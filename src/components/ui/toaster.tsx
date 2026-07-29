@@ -22,7 +22,7 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <span className="toast-status-icon" aria-hidden="true">
-              <StatusIcon className="h-4 w-4" />
+              <StatusIcon className="h-4 w-4" strokeWidth={2.25} />
             </span>
             <div className="toast-content">
               {title && <ToastTitle>{title}</ToastTitle>}

@@ -53,7 +53,11 @@ test('all toast variants use consistent entrance and exit motion', async () => {
   assert.match(styles, /\.toast-shell\[data-state="open"\]/);
   assert.match(styles, /\.toast-shell\.destructive/);
   assert.match(styles, /\.toast-shell\.destructive \{[^}]*--toast-ink: #8f2020/);
-  assert.match(toast, /destructive group border-destructive bg-destructive text-\[#9b2020\]/);
+  assert.match(toast, /destructive group border-destructive text-\[#9b2020\]/);
+  assert.doesNotMatch(toast, /destructive group border-destructive bg-destructive/);
+  assert.match(toaster, /strokeWidth=\{2\.25\}/);
+  assert.match(styles, /\.toast-title \{[^}]*font-weight: 750/);
+  assert.match(styles, /\.toast-description \{[^}]*font-weight: 600/);
   assert.match(styles, /\.toast-shell::after/);
   assert.match(styles, /@keyframes toast-icon-enter/);
   assert.match(styles, /@keyframes toast-progress/);
