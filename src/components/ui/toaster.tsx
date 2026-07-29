@@ -21,8 +21,10 @@ export function Toaster() {
 
         return (
           <Toast key={id} {...props}>
-            <StatusIcon className="toast-status-icon h-5 w-5 shrink-0" aria-hidden="true" />
-            <div className="grid gap-1">
+            <span className="toast-status-icon" aria-hidden="true">
+              <StatusIcon className="h-4 w-4" />
+            </span>
+            <div className="toast-content">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
                 <ToastDescription>{description}</ToastDescription>

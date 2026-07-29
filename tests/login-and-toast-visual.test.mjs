@@ -43,12 +43,18 @@ test('all toast variants use consistent entrance and exit motion', async () => {
   ]);
 
   assert.match(toast, /toast-shell/);
+  assert.match(toast, /max-w-\[22rem\] items-start gap-3/);
   assert.match(toaster, /ToastCircleCheck|CircleCheck/);
   assert.match(toaster, /CircleAlert/);
+  assert.match(toaster, /<span className="toast-status-icon"/);
+  assert.match(toaster, /className="toast-content"/);
   assert.match(styles, /@keyframes toast-enter/);
   assert.match(styles, /@keyframes toast-exit/);
   assert.match(styles, /\.toast-shell\[data-state="open"\]/);
   assert.match(styles, /\.toast-shell\.destructive/);
-  assert.match(styles, /\.toast-shell\.destructive \{[^}]*color: #9b2020/);
+  assert.match(styles, /\.toast-shell\.destructive \{[^}]*--toast-ink: #8f2020/);
   assert.match(toast, /destructive group border-destructive bg-destructive text-\[#9b2020\]/);
+  assert.match(styles, /\.toast-shell::after/);
+  assert.match(styles, /@keyframes toast-icon-enter/);
+  assert.match(styles, /@keyframes toast-progress/);
 });

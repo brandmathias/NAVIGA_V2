@@ -319,18 +319,43 @@
   .login-brand-image { width: 7.75rem; height: auto; }
   .login-brand p { color: #19aa9d; font-size: .72rem; font-weight: 500; }
 
-  .toast-shell { border-color: rgba(53, 195, 181, .42); border-radius: 1rem; background: rgba(255, 255, 255, .96); box-shadow: 0 16px 38px rgba(4, 75, 84, .16), inset 0 1px 0 rgba(255, 255, 255, .95); }
-  .toast-shell[data-state="open"] { animation: toast-enter 280ms cubic-bezier(.05, .7, .1, 1) both; }
+  /* Hallmark · component: toast · genre: modern-minimal · theme: NAVIGA teal
+   * states: default · hover · focus · active · error · success · contrast: pass
+   */
+  .toast-shell {
+    --toast-accent: #079c91;
+    --toast-ink: #12394a;
+    --toast-muted: #5b7280;
+    --toast-surface: rgba(255, 255, 255, .97);
+    border-color: rgba(99, 207, 196, .46);
+    background: var(--toast-surface);
+    box-shadow: 0 14px 34px rgba(4, 75, 84, .16), inset 0 1px 0 rgba(255, 255, 255, .95);
+    color: var(--toast-ink);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .toast-shell::before { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--toast-accent); content: ''; }
+  .toast-shell::after { position: absolute; right: 0; bottom: 0; left: 0; height: 2px; transform: scaleX(0); transform-origin: left; background: var(--toast-accent); content: ''; }
+  .toast-shell[data-state="open"] { animation: toast-enter 300ms cubic-bezier(.2, 0, 0, 1) both; }
+  .toast-shell[data-state="open"]::after { animation: toast-progress 5s linear both; }
   .toast-shell[data-state="closed"] { animation: toast-exit 180ms cubic-bezier(.3, 0, 1, 1) both; }
-  .toast-shell.destructive { border-color: rgba(239, 112, 112, .55); background: #fff8f8; color: #9b2020; box-shadow: 0 16px 38px rgba(140, 37, 37, .14), inset 0 1px 0 #fff; }
-  .toast-status-icon { display: grid; width: 2.35rem; height: 2.35rem; flex: 0 0 auto; place-items: center; border-radius: 50%; background: rgba(12, 172, 157, .12); color: #08998d; }
-  .destructive .toast-status-icon { background: rgba(224, 71, 71, .12); color: #d54343; animation: toast-error-nudge 360ms cubic-bezier(.2, 0, 0, 1); }
+  .toast-shell.destructive { --toast-accent: #d54343; --toast-ink: #8f2020; --toast-muted: #a65757; --toast-surface: rgba(255, 249, 249, .98); border-color: rgba(239, 112, 112, .55); box-shadow: 0 14px 34px rgba(140, 37, 37, .14), inset 0 1px 0 #fff; }
+  .toast-content { display: grid; min-width: 0; flex: 1 1 auto; gap: .18rem; padding-top: .05rem; }
+  .toast-title { color: var(--toast-ink); font-size: .875rem; font-weight: 700; line-height: 1.25; letter-spacing: -.01em; }
+  .toast-description { color: var(--toast-muted); font-size: .75rem; font-weight: 500; line-height: 1.45; }
+  .toast-status-icon { display: grid; width: 2rem; height: 2rem; flex: 0 0 auto; place-items: center; border-radius: .7rem; background: rgba(12, 172, 157, .12); color: var(--toast-accent); }
+  .toast-shell[data-state="open"] .toast-status-icon { animation: toast-icon-enter 360ms cubic-bezier(.2, 0, 0, 1) both; }
+  .destructive .toast-status-icon { background: rgba(224, 71, 71, .12); }
+  .toast-shell [toast-close] { color: var(--toast-muted); }
+  .toast-shell [toast-close]:hover { color: var(--toast-ink); background: rgba(8, 169, 155, .08); }
+  .toast-shell.destructive [toast-close]:hover { color: var(--toast-ink); background: rgba(213, 67, 67, .08); }
 }
 
 @keyframes login-card-enter { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes toast-enter { from { opacity: 0; transform: translateY(18px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes toast-exit { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(10px) scale(.96); } }
-@keyframes toast-error-nudge { 0%, 100% { transform: translateX(0); } 33% { transform: translateX(-3px); } 66% { transform: translateX(3px); } }
+@keyframes toast-enter { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toast-exit { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(8px) scale(.98); } }
+@keyframes toast-icon-enter { from { opacity: 0; transform: scale(.72) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+@keyframes toast-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (max-width: 640px) {
   .login-screen { justify-content: center; gap: .85rem; padding: 1.25rem 1rem; }
