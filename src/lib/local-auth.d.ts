@@ -13,6 +13,9 @@ export interface LocalUser {
   unitProvince: string | null;
   unitPhone: string | null;
   unitAddress: string | null;
+  unitMapUrl: string | null;
+  unitManagers: Array<{ name: string; nip: string; phone: string }>;
+  unitAppraisers: Array<{ name: string; nip: string; phone: string }>;
   upc: LocalUpc;
 }
 

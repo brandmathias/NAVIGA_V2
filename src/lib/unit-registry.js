@@ -31,6 +31,34 @@ function normalizeText(value) {
   return String(value ?? '').trim();
 }
 
+function normalizePeople(value, label) {
+  if (value == null) return [];
+  if (!Array.isArray(value)) throw new Error(`${label} harus berupa daftar data.`);
+  if (value.length > 20) throw new Error(`${label} maksimal 20 orang.`);
+  return value.map((person) => {
+    const name = normalizeText(person?.name);
+    const nip = normalizeText(person?.nip);
+    const phone = normalizeText(person?.phone);
+    if (!name || !nip || !phone) throw new Error(`Data ${label} belum lengkap.`);
+    return { name, nip, phone };
+  });
+}
+
+function normalizeAdmins(value, fallback) {
+  const source = Array.isArray(value) ? value : [fallback];
+  if (!source.length || source.length > 20) throw new Error('Tambahkan minimal satu dan maksimal 20 akun admin unit.');
+  const admins = source.map((admin) => {
+    const name = normalizeText(admin?.name) || `Admin ${fallback.unitName}`;
+    const email = normalizeEmail(admin?.email);
+    const phone = normalizeText(admin?.phone);
+    const password = validatePassword(admin?.password);
+    if (!email) throw new Error('Email akun admin wajib diisi.');
+    return { name, email, phone, password };
+  });
+  if (new Set(admins.map((admin) => admin.email)).size !== admins.length) throw new Error('Email akun admin tidak boleh ganda.');
+  return admins;
+}
+
 function hashPassword(password) {
   const salt = randomBytes(16).toString('hex');
   return `${salt}:${scryptSync(password, salt, 64).toString('hex')}`;
@@ -93,6 +121,9 @@ function toPublicUnit(registry, unit) {
     unitCode: unit.unitCode ?? formatUnitCode(unit.domicile, unit.prefix),
     phone: unit.phone ?? '',
     address: unit.address ?? '',
+    mapUrl: unit.mapUrl ?? '',
+    managers: Array.isArray(unit.managers) ? unit.managers : [],
+    appraisers: Array.isArray(unit.appraisers) ? unit.appraisers : [],
     email: account?.email ?? '',
     adminName: account?.name ?? '',
     adminPhone: account?.phone ?? '',
@@ -132,6 +163,9 @@ function toAuthenticatedUser(registry, account) {
     unitProvince: unit?.province ?? null,
     unitPhone: unit?.phone ?? null,
     unitAddress: unit?.address ?? null,
+    unitMapUrl: unit?.mapUrl ?? null,
+    unitManagers: Array.isArray(unit?.managers) ? unit.managers : [],
+    unitAppraisers: Array.isArray(unit?.appraisers) ? unit.appraisers : [],
     upc: unit?.name ?? 'all',
   };
 }
@@ -255,30 +289,27 @@ function createUnitRegistry({ filePath, bootstrap }) {
       const province = validateProvince(input?.province);
       const phone = normalizeText(input?.phone);
       const address = normalizeText(input?.address);
-      const adminName = normalizeText(input?.adminName) || `Admin ${name}`;
-      const adminPhone = normalizeText(input?.adminPhone);
-      const email = normalizeEmail(input?.email);
-      const password = validatePassword(input?.password);
-      if (!name || !domicile || !email) throw new Error('Nama unit, kota/kabupaten, domisili, dan email wajib diisi.');
+      const mapUrl = normalizeText(input?.mapUrl);
+      const managers = normalizePeople(input?.managers, 'pengelola unit');
+      const appraisers = normalizePeople(input?.appraisers, 'penaksir unit');
+      const admins = normalizeAdmins(input?.admins, {
+        unitName: name,
+        name: input?.adminName,
+        email: input?.email,
+        phone: input?.adminPhone,
+        password: input?.password,
+      });
+      if (!name || !domicile) throw new Error('Nama unit, kota/kabupaten, dan domisili wajib diisi.');
       if (registry.units.some((unit) => unit.prefix === prefix)) throw new Error('Prefix SBG sudah digunakan.');
-      if (registry.accounts.some((account) => account.email === email)) throw new Error('Email akun sudah digunakan.');
+      if (admins.some((admin) => registry.accounts.some((account) => account.email === admin.email))) throw new Error('Email akun sudah digunakan.');
 
       const now = new Date().toISOString();
-      const unit = { id: randomUUID(), name, prefix, domicile, province, unitCode: formatUnitCode(domicile, prefix), phone, address, active: true, createdAt: now };
+      const unit = { id: randomUUID(), name, prefix, domicile, province, unitCode: formatUnitCode(domicile, prefix), phone, address, mapUrl, managers, appraisers, active: true, createdAt: now };
       registry.units.push(unit);
-      registry.accounts.push({
-        id: randomUUID(),
-        name: adminName,
-        email,
-        passwordHash: hashPassword(password),
-        role: 'unit',
-        unitId: unit.id,
-        domicile,
-        phone: adminPhone,
-        address,
-        active: true,
-        createdAt: now,
-      });
+      registry.accounts.push(...admins.map((admin) => ({
+        id: randomUUID(), name: admin.name, email: admin.email, passwordHash: hashPassword(admin.password), role: 'unit', unitId: unit.id,
+        domicile, phone: admin.phone, address, active: true, createdAt: now,
+      })));
       await writeRegistry(registry);
       return toPublicUnit(registry, unit);
     });

@@ -32,7 +32,7 @@ interface UpcProfileData {
   streetViewUrl: string;
   staff: {
     penaksir: { name: string; nip: string; avatar: string };
-    kasir: { name: string; nip: string; avatar: string };
+    pengelola: { name: string; nip: string; avatar: string };
   };
 }
 
@@ -54,7 +54,7 @@ const upcProfiles: Record<Customer['upc'] | 'all', UpcProfileData> = {
         nip: 'P85395',
         avatar: 'https://placehold.co/100x100/EEDD82/000000?text=CP',
       },
-      kasir: {
+      pengelola: {
         name: 'Miranda Melina Irene Turangan',
         nip: 'ERA00362',
         avatar: 'https://placehold.co/100x100/D8BFD8/000000?text=MT',
@@ -78,7 +78,7 @@ const upcProfiles: Record<Customer['upc'] | 'all', UpcProfileData> = {
         nip: 'P86446',
         avatar: 'https://placehold.co/100x100/A0E6E6/000000?text=FP',
       },
-      kasir: {
+      pengelola: {
         name: 'Novi Mohede',
         nip: 'ERA00363',
         avatar: 'https://placehold.co/100x100/FFC0CB/000000?text=NM',
@@ -96,7 +96,7 @@ const upcProfiles: Record<Customer['upc'] | 'all', UpcProfileData> = {
     streetViewUrl: '',
     staff: {
       penaksir: { name: 'N/A', nip: 'N/A', avatar: '' },
-      kasir: { name: 'N/A', nip: 'N/A', avatar: '' },
+      pengelola: { name: 'N/A', nip: 'N/A', avatar: '' },
     },
   },
   all: {
@@ -113,7 +113,7 @@ const upcProfiles: Record<Customer['upc'] | 'all', UpcProfileData> = {
       'https://www.google.com/maps/embed?pb=!1m0!4v1719217141382!6m8!1m7!1sCAoSLEFGMVFpcE5pTXZET21YNnFLdGdMQS1EM1pUcU5sYVdZb2dZWFItb2YxcmNP!2m2!1d-6.1953589!2d106.8455844!3f314.94!4f-2.22!5f0.7820865974627469',
     staff: {
       penaksir: { name: 'System', nip: 'N/A', avatar: '' },
-      kasir: { name: 'System', nip: 'N/A', avatar: '' },
+      pengelola: { name: 'System', nip: 'N/A', avatar: '' },
     },
   },
 };
@@ -123,12 +123,19 @@ export default function DashboardPage() {
   const userUpc = session.upc;
   const [mapView, setMapView] = React.useState<'map' | 'street'>('map');
 
+  const dynamicAppraiser = session.unitAppraisers?.[0];
+  const dynamicManager = session.unitManagers?.[0];
   const profileData = upcProfiles[userUpc as keyof typeof upcProfiles] ?? {
     ...upcProfiles['N/A'],
     name: session.unitName ?? 'Unit Pelayanan Cabang',
     address: session.unitAddress || [session.unitDomicile, session.unitProvince].filter(Boolean).join(', ') || 'Alamat unit belum diatur.',
     phone: session.unitPhone || 'Nomor telepon unit belum diatur.',
     description: `Profil untuk ${session.unitCode || `prefix SBG ${session.unitPrefix ?? 'belum diatur'}`}.`,
+    mapUrl: session.unitMapUrl || '',
+    staff: {
+      penaksir: { name: dynamicAppraiser?.name || 'Belum diatur', nip: dynamicAppraiser?.nip || '—', avatar: '' },
+      pengelola: { name: dynamicManager?.name || 'Belum diatur', nip: dynamicManager?.nip || '—', avatar: '' },
+    },
   };
 
   return (
@@ -237,18 +244,18 @@ export default function DashboardPage() {
             <Card className="transition-shadow duration-200 hover:shadow-xl">
               <CardHeader className="flex flex-row items-center gap-4 space-y-0">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={profileData.staff.kasir.avatar} />
+                  <AvatarImage src={profileData.staff.pengelola.avatar} />
                   <AvatarFallback>
-                    {profileData.staff.kasir.name.charAt(0)}
+                    {profileData.staff.pengelola.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-lg">Kasir</CardTitle>
+                  <CardTitle className="text-lg">Pengelola Unit</CardTitle>
                   <p className="text-base font-semibold">
-                    {profileData.staff.kasir.name}
+                    {profileData.staff.pengelola.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    NIP: {profileData.staff.kasir.nip}
+                    NIP: {profileData.staff.pengelola.nip}
                   </p>
                 </div>
               </CardHeader>

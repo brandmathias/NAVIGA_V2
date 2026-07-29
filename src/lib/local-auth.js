@@ -41,6 +41,9 @@ function parseSession(payload) {
       (session.unitProvince !== null && session.unitProvince !== undefined && typeof session.unitProvince !== 'string') ||
       (session.unitPhone !== null && session.unitPhone !== undefined && typeof session.unitPhone !== 'string') ||
       (session.unitAddress !== null && session.unitAddress !== undefined && typeof session.unitAddress !== 'string') ||
+      (session.unitMapUrl !== null && session.unitMapUrl !== undefined && typeof session.unitMapUrl !== 'string') ||
+      (session.unitManagers !== undefined && !Array.isArray(session.unitManagers)) ||
+      (session.unitAppraisers !== undefined && !Array.isArray(session.unitAppraisers)) ||
       typeof session.upc !== 'string' ||
       typeof session.expiresAt !== 'number' ||
       !Number.isFinite(session.expiresAt)
@@ -60,6 +63,9 @@ function parseSession(payload) {
       unitProvince: session.unitProvince ?? null,
       unitPhone: session.unitPhone ?? null,
       unitAddress: session.unitAddress ?? null,
+      unitMapUrl: session.unitMapUrl ?? null,
+      unitManagers: Array.isArray(session.unitManagers) ? session.unitManagers : [],
+      unitAppraisers: Array.isArray(session.unitAppraisers) ? session.unitAppraisers : [],
       upc: session.upc,
       expiresAt: session.expiresAt,
     };

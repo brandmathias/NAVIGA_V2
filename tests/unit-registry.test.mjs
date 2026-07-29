@@ -170,3 +170,53 @@ test('keeps unit profile fields and lets a Superadmin add another admin to that 
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test('persists unit staff, map link, and every queued unit-admin account together', async () => {
+  const { directory, registry } = await createTestRegistry();
+
+  try {
+    await registry.ensure();
+    const unit = await registry.registerUnit({
+      name: 'Pegadaian Garuda',
+      prefix: '11799',
+      domicile: 'Manado',
+      province: 'Sulawesi Utara',
+      phone: '0431862000',
+      address: 'Jl. Garuda No. 1, Manado',
+      mapUrl: 'https://maps.google.com/?q=Pegadaian+Garuda',
+      managers: [{ name: 'Santi Garuda', nip: '19850110 201001 1 001', phone: '081234567890' }],
+      appraisers: [{ name: 'Bima Garuda', nip: '19860211 201101 1 002', phone: '081298765432' }],
+      admins: [
+        { name: 'Admin Garuda', email: 'admin.garuda@pegadaian.co.id', phone: '081211111111', password: 'GarudaAdmin*0' },
+        { name: 'Admin Dua', email: 'admin.dua@pegadaian.co.id', phone: '081222222222', password: 'GarudaAdmin*1' },
+      ],
+    });
+
+    assert.deepEqual(
+      { mapUrl: unit.mapUrl, managers: unit.managers, appraisers: unit.appraisers },
+      {
+        mapUrl: 'https://maps.google.com/?q=Pegadaian+Garuda',
+        managers: [{ name: 'Santi Garuda', nip: '19850110 201001 1 001', phone: '081234567890' }],
+        appraisers: [{ name: 'Bima Garuda', nip: '19860211 201101 1 002', phone: '081298765432' }],
+      },
+    );
+    assert.equal((await registry.listUnitAdmins()).filter((admin) => admin.unitId === unit.id).length, 2);
+    const authenticated = await registry.authenticate('admin.dua@pegadaian.co.id', 'GarudaAdmin*1');
+    assert.deepEqual(
+      {
+        unitCode: authenticated.unitCode,
+        unitMapUrl: authenticated.unitMapUrl,
+        unitManagers: authenticated.unitManagers,
+        unitAppraisers: authenticated.unitAppraisers,
+      },
+      {
+        unitCode: 'CP-MND-11799',
+        unitMapUrl: 'https://maps.google.com/?q=Pegadaian+Garuda',
+        unitManagers: [{ name: 'Santi Garuda', nip: '19850110 201001 1 001', phone: '081234567890' }],
+        unitAppraisers: [{ name: 'Bima Garuda', nip: '19860211 201101 1 002', phone: '081298765432' }],
+      },
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

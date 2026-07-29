@@ -11,6 +11,18 @@ async function requireSuperadmin() {
   }
 }
 
+function readList(formData: FormData, field: string) {
+  const value = formData.get(field);
+  if (!value) return [];
+  try {
+    const list = JSON.parse(String(value));
+    if (!Array.isArray(list)) throw new Error('shape');
+    return list;
+  } catch {
+    throw new Error(`Data ${field} tidak valid. Silakan tambahkan kembali.`);
+  }
+}
+
 export async function registerUnitAction(formData: FormData) {
   await requireSuperadmin();
 
@@ -21,6 +33,10 @@ export async function registerUnitAction(formData: FormData) {
     province: formData.get('province'),
     phone: formData.get('phone'),
     address: formData.get('address'),
+    mapUrl: formData.get('mapUrl'),
+    managers: readList(formData, 'managers'),
+    appraisers: readList(formData, 'appraisers'),
+    admins: readList(formData, 'admins'),
     adminName: formData.get('adminName'),
     adminPhone: formData.get('adminPhone'),
     email: formData.get('email'),

@@ -51,6 +51,9 @@ test('authenticates a persisted unit account with its server-side prefix scope',
       unitProvince: '',
       unitPhone: '',
       unitAddress: '',
+      unitMapUrl: null,
+      unitManagers: [],
+      unitAppraisers: [],
       upc: 'Pegadaian Wanea',
     });
   });

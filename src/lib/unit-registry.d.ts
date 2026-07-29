@@ -10,9 +10,25 @@ export interface RegisteredUnit {
   unitCode: string;
   phone: string;
   address: string;
+  mapUrl: string;
+  managers: UnitStaffMember[];
+  appraisers: UnitStaffMember[];
   email: string;
   adminName: string;
   adminPhone: string;
+}
+
+export interface UnitStaffMember {
+  name: string;
+  nip: string;
+  phone: string;
+}
+
+export interface UnitAdminDraft {
+  name: unknown;
+  email: unknown;
+  phone?: unknown;
+  password: unknown;
 }
 
 export interface UnitRegistrationInput {
@@ -22,6 +38,10 @@ export interface UnitRegistrationInput {
   province?: unknown;
   phone?: unknown;
   address?: unknown;
+  mapUrl?: unknown;
+  managers?: unknown;
+  appraisers?: unknown;
+  admins?: unknown;
   adminName?: unknown;
   adminPhone?: unknown;
   email: unknown;
@@ -63,6 +83,9 @@ export interface AuthenticatedRegistryUser {
   unitProvince: string | null;
   unitPhone: string | null;
   unitAddress: string | null;
+  unitMapUrl: string | null;
+  unitManagers: UnitStaffMember[];
+  unitAppraisers: UnitStaffMember[];
   upc: string;
 }
 
