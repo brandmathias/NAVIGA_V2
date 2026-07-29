@@ -33,3 +33,10 @@ Untuk menjalankan fitur lokal, gunakan skrip di `scripts/setup-piper.ps1`,
 Excel angsuran tidak memuat nomor WhatsApp. Karena itu fiturnya hanya salin
 template dan pembuatan/pratinjau/unduh WAV Piper lokal. Aksi WhatsApp hanya
 tersedia pada hasil PDF gadai dengan nomor seluler Indonesia yang valid.
+
+## Antrean Fonnte (opsional)
+
+Antrean server Fonnte tetap nonaktif secara bawaan. Untuk mengaktifkannya pada
+lingkungan lokal yang tidak dibagikan, isi `FONNTE_ENABLED=true` dan
+`FONNTE_TOKEN` di `.env.local`. Jangan menaruh token asli di README atau
+berkas yang dikomit.
