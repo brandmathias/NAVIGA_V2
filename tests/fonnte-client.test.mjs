@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 import fonnte from '../src/lib/fonnte-client.js';
@@ -60,4 +61,27 @@ test('queueFonnteMessages rejects while Fonnte is disabled before calling fetch'
     assert.equal(called, false);
     assert.deepEqual(getFonnteStatus(), { enabled: false });
   });
+});
+
+test('queueFonnteMessages rejects when its Fonnte token is missing before calling fetch', async () => {
+  await withFonnteEnvironment({ FONNTE_ENABLED: 'true', FONNTE_TOKEN: '' }, async () => {
+    let called = false;
+
+    await assert.rejects(
+      queueFonnteMessages({
+        recipients: [{ target: '6281234567890', message: 'Halo' }],
+        fetchImpl: async () => { called = true; },
+      }),
+      /token belum tersedia/i,
+    );
+
+    assert.equal(called, false);
+    assert.deepEqual(getFonnteStatus(), { enabled: false });
+  });
+});
+
+test('Fonnte adapter carries the Next server-only import marker without loading it in Node tests', async () => {
+  const source = await readFile(new URL('../src/lib/fonnte-client.js', import.meta.url), 'utf8');
+
+  assert.match(source, /require\('server-only'\)/);
 });

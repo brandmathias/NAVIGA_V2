@@ -1,5 +1,7 @@
 const FONNTE_SEND_URL = 'https://api.fonnte.com/send';
 
+if (process.env.NEXT_RUNTIME !== undefined) require('server-only');
+
 function getFonnteStatus() {
   return { enabled: process.env.FONNTE_ENABLED === 'true' && Boolean(process.env.FONNTE_TOKEN) };
 }

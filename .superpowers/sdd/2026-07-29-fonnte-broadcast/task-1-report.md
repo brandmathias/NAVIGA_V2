@@ -34,3 +34,19 @@
   a future confirmed API contract can map another reference field if needed.
 - `graphify update .` refreshed generated `graphify-out/` files. They are left
   unstaged because they are generated workspace state, not Task 1 source.
+
+## Follow-up: server-only boundary and missing-token regression
+
+- Inspected Next 15's bundled `server-only` marker at
+  `next/dist/compiled/server-only`: Next's webpack rule rejects it from client
+  layers, while direct Node loading throws. The adapter therefore conditionally
+  requires the standard `server-only` specifier only when `NEXT_RUNTIME` is
+  present; Next still analyzes the literal import, while plain Node tests do not
+  execute it.
+- Added a missing-token test that confirms rejection and zero fetch calls.
+- RED: `node --test tests/fonnte-client.test.mjs` exited 1 with 3 passing tests
+  and the expected missing `require('server-only')` marker assertion. The new
+  missing-token regression passed immediately because the existing Task 1 guard
+  already enforced that behavior.
+- GREEN: `node --test tests/fonnte-client.test.mjs` exited 0: 4 passed, 0 failed.
+- Full suite: `npm test` exited 0: 38 passed, 0 failed.
