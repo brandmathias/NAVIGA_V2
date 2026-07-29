@@ -86,3 +86,57 @@ test('creates a future unit once and rejects a duplicate prefix', async () => {
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test('keeps unit profile fields and lets a Superadmin add another admin to that unit', async () => {
+  const { directory, registry } = await createTestRegistry();
+
+  try {
+    await registry.ensure();
+    const unit = await registry.registerUnit({
+      name: 'Pegadaian Garuda',
+      prefix: '11799',
+      domicile: 'Manado',
+      phone: '0431862000',
+      address: 'Jl. Garuda No. 1, Manado',
+      email: 'upc.garuda@pegadaian.co.id',
+      password: 'UpcGaruda*0',
+      adminName: 'Rani Garuda',
+      adminPhone: '081234567890',
+    });
+
+    assert.deepEqual(
+      {
+        domicile: unit.domicile,
+        phone: unit.phone,
+        address: unit.address,
+        adminName: unit.adminName,
+        adminPhone: unit.adminPhone,
+      },
+      {
+        domicile: 'Manado',
+        phone: '0431862000',
+        address: 'Jl. Garuda No. 1, Manado',
+        adminName: 'Rani Garuda',
+        adminPhone: '081234567890',
+      },
+    );
+
+    const extraAdmin = await registry.registerUnitAdmin({
+      unitId: unit.id,
+      name: 'Bima Garuda',
+      email: 'bima.garuda@pegadaian.co.id',
+      password: 'BimaGaruda*0',
+      domicile: 'Manado',
+      phone: '081398765432',
+      address: 'Jl. Garuda No. 1, Manado',
+    });
+
+    assert.deepEqual(
+      { name: extraAdmin.name, unitId: extraAdmin.unitId, phone: extraAdmin.phone },
+      { name: 'Bima Garuda', unitId: unit.id, phone: '081398765432' },
+    );
+    assert.equal((await registry.listUnitAdmins()).filter((admin) => admin.unitId === unit.id).length, 2);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

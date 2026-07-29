@@ -70,7 +70,7 @@ export default function MainShell({ children, user }: { children: React.ReactNod
 
   return (
     <SessionContext.Provider value={user}>
-      <SidebarProvider className="naviga-shell bg-[#f7fbfc]" style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
+      <SidebarProvider className="naviga-shell" style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
         <Sidebar variant="floating" className="naviga-sidebar">
           <SidebarHeader className="border-b border-[#e4eff1] p-5">
             <button onClick={() => router.push('/dashboard')} className="flex items-center gap-2 text-primary transition-transform duration-200 hover:translate-x-0.5 active:scale-[.98]">

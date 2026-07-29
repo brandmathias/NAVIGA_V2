@@ -18,6 +18,10 @@ function validatePassword(value) {
   return password;
 }
 
+function normalizeText(value) {
+  return String(value ?? '').trim();
+}
+
 function hashPassword(password) {
   const salt = randomBytes(16).toString('hex');
   return `${salt}:${scryptSync(password, salt, 64).toString('hex')}`;
@@ -44,8 +48,13 @@ function validateBootstrap(bootstrap) {
   if (!superadmin.email) throw new Error('Email Superadmin wajib diatur.');
 
   const units = bootstrap.units.map((unit) => ({
-    name: String(unit.name ?? '').trim(),
+    name: normalizeText(unit.name),
     prefix: validatePrefix(unit.prefix),
+    domicile: normalizeText(unit.domicile),
+    phone: normalizeText(unit.phone),
+    address: normalizeText(unit.address),
+    adminName: normalizeText(unit.adminName),
+    adminPhone: normalizeText(unit.adminPhone),
     email: normalizeEmail(unit.email),
     password: validatePassword(unit.password),
   }));
@@ -69,7 +78,28 @@ function toPublicUnit(registry, unit) {
     name: unit.name,
     prefix: unit.prefix,
     active: unit.active,
+    domicile: unit.domicile ?? '',
+    phone: unit.phone ?? '',
+    address: unit.address ?? '',
     email: account?.email ?? '',
+    adminName: account?.name ?? '',
+    adminPhone: account?.phone ?? '',
+  };
+}
+
+function toPublicAdmin(registry, account) {
+  const unit = registry.units.find((candidate) => candidate.id === account.unitId);
+  return {
+    id: account.id,
+    name: account.name,
+    email: account.email,
+    active: account.active,
+    unitId: account.unitId,
+    unitName: unit?.name ?? '',
+    unitPrefix: unit?.prefix ?? '',
+    domicile: account.domicile ?? unit?.domicile ?? '',
+    phone: account.phone ?? '',
+    address: account.address ?? unit?.address ?? '',
   };
 }
 
@@ -123,6 +153,9 @@ function createUnitRegistry({ filePath, bootstrap }) {
             id: randomUUID(),
             name: unit.name,
             prefix: unit.prefix,
+            domicile: unit.domicile,
+            phone: unit.phone,
+            address: unit.address,
             active: true,
             createdAt: now,
           }));
@@ -142,11 +175,14 @@ function createUnitRegistry({ filePath, bootstrap }) {
               },
               ...initial.units.map((unit, index) => ({
                 id: randomUUID(),
-                name: `Admin ${unit.name}`,
+                name: unit.adminName || `Admin ${unit.name}`,
                 email: unit.email,
                 passwordHash: hashPassword(unit.password),
                 role: 'unit',
                 unitId: units[index].id,
+                domicile: unit.domicile,
+                phone: unit.adminPhone,
+                address: unit.address,
                 active: true,
                 createdAt: now,
               })),
@@ -173,6 +209,15 @@ function createUnitRegistry({ filePath, bootstrap }) {
     return registry.units.map((unit) => toPublicUnit(registry, unit)).sort((left, right) => left.name.localeCompare(right.name));
   }
 
+  async function listUnitAdmins() {
+    await ensure();
+    const registry = await readRegistry();
+    return registry.accounts
+      .filter((account) => account.role === 'unit')
+      .map((account) => toPublicAdmin(registry, account))
+      .sort((left, right) => left.name.localeCompare(right.name));
+  }
+
   async function getActiveUnitByPrefix(prefix) {
     await ensure();
     const registry = await readRegistry();
@@ -184,8 +229,13 @@ function createUnitRegistry({ filePath, bootstrap }) {
     const task = mutationQueue.then(async () => {
       await ensure();
       const registry = await readRegistry();
-      const name = String(input?.name ?? '').trim();
+      const name = normalizeText(input?.name);
       const prefix = validatePrefix(input?.prefix);
+      const domicile = normalizeText(input?.domicile);
+      const phone = normalizeText(input?.phone);
+      const address = normalizeText(input?.address);
+      const adminName = normalizeText(input?.adminName) || `Admin ${name}`;
+      const adminPhone = normalizeText(input?.adminPhone);
       const email = normalizeEmail(input?.email);
       const password = validatePassword(input?.password);
       if (!name || !email) throw new Error('Nama unit dan email wajib diisi.');
@@ -193,15 +243,18 @@ function createUnitRegistry({ filePath, bootstrap }) {
       if (registry.accounts.some((account) => account.email === email)) throw new Error('Email akun sudah digunakan.');
 
       const now = new Date().toISOString();
-      const unit = { id: randomUUID(), name, prefix, active: true, createdAt: now };
+      const unit = { id: randomUUID(), name, prefix, domicile, phone, address, active: true, createdAt: now };
       registry.units.push(unit);
       registry.accounts.push({
         id: randomUUID(),
-        name: `Admin ${name}`,
+        name: adminName,
         email,
         passwordHash: hashPassword(password),
         role: 'unit',
         unitId: unit.id,
+        domicile,
+        phone: adminPhone,
+        address,
         active: true,
         createdAt: now,
       });
@@ -212,7 +265,45 @@ function createUnitRegistry({ filePath, bootstrap }) {
     return task;
   }
 
-  return { ensure, authenticate, getActiveUnitByPrefix, listUnits, registerUnit };
+  function registerUnitAdmin(input) {
+    const task = mutationQueue.then(async () => {
+      await ensure();
+      const registry = await readRegistry();
+      const unitId = normalizeText(input?.unitId);
+      const unit = registry.units.find((candidate) => candidate.id === unitId && candidate.active);
+      const name = normalizeText(input?.name);
+      const email = normalizeEmail(input?.email);
+      const password = validatePassword(input?.password);
+      const domicile = normalizeText(input?.domicile) || unit?.domicile || '';
+      const phone = normalizeText(input?.phone);
+      const address = normalizeText(input?.address) || unit?.address || '';
+
+      if (!unit) throw new Error('Unit aktif tidak ditemukan.');
+      if (!name || !email) throw new Error('Nama dan email akun admin wajib diisi.');
+      if (registry.accounts.some((account) => account.email === email)) throw new Error('Email akun sudah digunakan.');
+
+      const account = {
+        id: randomUUID(),
+        name,
+        email,
+        passwordHash: hashPassword(password),
+        role: 'unit',
+        unitId: unit.id,
+        domicile,
+        phone,
+        address,
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
+      registry.accounts.push(account);
+      await writeRegistry(registry);
+      return toPublicAdmin(registry, account);
+    });
+    mutationQueue = task.catch(() => undefined);
+    return task;
+  }
+
+  return { ensure, authenticate, getActiveUnitByPrefix, listUnits, listUnitAdmins, registerUnit, registerUnitAdmin };
 }
 
 function bootstrapFromEnvironment() {
@@ -249,5 +340,7 @@ module.exports = {
   authenticateAccount: defaultRegistry.authenticate,
   getActiveUnitByPrefix: defaultRegistry.getActiveUnitByPrefix,
   listUnits: defaultRegistry.listUnits,
+  listUnitAdmins: defaultRegistry.listUnitAdmins,
   registerUnit: defaultRegistry.registerUnit,
+  registerUnitAdmin: defaultRegistry.registerUnitAdmin,
 };

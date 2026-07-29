@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/local-auth';
-import { listUnits } from '@/lib/unit-registry';
+import { listUnitAdmins, listUnits } from '@/lib/unit-registry';
 import UnitManagementClient from './unit-management-client';
 
 export default async function UnitManagementPage() {
@@ -8,5 +8,6 @@ export default async function UnitManagementPage() {
   if (!session) redirect('/login');
   if (session.role !== 'superadmin') redirect('/dashboard');
 
-  return <UnitManagementClient units={await listUnits()} />;
+  const [units, admins] = await Promise.all([listUnits(), listUnitAdmins()]);
+  return <UnitManagementClient units={units} admins={admins} />;
 }
