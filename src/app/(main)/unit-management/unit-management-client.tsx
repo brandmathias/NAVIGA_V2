@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Building2,
@@ -145,14 +146,8 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
                 </span>
               </div>
               <div className="unit-hero-actions relative z-10 mt-4 flex flex-col gap-2.5 sm:flex-row">
-                <Button type="button" onClick={() => router.push('/unit-management/new')} className="unit-hero-secondary group h-12 min-w-[178px] rounded-xl px-5">
-                  <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.7} />
-                  Tambah unit
-                </Button>
-                <Button type="button" onClick={() => router.push('/unit-management/new?mode=admin')} className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5">
-                  <UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />
-                  Tambahkan akun
-                </Button>
+                <Button asChild className="unit-hero-secondary group h-12 min-w-[178px] rounded-xl px-5"><Link href="/unit-management/new"><Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.7} />Tambah unit</Link></Button>
+                <Button asChild className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5"><Link href="/unit-management/new?mode=admin"><UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />Tambahkan akun</Link></Button>
               </div>
             </div>
           </div>

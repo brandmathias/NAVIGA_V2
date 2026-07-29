@@ -91,6 +91,27 @@ test('creates a future unit once and rejects a duplicate prefix', async () => {
   }
 });
 
+test('rejects a unit domicile outside the official Indonesian province list', async () => {
+  const { directory, registry } = await createTestRegistry();
+
+  try {
+    await registry.ensure();
+    await assert.rejects(
+      registry.registerUnit({
+        name: 'Pegadaian Tidak Valid',
+        prefix: '11801',
+        domicile: 'Manado',
+        province: 'Sulawesi Utara Timur',
+        email: 'upc.invalid@pegadaian.co.id',
+        password: 'UnitValid*0',
+      }),
+      /Provinsi harus dipilih dari daftar provinsi Indonesia/,
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test('keeps unit profile fields and lets a Superadmin add another admin to that unit', async () => {
   const { directory, registry } = await createTestRegistry();
 

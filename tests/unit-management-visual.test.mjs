@@ -15,8 +15,8 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.doesNotMatch(styles, /\.unit-hero::before/);
   assert.match(styles, /background-size:\s*cover,\s*cover/);
   assert.match(styles, /background-position:\s*center,\s*right 85%/);
-  assert.match(page, /router\.push\('\/unit-management\/new'\)/);
-  assert.match(page, /router\.push\('\/unit-management\/new\?mode=admin'\)/);
+  assert.match(page, /<Link href="\/unit-management\/new">/);
+  assert.match(page, /<Link href="\/unit-management\/new\?mode=admin">/);
   assert.match(createPage, /Tambah akun admin unit/);
   assert.match(createPage, /Pilih unit terkait/);
   assert.match(createPage, /<Select name="unitId"/);
@@ -24,6 +24,8 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(createPage, /pattern="\[0-9\]\{5\}"/);
   assert.match(createPage, /formatUnitCode\(domicile, prefix\)/);
   assert.match(createPage, /router\.push\('\/unit-management'\)/);
+  assert.match(createPage, /unit-create-reference-card/);
+  assert.match(createPage, /Domisili <span>\*<\/span>/);
   assert.match(page, /unit-admin-select-content/);
   assert.match(page, /unit-admin-info/);
   assert.match(page, /Simpan/);
@@ -31,7 +33,10 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /\.unit-admin-select-trigger\[data-state="open"\]/);
   assert.match(styles, /\.unit-admin-select-content\s*\{/);
   assert.match(styles, /\.unit-admin-select-item\[data-highlighted\]/);
+  assert.match(styles, /\.unit-create-reference-card\s*\{[\s\S]*?max-width:\s*83rem[\s\S]*?border-radius:\s*\.9rem/);
+  assert.match(styles, /\.unit-create-reference-card\s+\.unit-admin-select-trigger,[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif/);
   assert.match(page, /Domisili/);
+  assert.match(styles, /\.unit-create-reference-card \.unit-admin-select-trigger\s*\{[\s\S]*?color:\s*#12394a[\s\S]*?font-size:\s*\.9rem[\s\S]*?font-weight:\s*600/);
   assert.match(page, /Nomor telepon/);
   assert.match(page, /Nama admin/);
   assert.match(page, /unit-hero-copy/);

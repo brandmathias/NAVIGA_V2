@@ -1,7 +1,9 @@
 const { randomBytes, randomUUID, scryptSync, timingSafeEqual } = require('node:crypto');
 const { mkdir, readFile, rename, writeFile } = require('node:fs/promises');
 const { dirname, join } = require('node:path');
-const { formatUnitCode } = require('./unit-code');
+const { INDONESIAN_PROVINCES, formatUnitCode } = require('./unit-code');
+
+const INDONESIAN_PROVINCE_SET = new Set(INDONESIAN_PROVINCES);
 
 function normalizeEmail(value) {
   return String(value ?? '').trim().toLowerCase();
@@ -17,6 +19,12 @@ function validatePassword(value) {
   const password = String(value ?? '');
   if (password.length < 8) throw new Error('Password minimal 8 karakter.');
   return password;
+}
+
+function validateProvince(value) {
+  const province = normalizeText(value);
+  if (!INDONESIAN_PROVINCE_SET.has(province)) throw new Error('Provinsi harus dipilih dari daftar provinsi Indonesia.');
+  return province;
 }
 
 function normalizeText(value) {
@@ -244,14 +252,14 @@ function createUnitRegistry({ filePath, bootstrap }) {
       const name = normalizeText(input?.name);
       const prefix = validatePrefix(input?.prefix);
       const domicile = normalizeText(input?.domicile);
-      const province = normalizeText(input?.province);
+      const province = validateProvince(input?.province);
       const phone = normalizeText(input?.phone);
       const address = normalizeText(input?.address);
       const adminName = normalizeText(input?.adminName) || `Admin ${name}`;
       const adminPhone = normalizeText(input?.adminPhone);
       const email = normalizeEmail(input?.email);
       const password = validatePassword(input?.password);
-      if (!name || !domicile || !province || !email) throw new Error('Nama unit, kota/kabupaten, provinsi, dan email wajib diisi.');
+      if (!name || !domicile || !email) throw new Error('Nama unit, kota/kabupaten, domisili, dan email wajib diisi.');
       if (registry.units.some((unit) => unit.prefix === prefix)) throw new Error('Prefix SBG sudah digunakan.');
       if (registry.accounts.some((account) => account.email === email)) throw new Error('Email akun sudah digunakan.');
 
