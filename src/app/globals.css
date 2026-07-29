@@ -170,7 +170,10 @@
   .unit-admin-dialog-title { color: var(--admin-dialog-ink); font-size: clamp(1.4rem, 3vw, 1.85rem); font-weight: 750; letter-spacing: -.035em; line-height: 1.05; overflow-wrap: anywhere; }
   .unit-admin-dialog-description { margin-top: .45rem; color: var(--admin-dialog-muted); font-size: .92rem; font-weight: 500; line-height: 1.45; }
 
-  .unit-admin-form { display: grid; gap: .9rem; margin-top: 1.35rem; }
+  .unit-admin-form { display: grid; gap: .8rem; margin-top: 1rem; }
+  .unit-admin-error { margin: 0; }
+  .unit-admin-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem 1rem; }
+  .unit-admin-field--unit { grid-column: 1 / -1; }
   .unit-admin-field { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: start; gap: .75rem; }
   .unit-admin-field-icon { display: grid; height: 2rem; place-items: center; color: var(--admin-dialog-teal); }
   .unit-admin-field-label { color: var(--admin-dialog-ink); font-size: .9rem; font-weight: 750; line-height: 2rem; }
@@ -236,6 +239,8 @@
     .unit-admin-dialog-emblem { height: 3.5rem; width: 3.5rem; }
     .unit-admin-dialog-emblem svg { height: 2rem; width: 2rem; }
     .unit-admin-field { grid-template-columns: 1.6rem minmax(0, 1fr); gap: .55rem; }
+    .unit-admin-fields { grid-template-columns: 1fr; }
+    .unit-admin-field--unit { grid-column: auto; }
     .unit-admin-actions { flex-direction: column-reverse; }
     .unit-admin-cancel, .unit-admin-submit { width: 100%; }
   }

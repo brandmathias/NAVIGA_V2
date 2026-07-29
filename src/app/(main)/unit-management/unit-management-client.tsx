@@ -200,28 +200,30 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
       </div>
 
       <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-        <DialogContent data-testid="admin-registration" className="unit-admin-dialog max-h-[92dvh] overflow-y-auto">
-          <DialogHeader className="unit-admin-dialog-header">
+        <DialogContent data-testid="admin-registration" className="unit-admin-dialog !max-h-[calc(100dvh-2rem)] !overflow-hidden !p-5 max-sm:!overflow-y-auto sm:!p-6">
+          <DialogHeader className="unit-admin-dialog-header !grid !text-left">
             <span className="unit-admin-dialog-emblem" aria-hidden="true"><ShieldPlus className="h-10 w-10" strokeWidth={1.55} /></span>
             <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">Tambah akun admin unit</DialogTitle><DialogDescription className="unit-admin-dialog-description">Buat akun admin baru untuk mengelola unit.</DialogDescription></div>
           </DialogHeader>
           <form className="unit-admin-form" onSubmit={handleAdminSubmit}>
-            <p aria-live="polite" className="min-h-5 text-sm font-medium text-destructive">{adminError}</p>
-            <div className="unit-admin-field">
-              <span className="unit-admin-field-icon" aria-hidden="true"><Building2 className="h-5 w-5" strokeWidth={1.8} /></span>
-              <div className="min-w-0"><Label htmlFor="admin-unit" className="unit-admin-field-label">Unit terkait <span aria-hidden="true">*</span></Label>
-                <Select name="unitId" value={adminUnitId} onValueChange={setAdminUnitId} required disabled={saving === 'admin' || !units.length}>
-                  <SelectTrigger id="admin-unit" aria-label="Unit terkait" className="unit-admin-select-trigger mt-2"><SelectValue placeholder="Pilih unit terkait" /></SelectTrigger>
-                  <SelectContent className="unit-admin-select-content" position="popper">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item"><span>{unit.name}</span><span>{unit.prefix}</span></SelectItem>)}</SelectContent>
-                </Select>
+            {adminError && <p aria-live="polite" className="unit-admin-error text-sm font-medium text-destructive">{adminError}</p>}
+            <div className="unit-admin-fields">
+              <div className="unit-admin-field unit-admin-field--unit">
+                <span className="unit-admin-field-icon" aria-hidden="true"><Building2 className="h-5 w-5" strokeWidth={1.8} /></span>
+                <div className="min-w-0"><Label htmlFor="admin-unit" className="unit-admin-field-label">Unit terkait <span aria-hidden="true">*</span></Label>
+                  <Select name="unitId" value={adminUnitId} onValueChange={setAdminUnitId} required disabled={saving === 'admin' || !units.length}>
+                    <SelectTrigger id="admin-unit" aria-label="Unit terkait" className="unit-admin-select-trigger mt-2"><SelectValue placeholder="Pilih unit terkait" /></SelectTrigger>
+                    <SelectContent className="unit-admin-select-content" position="popper">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item"><span>{unit.name}</span><span>{unit.prefix}</span></SelectItem>)}</SelectContent>
+                  </Select>
+                </div>
               </div>
+              <AdminFormField icon={UserRound} id="admin-name" name="name" label="Nama admin unit" placeholder="Masukkan nama admin unit" disabled={saving === 'admin'} />
+              <AdminFormField icon={Mail} id="admin-email" name="email" type="email" label="Email akun" placeholder="Masukkan email akun" disabled={saving === 'admin'} />
+              <AdminFormField icon={Phone} id="admin-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" disabled={saving === 'admin'} />
+              <AdminFormField icon={LockKeyhole} id="admin-password" name="password" type={showAdminPassword ? 'text' : 'password'} minLength={8} label="Password awal" placeholder="Masukkan password awal" disabled={saving === 'admin'}>
+                <button type="button" className="unit-admin-password-toggle" onClick={() => setShowAdminPassword((current) => !current)} aria-label={showAdminPassword ? 'Sembunyikan password' : 'Tampilkan password'}>{showAdminPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
+              </AdminFormField>
             </div>
-            <AdminFormField icon={UserRound} id="admin-name" name="name" label="Nama admin unit" placeholder="Masukkan nama admin unit" disabled={saving === 'admin'} />
-            <AdminFormField icon={Mail} id="admin-email" name="email" type="email" label="Email akun" placeholder="Masukkan email akun" disabled={saving === 'admin'} />
-            <AdminFormField icon={Phone} id="admin-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" disabled={saving === 'admin'} />
-            <AdminFormField icon={LockKeyhole} id="admin-password" name="password" type={showAdminPassword ? 'text' : 'password'} minLength={8} label="Password awal" placeholder="Masukkan password awal" disabled={saving === 'admin'}>
-              <button type="button" className="unit-admin-password-toggle" onClick={() => setShowAdminPassword((current) => !current)} aria-label={showAdminPassword ? 'Sembunyikan password' : 'Tampilkan password'}>{showAdminPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
-            </AdminFormField>
             <div className="unit-admin-info"><Info className="h-5 w-5 shrink-0" strokeWidth={1.9} /><p>Akun admin unit akan digunakan untuk mengelola data unit.</p></div>
             <div className="unit-admin-actions"><Button type="button" variant="outline" className="unit-admin-cancel" onClick={() => setIsAdminDialogOpen(false)} disabled={saving === 'admin'}>Batalkan</Button><Button type="submit" className="unit-admin-submit" disabled={saving === 'admin' || !units.length}>{saving === 'admin' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" strokeWidth={1.8} />}{saving === 'admin' ? 'Menyimpan...' : 'Simpan'}</Button></div>
           </form>

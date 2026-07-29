@@ -19,6 +19,10 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(page, /onClick=\{\(\) => setIsAdminDialogOpen\(true\)\}/);
   assert.doesNotMatch(page, /href="\/unit-management\/new\?mode=admin"/);
   assert.match(page, /<Dialog open=\{isAdminDialogOpen\}/);
+  assert.match(page, /unit-admin-dialog-header !grid !text-left/);
+  assert.match(page, /unit-admin-fields/);
+  assert.match(page, /unit-admin-field--unit/);
+  assert.match(page, /adminError && <p/);
   assert.match(page, /Tambah akun admin unit/);
   assert.match(page, /Unit terkait/);
   assert.match(page, /Nama admin unit/);
@@ -51,6 +55,8 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.doesNotMatch(styles, /Full-size admin account modal/);
   assert.match(styles, /width: min\(calc\(100% - 2rem\), 43rem\)/);
   assert.match(styles, /height: 2\.9rem/);
+  assert.match(styles, /\.unit-admin-fields\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(styles, /\.unit-admin-field--unit\s*\{[\s\S]*?grid-column:\s*1\s*\/\s*-1/);
   assert.match(styles, /\.unit-admin-select-trigger\[data-state="open"\]/);
   assert.match(styles, /\.unit-admin-select-content\s*\{/);
   assert.match(styles, /\.unit-admin-select-item\[data-highlighted\]/);
