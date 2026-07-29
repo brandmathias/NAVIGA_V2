@@ -22,6 +22,9 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(page, /Detail akun admin unit/);
   assert.match(page, /<BadgeCheck className="h-10 w-10"/);
   assert.match(page, /Kode unit/);
+  assert.match(page, /unit\.unitCode \|\| formatUnitCodePreview\(unit\.domicile, unit\.prefix\)/);
+  assert.equal((page.match(/font-sans tabular-nums/g) ?? []).length, 4);
+  assert.doesNotMatch(page, /font-mono/);
   assert.match(page, /setIsAdminDialogOpen\(true\)/);
   assert.doesNotMatch(page, /href="\/unit-management\/new\?mode=admin"/);
   assert.match(page, /<Dialog open=\{isAdminDialogOpen\}/);
