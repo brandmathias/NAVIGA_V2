@@ -147,7 +147,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
               </div>
               <div className="unit-hero-actions relative z-10 mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Button asChild className="unit-hero-secondary group h-12 min-w-[178px] rounded-xl px-5"><Link href="/unit-management/new"><Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.7} />Tambah unit</Link></Button>
-                <Button asChild className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5"><Link href="/unit-management/new?mode=admin"><UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />Tambahkan akun</Link></Button>
+                <Button type="button" onClick={() => setIsAdminDialogOpen(true)} className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5"><UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />Tambahkan akun</Button>
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
       </div>
 
       <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-        <DialogContent data-testid="admin-registration" className="unit-admin-dialog max-h-[92dvh] overflow-y-auto p-5 sm:p-7">
+        <DialogContent data-testid="admin-registration" className="unit-admin-dialog max-h-[92dvh] overflow-y-auto">
           <DialogHeader className="unit-admin-dialog-header">
             <span className="unit-admin-dialog-emblem" aria-hidden="true"><ShieldPlus className="h-10 w-10" strokeWidth={1.55} /></span>
             <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">Tambah akun admin unit</DialogTitle><DialogDescription className="unit-admin-dialog-description">Buat akun admin baru untuk mengelola unit.</DialogDescription></div>
@@ -213,8 +213,6 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
             <AdminFormField icon={UserRound} id="admin-name" name="name" label="Nama admin unit" placeholder="Masukkan nama admin unit" disabled={saving === 'admin'} />
             <AdminFormField icon={Mail} id="admin-email" name="email" type="email" label="Email akun" placeholder="Masukkan email akun" disabled={saving === 'admin'} />
             <AdminFormField icon={Phone} id="admin-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" disabled={saving === 'admin'} />
-            <AdminFormField icon={Building2} id="admin-domicile" name="domicile" label="Domisili" placeholder="Masukkan domisili" disabled={saving === 'admin'} />
-            <AdminFormField icon={Building2} id="admin-address" name="address" label="Alamat" placeholder="Masukkan alamat admin" disabled={saving === 'admin'} />
             <AdminFormField icon={LockKeyhole} id="admin-password" name="password" type={showAdminPassword ? 'text' : 'password'} minLength={8} label="Password awal" placeholder="Masukkan password awal" disabled={saving === 'admin'}>
               <button type="button" className="unit-admin-password-toggle" onClick={() => setShowAdminPassword((current) => !current)} aria-label={showAdminPassword ? 'Sembunyikan password' : 'Tampilkan password'}>{showAdminPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
             </AdminFormField>

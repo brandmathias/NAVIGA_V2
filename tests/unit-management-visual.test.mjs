@@ -16,7 +16,17 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /background-size:\s*cover,\s*cover/);
   assert.match(styles, /background-position:\s*center,\s*right 85%/);
   assert.match(page, /<Link href="\/unit-management\/new">/);
-  assert.match(page, /<Link href="\/unit-management\/new\?mode=admin">/);
+  assert.match(page, /onClick=\{\(\) => setIsAdminDialogOpen\(true\)\}/);
+  assert.doesNotMatch(page, /href="\/unit-management\/new\?mode=admin"/);
+  assert.match(page, /<Dialog open=\{isAdminDialogOpen\}/);
+  assert.match(page, /Tambah akun admin unit/);
+  assert.match(page, /Unit terkait/);
+  assert.match(page, /Nama admin unit/);
+  assert.match(page, /Email akun/);
+  assert.match(page, /Nomor telepon/);
+  assert.match(page, /Password awal/);
+  assert.doesNotMatch(page, /id="admin-domicile"/);
+  assert.doesNotMatch(page, /id="admin-address"/);
   assert.match(createPage, /Tambah akun admin unit/);
   assert.match(createPage, /Pilih unit terkait/);
   assert.match(createPage, /<Select name="unitId"/);
