@@ -220,3 +220,58 @@ test('persists unit staff, map link, and every queued unit-admin account togethe
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test('updates a unit and an existing admin account without replacing its password', async () => {
+  const { directory, registry } = await createTestRegistry();
+
+  try {
+    await registry.ensure();
+    const unit = await registry.registerUnit({
+      name: 'Pegadaian Garuda',
+      prefix: '11799',
+      domicile: 'Sulawesi Utara',
+      province: 'Sulawesi Utara',
+      phone: '0431862000',
+      address: 'Jl. Garuda No. 1, Manado',
+      mapUrl: 'https://maps.google.com/?q=Pegadaian+Garuda',
+      managers: [{ name: 'Santi Garuda', nip: '19850110 201001 1 001', phone: '081234567890' }],
+      appraisers: [],
+      admins: [{ name: 'Admin Garuda', email: 'admin.garuda@pegadaian.co.id', phone: '081211111111', password: 'GarudaAdmin*0' }],
+    });
+    const admin = (await registry.listUnitAdmins()).find((candidate) => candidate.email === 'admin.garuda@pegadaian.co.id');
+
+    const updatedUnit = await registry.updateUnit({
+      id: unit.id,
+      name: 'Pegadaian Garuda Bali',
+      prefix: '11801',
+      domicile: 'Bali',
+      province: 'Bali',
+      phone: '0361123456',
+      address: 'Jl. Garuda No. 10, Denpasar',
+      mapUrl: 'https://maps.google.com/?q=Pegadaian+Garuda+Bali',
+      managers: [{ name: 'Santi Bali', nip: '19850110 201001 1 001', phone: '081234567890' }],
+      appraisers: [],
+      admins: [],
+    });
+    const updatedAdmin = await registry.updateUnitAdmin({
+      id: admin.id,
+      unitId: unit.id,
+      name: 'Admin Garuda Bali',
+      email: 'admin.garuda.bali@pegadaian.co.id',
+      phone: '081299999999',
+      password: '',
+    });
+
+    assert.deepEqual(
+      { name: updatedUnit.name, unitCode: updatedUnit.unitCode, province: updatedUnit.province, address: updatedUnit.address },
+      { name: 'Pegadaian Garuda Bali', unitCode: 'CP-DPS-11801', province: 'Bali', address: 'Jl. Garuda No. 10, Denpasar' },
+    );
+    assert.deepEqual(
+      { name: updatedAdmin.name, email: updatedAdmin.email, domicile: updatedAdmin.domicile, phone: updatedAdmin.phone },
+      { name: 'Admin Garuda Bali', email: 'admin.garuda.bali@pegadaian.co.id', domicile: 'Bali', phone: '081299999999' },
+    );
+    assert.equal((await registry.authenticate('admin.garuda.bali@pegadaian.co.id', 'GarudaAdmin*0')).unitCode, 'CP-DPS-11801');
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

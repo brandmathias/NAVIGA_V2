@@ -24,7 +24,7 @@ import {
   UserRound,
   UsersRound,
 } from 'lucide-react';
-import { registerUnitAdminAction } from './actions';
+import { registerUnitAdminAction, updateUnitAdminAction } from './actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,7 +61,7 @@ type UnitAdmin = {
   unitId: string;
   unitName: string;
   unitPrefix: string;
-  domicile: string;
+  unitCode: string;
   phone: string;
   address: string;
 };
@@ -91,6 +91,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
   const [isAdminDialogOpen, setIsAdminDialogOpen] = React.useState(openAdminDialog);
   const [adminError, setAdminError] = React.useState<string | null>(null);
   const [adminUnitId, setAdminUnitId] = React.useState('');
+  const [editingAdmin, setEditingAdmin] = React.useState<UnitAdmin | null>(null);
   const [showAdminPassword, setShowAdminPassword] = React.useState(false);
   const [unitQuery, setUnitQuery] = React.useState('');
   const [adminQuery, setAdminQuery] = React.useState('');
@@ -105,7 +106,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
     [unit.name, unit.prefix, unit.domicile, unit.phone, unit.address].join(' ').toLowerCase().includes(unitQuery.trim().toLowerCase()),
   );
   const visibleAdmins = admins.filter((admin) =>
-    [admin.name, admin.unitName, admin.domicile, admin.phone, admin.email].join(' ').toLowerCase().includes(adminQuery.trim().toLowerCase()),
+    [admin.name, admin.unitName, admin.unitCode, admin.phone, admin.email].join(' ').toLowerCase().includes(adminQuery.trim().toLowerCase()),
   );
 
   const handleAdminSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -114,24 +115,39 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
     setAdminError(null);
     setSaving('admin');
     try {
-      const admin = await registerUnitAdminAction(new FormData(form)) as UnitAdmin;
-      setAdmins((current) => [...current, admin].sort((left, right) => left.name.localeCompare(right.name)));
+      const admin = await (editingAdmin ? updateUnitAdminAction : registerUnitAdminAction)(new FormData(form)) as UnitAdmin;
+      setAdmins((current) => (editingAdmin ? current.map((candidate) => candidate.id === admin.id ? admin : candidate) : [...current, admin]).sort((left, right) => left.name.localeCompare(right.name)));
       form.reset();
       setAdminUnitId('');
+      setEditingAdmin(null);
       setShowAdminPassword(false);
       setIsAdminDialogOpen(false);
-      toast({ title: 'Akun admin ditambahkan', description: `${admin.name} dapat masuk untuk ${admin.unitName}.`, tone: 'success' });
+      toast({ title: editingAdmin ? 'Akun admin diperbarui' : 'Akun admin ditambahkan', description: `${admin.name} dapat masuk untuk ${admin.unitName}.`, tone: 'success' });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Periksa data akun dan coba lagi.';
       setAdminError(message);
-      toast({ title: 'Akun tidak dapat ditambahkan', description: message, variant: 'destructive', tone: 'error' });
+      toast({ title: editingAdmin ? 'Akun tidak dapat diperbarui' : 'Akun tidak dapat ditambahkan', description: message, variant: 'destructive', tone: 'error' });
     } finally {
       setSaving(null);
     }
   };
 
-  const showUnit = (unit: Unit) => toast({ title: unit.name, description: `${unit.prefix} · ${missingValue(unit.address)}`, tone: 'info' });
-  const showAdmin = (admin: UnitAdmin) => toast({ title: admin.name, description: `${admin.unitName} · ${admin.email}`, tone: 'info' });
+  const showUnit = (unit: Unit) => router.push(`/unit-management/${unit.id}`);
+  const showAdmin = (admin: UnitAdmin) => {
+    setEditingAdmin(admin);
+    setAdminUnitId(admin.unitId);
+    setAdminError(null);
+    setShowAdminPassword(false);
+    setIsAdminDialogOpen(true);
+  };
+
+  const closeAdminDialog = () => {
+    setIsAdminDialogOpen(false);
+    setEditingAdmin(null);
+    setAdminUnitId('');
+    setAdminError(null);
+    setShowAdminPassword(false);
+  };
 
   return (
     <main className="unit-management-page flex flex-1 flex-col gap-3 px-3 py-4 sm:gap-4 sm:px-5 sm:py-5 xl:px-6">
@@ -155,7 +171,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
               </div>
               <div className="unit-hero-actions relative z-10 mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Button asChild className="unit-hero-secondary group h-12 min-w-[178px] rounded-xl px-5"><Link href="/unit-management/new"><Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.7} />Tambah unit</Link></Button>
-                <Button type="button" onClick={() => setIsAdminDialogOpen(true)} className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5"><UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />Tambahkan akun</Button>
+                <Button type="button" onClick={() => { setEditingAdmin(null); setAdminError(null); setIsAdminDialogOpen(true); }} className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5"><UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />Tambahkan akun</Button>
               </div>
             </div>
           </div>
@@ -190,8 +206,8 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
             </div>
             <div className="overflow-x-auto px-3 pb-3 pt-3 sm:px-4 sm:pb-4">
               <table className="w-full min-w-[920px] overflow-hidden rounded-xl border border-[#e0ecee] text-left text-xs">
-                <thead className="bg-[#f8fbfb] font-semibold text-[#496171]"><tr><th className="px-3 py-3">Nama admin</th><th className="px-3 py-3">Unit terkait</th><th className="px-3 py-3">Domisili</th><th className="px-3 py-3">Nomor telepon</th><th className="px-3 py-3">Email akun</th><th className="px-3 py-3 text-right">Aksi</th></tr></thead>
-                <tbody className="divide-y divide-[#e6f0f1] bg-white text-[#19374b]">{visibleAdmins.map((admin) => <tr key={admin.id} className="transition-colors duration-150 hover:bg-[#f4fbfa]"><td className="px-3 py-3 font-semibold">{admin.name}</td><td className="px-3 py-3">{admin.unitName}</td><td className="px-3 py-3">{missingValue(admin.domicile)}</td><td className="px-3 py-3">{missingValue(admin.phone)}</td><td className="px-3 py-3 text-[#526b7a]">{admin.email}</td><td className="px-3 py-3 text-right"><button type="button" onClick={() => showAdmin(admin)} className="inline-flex items-center gap-1 whitespace-nowrap font-semibold text-primary transition-transform duration-150 hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">Lihat detail <ChevronRight className="h-4 w-4" /></button></td></tr>)}{!visibleAdmins.length && <tr><td colSpan={6} className="px-4 py-10 text-center text-sm text-muted-foreground">Akun admin tidak ditemukan.</td></tr>}</tbody>
+                <thead className="bg-[#f8fbfb] font-semibold text-[#496171]"><tr><th className="px-3 py-3">Nama admin</th><th className="px-3 py-3">Unit terkait</th><th className="px-3 py-3">Kode unit</th><th className="px-3 py-3">Nomor telepon</th><th className="px-3 py-3">Email akun</th><th className="px-3 py-3 text-right">Aksi</th></tr></thead>
+                <tbody className="divide-y divide-[#e6f0f1] bg-white text-[#19374b]">{visibleAdmins.map((admin) => <tr key={admin.id} className="transition-colors duration-150 hover:bg-[#f4fbfa]"><td className="px-3 py-3 font-semibold">{admin.name}</td><td className="px-3 py-3">{admin.unitName}</td><td className="px-3 py-3 font-mono tabular-nums">{admin.unitCode || admin.unitPrefix}</td><td className="px-3 py-3">{missingValue(admin.phone)}</td><td className="px-3 py-3 text-[#526b7a]">{admin.email}</td><td className="px-3 py-3 text-right"><button type="button" onClick={() => showAdmin(admin)} className="inline-flex items-center gap-1 whitespace-nowrap font-semibold text-primary transition-transform duration-150 hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">Lihat detail <ChevronRight className="h-4 w-4" /></button></td></tr>)}{!visibleAdmins.length && <tr><td colSpan={6} className="px-4 py-10 text-center text-sm text-muted-foreground">Akun admin tidak ditemukan.</td></tr>}</tbody>
               </table>
             </div>
             <p className="px-5 pb-4 text-xs text-muted-foreground">Menampilkan 1–{visibleAdmins.length} dari {admins.length} akun admin</p>
@@ -201,13 +217,14 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
         <aside className="naviga-entry naviga-entry-delay-3 naviga-panel h-fit p-5 sm:p-6"><div className="flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e9faf7] text-primary"><UsersRound className="h-5 w-5" strokeWidth={1.6} /></span><h2 className="text-base font-bold tracking-tight text-[#102f45]">Ringkasan</h2></div><div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl border border-[#dcebed] bg-[#fbfefe] p-4 text-center"><p className="text-3xl font-bold tracking-tight text-primary">{units.length}</p><p className="mt-1 text-xs text-[#607786]">Unit terdaftar</p></div><div className="rounded-xl border border-[#dcebed] bg-[#fbfefe] p-4 text-center"><p className="text-3xl font-bold tracking-tight text-primary">{admins.length}</p><p className="mt-1 text-xs text-[#607786]">Akun admin</p></div></div><div className="mt-6 border-t border-[#e2eeee] pt-6"><h3 className="text-base font-bold text-[#102f45]">Informasi cepat</h3><ul className="mt-4 space-y-4 text-sm leading-5 text-[#526b7a]"><li className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Setiap unit dibatasi oleh 5 digit awal kode unit atau nomor angsuran.</li><li className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Akun unit hanya bersifat read-only sesuai cakupan unit.</li><li className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Kelola akun admin untuk memberikan akses sesuai unit.</li></ul></div><div className="mt-6 rounded-xl border border-[#cbe7e4] bg-[#f0faf9] p-4 text-sm leading-5 text-[#456675]"><div className="flex gap-3"><ShieldCheck className="h-6 w-6 shrink-0 text-primary" strokeWidth={1.6} /><p>Pastikan data unit dan akun selalu terbaru untuk keamanan sistem.</p></div></div></aside>
       </div>
 
-      <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
+      <Dialog open={isAdminDialogOpen} onOpenChange={(open) => open ? setIsAdminDialogOpen(true) : closeAdminDialog()}>
         <DialogContent data-testid="admin-registration" className="unit-admin-dialog !max-h-[calc(100dvh-2rem)] !max-w-[47rem] !overflow-hidden !p-5 max-sm:!overflow-y-auto sm:!p-6">
           <DialogHeader className="unit-admin-dialog-header !grid !text-left">
-            <span className="unit-admin-dialog-emblem" aria-hidden="true"><ShieldPlus className="h-10 w-10" strokeWidth={1.55} /></span>
-            <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">Tambah akun admin unit</DialogTitle><DialogDescription className="unit-admin-dialog-description">Buat akun admin baru untuk mengelola unit.</DialogDescription></div>
+            <span className="unit-admin-dialog-emblem" aria-hidden="true">{editingAdmin ? <UserRound className="h-10 w-10" strokeWidth={1.55} /> : <ShieldPlus className="h-10 w-10" strokeWidth={1.55} />}</span>
+            <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">{editingAdmin ? 'Edit akun admin unit' : 'Tambah akun admin unit'}</DialogTitle><DialogDescription className="unit-admin-dialog-description">{editingAdmin ? 'Perbarui data akun untuk mengelola unit terkait.' : 'Buat akun admin baru untuk mengelola unit.'}</DialogDescription></div>
           </DialogHeader>
-          <form className="unit-admin-form" onSubmit={handleAdminSubmit}>
+          <form key={editingAdmin?.id ?? 'new'} className="unit-admin-form" onSubmit={handleAdminSubmit}>
+            {editingAdmin && <input type="hidden" name="id" value={editingAdmin.id} />}
             {adminError && <p aria-live="polite" className="unit-admin-error text-sm font-medium text-destructive">{adminError}</p>}
             <div className="unit-admin-fields">
               <div className="unit-admin-field unit-admin-field--unit">
@@ -219,15 +236,15 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
                   </Select>
                 </div>
               </div>
-              <AdminFormField icon={UserRound} id="admin-name" name="name" label="Nama admin unit" placeholder="Masukkan nama admin unit" disabled={saving === 'admin'} />
-              <AdminFormField icon={Mail} id="admin-email" name="email" type="email" label="Email akun" placeholder="Masukkan email akun" disabled={saving === 'admin'} />
-              <AdminFormField icon={Phone} id="admin-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" disabled={saving === 'admin'} />
-              <AdminFormField icon={LockKeyhole} id="admin-password" name="password" type={showAdminPassword ? 'text' : 'password'} minLength={8} label="Password awal" placeholder="Masukkan password awal" disabled={saving === 'admin'}>
+              <AdminFormField icon={UserRound} id="admin-name" name="name" label="Nama admin unit" placeholder="Masukkan nama admin unit" defaultValue={editingAdmin?.name} disabled={saving === 'admin'} />
+              <AdminFormField icon={Mail} id="admin-email" name="email" type="email" label="Email akun" placeholder="Masukkan email akun" defaultValue={editingAdmin?.email} disabled={saving === 'admin'} />
+              <AdminFormField icon={Phone} id="admin-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" defaultValue={editingAdmin?.phone} disabled={saving === 'admin'} />
+              <AdminFormField icon={LockKeyhole} id="admin-password" name="password" type={showAdminPassword ? 'text' : 'password'} minLength={8} required={!editingAdmin} label={editingAdmin ? 'Password baru (opsional)' : 'Password awal'} placeholder={editingAdmin ? 'Kosongkan jika tidak diubah' : 'Masukkan password awal'} disabled={saving === 'admin'}>
                 <button type="button" className="unit-admin-password-toggle" onClick={() => setShowAdminPassword((current) => !current)} aria-label={showAdminPassword ? 'Sembunyikan password' : 'Tampilkan password'}>{showAdminPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
               </AdminFormField>
             </div>
             <div className="unit-admin-info"><Info className="h-5 w-5 shrink-0" strokeWidth={1.9} /><p>Akun admin unit akan digunakan untuk mengelola data unit.</p></div>
-            <div className="unit-admin-actions"><Button type="button" variant="outline" className="unit-admin-cancel" onClick={() => setIsAdminDialogOpen(false)} disabled={saving === 'admin'}>Batalkan</Button><Button type="submit" className="unit-admin-submit" disabled={saving === 'admin' || !units.length}>{saving === 'admin' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" strokeWidth={1.8} />}{saving === 'admin' ? 'Menyimpan...' : 'Simpan'}</Button></div>
+            <div className="unit-admin-actions"><Button type="button" variant="outline" className="unit-admin-cancel" onClick={closeAdminDialog} disabled={saving === 'admin'}>Batalkan</Button><Button type="submit" className="unit-admin-submit" disabled={saving === 'admin' || !units.length}>{saving === 'admin' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" strokeWidth={1.8} />}{saving === 'admin' ? 'Menyimpan...' : editingAdmin ? 'Simpan perubahan' : 'Simpan'}</Button></div>
           </form>
         </DialogContent>
       </Dialog>

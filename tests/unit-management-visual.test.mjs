@@ -16,7 +16,12 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /background-size:\s*cover,\s*cover/);
   assert.match(styles, /background-position:\s*center,\s*right 85%/);
   assert.match(page, /<Link href="\/unit-management\/new">/);
-  assert.match(page, /onClick=\{\(\) => setIsAdminDialogOpen\(true\)\}/);
+  assert.match(page, /router\.push\(`\/unit-management\/\$\{unit\.id\}`\)/);
+  assert.match(page, /updateUnitAdminAction/);
+  assert.match(page, /Edit akun admin unit/);
+  assert.match(page, /<UserRound className="h-10 w-10"/);
+  assert.match(page, /Kode unit/);
+  assert.match(page, /setIsAdminDialogOpen\(true\)/);
   assert.doesNotMatch(page, /href="\/unit-management\/new\?mode=admin"/);
   assert.match(page, /<Dialog open=\{isAdminDialogOpen\}/);
   assert.match(page, /unit-admin-dialog-header !grid !text-left/);
@@ -41,6 +46,11 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(createPage, /name="domicile" value=\{province\}/);
   assert.match(createPage, /Terbentuk otomatis dari domisili dan kode unit 5 digit\./);
   assert.match(createPage, /router\.push\('\/unit-management'\)/);
+  assert.match(createPage, /updateUnitAction/);
+  assert.match(createPage, /mode: 'unit' \| 'admin' \| 'edit'/);
+  assert.match(createPage, /Detail Unit/);
+  assert.doesNotMatch(createPage, /Pencil/);
+  assert.match(createPage, /Simpan perubahan/);
   assert.match(createPage, /unit-reference-unit-card/);
   assert.match(createPage, /Pengelola Unit/);
   assert.match(createPage, /Penaksir Unit/);

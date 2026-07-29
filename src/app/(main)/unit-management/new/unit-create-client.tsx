@@ -10,11 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { INDONESIAN_PROVINCES, formatUnitCodePreview } from '@/lib/unit-code-client';
-import { registerUnitAction, registerUnitAdminAction } from '../actions';
+import { registerUnitAction, registerUnitAdminAction, updateUnitAction } from '../actions';
 
-type Unit = { id: string; name: string; prefix: string; unitCode: string };
 type Person = { name: string; nip: string; phone: string };
 type Admin = { name: string; email: string; phone: string; password: string };
+type Unit = { id: string; name: string; prefix: string; unitCode: string; domicile: string; province: string; phone: string; address: string; mapUrl: string; managers: Person[]; appraisers: Person[] };
 type DraftPerson = Person;
 type DraftAdmin = Admin;
 
@@ -46,14 +46,14 @@ function PersonCard({ title, Icon, actionLabel, draft, setDraft, people, setPeop
   </section>;
 }
 
-function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; error: string; setError: React.Dispatch<React.SetStateAction<string>>; submit: (event: React.FormEvent<HTMLFormElement>) => Promise<void> }) {
-  const [prefix, setPrefix] = React.useState('');
-  const [province, setProvince] = React.useState('');
+function UnitCreateForm({ unit, saving, error, setError, submit }: { unit?: Unit; saving: boolean; error: string; setError: React.Dispatch<React.SetStateAction<string>>; submit: (event: React.FormEvent<HTMLFormElement>) => Promise<void> }) {
+  const [prefix, setPrefix] = React.useState(unit?.prefix ?? '');
+  const [province, setProvince] = React.useState(unit?.province || unit?.domicile || '');
   const [managerDraft, setManagerDraft] = React.useState<DraftPerson>({ name: '', nip: '', phone: '' });
   const [appraiserDraft, setAppraiserDraft] = React.useState<DraftPerson>({ name: '', nip: '', phone: '' });
   const [adminDraft, setAdminDraft] = React.useState<DraftAdmin>({ name: '', email: '', phone: '', password: '' });
-  const [managers, setManagers] = React.useState<Person[]>([]);
-  const [appraisers, setAppraisers] = React.useState<Person[]>([]);
+  const [managers, setManagers] = React.useState<Person[]>(unit?.managers ?? []);
+  const [appraisers, setAppraisers] = React.useState<Person[]>(unit?.appraisers ?? []);
   const [admins, setAdmins] = React.useState<Admin[]>([]);
   const [showPassword, setShowPassword] = React.useState(false);
   const unitCode = formatUnitCodePreview(province, prefix);
@@ -73,7 +73,7 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
   }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    if (!admins.length) {
+    if (!unit && !admins.length) {
       event.preventDefault();
       setError('Tambahkan minimal satu akun admin unit sebelum menyimpan.');
       return;
@@ -86,12 +86,12 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
     <section className="unit-reference-card unit-reference-unit-card naviga-entry">
       <div className="unit-reference-title"><Building2 /><h2>Informasi Unit</h2></div>
       <div className="unit-reference-unit-grid">
-        <Field id="unit-name" name="name" label="Nama unit" placeholder="Masukkan nama unit" disabled={saving} />
+        <Field id="unit-name" name="name" label="Nama unit" placeholder="Masukkan nama unit" defaultValue={unit?.name} disabled={saving} />
         <Field id="unit-prefix" name="prefix" label="Kode unit" placeholder="Masukkan kode unit" inputMode="numeric" pattern="[0-9]{5}" maxLength={5} value={prefix} onChange={(event) => setPrefix(event.target.value.replace(/\D/g, '').slice(0, 5))} disabled={saving} />
         <div className="unit-reference-field"><Label>Domisili <span>*</span></Label><Select name="province" value={province} onValueChange={setProvince} required disabled={saving}><SelectTrigger aria-label="Domisili" className="unit-reference-select"><SelectValue placeholder="Pilih domisili" /></SelectTrigger><SelectContent className="unit-admin-select-content">{INDONESIAN_PROVINCES.map((item) => <SelectItem key={item} value={item} className="unit-admin-select-item">{item}</SelectItem>)}</SelectContent></Select></div>
-        <Field id="unit-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" disabled={saving} />
-        <div className="unit-reference-field unit-reference-address"><Label htmlFor="unit-address">Alamat <span>*</span></Label><textarea id="unit-address" name="address" required placeholder="Masukkan alamat lengkap unit" className="unit-reference-textarea" disabled={saving} /></div>
-        <Field id="unit-map" name="mapUrl" label="Link Google Maps Alamat" placeholder="Masukkan link Google Maps alamat unit" type="url" disabled={saving} />
+        <Field id="unit-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" defaultValue={unit?.phone} disabled={saving} />
+        <div className="unit-reference-field unit-reference-address"><Label htmlFor="unit-address">Alamat <span>*</span></Label><textarea id="unit-address" name="address" required placeholder="Masukkan alamat lengkap unit" defaultValue={unit?.address} className="unit-reference-textarea" disabled={saving} /></div>
+        <Field id="unit-map" name="mapUrl" label="Link Google Maps Alamat" placeholder="Masukkan link Google Maps alamat unit" type="url" defaultValue={unit?.mapUrl} disabled={saving} />
         <div className="unit-code-preview"><span>Kode tampilan unit</span><strong>{unitCode || 'CP-XXX-00000'}</strong><small>Terbentuk otomatis dari domisili dan kode unit 5 digit.</small></div>
       </div>
     </section>
@@ -111,8 +111,8 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
       </div>
       <div className="unit-reference-table-wrap"><table className="unit-reference-table unit-reference-admin-table"><thead><tr><th>Nama admin unit</th><th>Email akun</th><th>Nomor telepon</th><th>Terakhir diperbarui</th><th aria-label="Aksi">Aksi</th></tr></thead><tbody>{admins.length ? admins.map((admin) => <tr key={admin.email}><td>{admin.name}</td><td>{admin.email}</td><td>{admin.phone}</td><td>Belum disimpan</td><td><button type="button" className="unit-reference-more" onClick={() => setAdmins((current) => current.filter((candidate) => candidate !== admin))} aria-label={`Hapus ${admin.name}`} title={`Hapus ${admin.name}`}><MoreVertical /></button></td></tr>) : <EmptyRows colSpan={5} message="Belum ada akun admin unit." />}</tbody></table></div>
     </section>
-    <input type="hidden" name="domicile" value={province} /><input type="hidden" name="managers" value={JSON.stringify(managers)} /><input type="hidden" name="appraisers" value={JSON.stringify(appraisers)} /><input type="hidden" name="admins" value={JSON.stringify(admins)} />
-    <footer className="unit-reference-footer"><Button type="submit" className="unit-reference-save" disabled={saving}>{saving ? <Loader2 className="animate-spin" /> : <Save />}{saving ? 'Menyimpan...' : 'Simpan unit'}</Button><Button asChild type="button" variant="outline" className="unit-reference-cancel" aria-disabled={saving}><Link href="/unit-management">Batal</Link></Button></footer>
+    {unit && <input type="hidden" name="id" value={unit.id} />}<input type="hidden" name="domicile" value={province} /><input type="hidden" name="managers" value={JSON.stringify(managers)} /><input type="hidden" name="appraisers" value={JSON.stringify(appraisers)} /><input type="hidden" name="admins" value={JSON.stringify(admins)} />
+    <footer className="unit-reference-footer"><Button type="submit" className="unit-reference-save" disabled={saving}>{saving ? <Loader2 className="animate-spin" /> : <Save />}{saving ? 'Menyimpan...' : unit ? 'Simpan perubahan' : 'Simpan unit'}</Button><Button asChild type="button" variant="outline" className="unit-reference-cancel" aria-disabled={saving}><Link href="/unit-management">Batal</Link></Button></footer>
   </form>;
 }
 
@@ -122,16 +122,17 @@ function AdminOnlyForm({ units, saving, submit }: { units: Unit[]; saving: boole
   return <form onSubmit={submit} className="unit-reference-form"><section className="unit-reference-card"><div className="unit-reference-title"><BadgeCheck /><h2>Tambah akun admin unit</h2></div><div className="unit-reference-admin-inputs mt-5"><div className="unit-reference-field"><Label>Unit terkait <span>*</span></Label><Select name="unitId" value={unitId} onValueChange={setUnitId} required disabled={saving || !units.length}><SelectTrigger className="unit-reference-select"><SelectValue placeholder="Pilih unit terkait" /></SelectTrigger><SelectContent className="unit-admin-select-content">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item">{unit.name} — {unit.unitCode || unit.prefix}</SelectItem>)}</SelectContent></Select></div><Field id="admin-only-name" name="name" label="Nama admin unit" placeholder="Masukkan nama admin" disabled={saving} /><Field id="admin-only-email" name="email" label="Email akun" type="email" placeholder="admin@pegadaian.co.id" disabled={saving} /><Field id="admin-only-phone" name="phone" label="Nomor telepon" placeholder="081234567890" disabled={saving} /><Field id="admin-only-password" name="password" label="Password awal" type={showPassword ? 'text' : 'password'} minLength={8} placeholder="Minimal 8 karakter" disabled={saving}>{<button type="button" className="unit-admin-password-toggle" onClick={() => setShowPassword((current) => !current)}>{showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}</button>}</Field></div></section><footer className="unit-reference-footer"><Button type="submit" className="unit-reference-save" disabled={saving || !unitId}><Save />Simpan akun</Button><Button asChild type="button" variant="outline" className="unit-reference-cancel"><Link href="/unit-management">Batal</Link></Button></footer></form>;
 }
 
-export default function UnitCreateClient({ units, mode }: { units: Unit[]; mode: 'unit' | 'admin' }) {
+export default function UnitCreateClient({ units, mode, unit }: { units: Unit[]; mode: 'unit' | 'admin' | 'edit'; unit?: Unit }) {
   const router = useRouter();
   const { toast } = useToast();
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState('');
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(''); setSaving(true);
-    try { const formData = new FormData(event.currentTarget); if (mode === 'unit') await registerUnitAction(formData); else await registerUnitAdminAction(formData); toast({ title: mode === 'unit' ? 'Unit ditambahkan' : 'Akun admin ditambahkan', description: 'Data siap digunakan oleh dashboard unit.', tone: 'success' }); router.push('/unit-management'); router.refresh(); }
+    try { const formData = new FormData(event.currentTarget); if (mode === 'unit') await registerUnitAction(formData); else if (mode === 'edit') await updateUnitAction(formData); else await registerUnitAdminAction(formData); toast({ title: mode === 'edit' ? 'Unit diperbarui' : mode === 'unit' ? 'Unit ditambahkan' : 'Akun admin ditambahkan', description: 'Data siap digunakan oleh dashboard unit.', tone: 'success' }); router.push('/unit-management'); router.refresh(); }
     catch (reason) { const message = reason instanceof Error ? reason.message : 'Periksa data dan coba lagi.'; setError(message); toast({ title: 'Data tidak dapat disimpan', description: message, variant: 'destructive', tone: 'error' }); }
     finally { setSaving(false); }
   }
-  return <main className="unit-reference-page"><header className="unit-reference-heading"><div className="unit-reference-breadcrumb"><Link href="/unit-management"><ChevronLeft />Manajemen Unit</Link><span>/</span><strong>{mode === 'unit' ? 'Tambah Unit' : 'Tambah akun'}</strong></div><div className="unit-reference-hero"><span><ShieldPlus /></span><div><h1>{mode === 'unit' ? 'Tambah Unit' : 'Tambah akun admin unit'}</h1><p>{mode === 'unit' ? 'Lengkapi informasi unit baru untuk menambah data ke sistem.' : 'Buat akun admin baru untuk mengelola unit terkait.'}</p></div></div></header>{mode === 'unit' ? <UnitCreateForm saving={saving} error={error} setError={setError} submit={submit} /> : <AdminOnlyForm units={units} saving={saving} submit={submit} />}</main>;
+  const editing = mode === 'edit';
+  return <main className="unit-reference-page"><header className="unit-reference-heading"><div className="unit-reference-breadcrumb"><Link href="/unit-management"><ChevronLeft />Manajemen Unit</Link><span>/</span><strong>{editing ? 'Detail Unit' : mode === 'unit' ? 'Tambah Unit' : 'Tambah akun'}</strong></div><div className="unit-reference-hero"><span>{editing ? <Building2 /> : <ShieldPlus />}</span><div><h1>{editing ? 'Detail Unit' : mode === 'unit' ? 'Tambah Unit' : 'Tambah akun admin unit'}</h1>{!editing && <p>{mode === 'unit' ? 'Lengkapi informasi unit baru untuk menambah data ke sistem.' : 'Buat akun admin baru untuk mengelola unit terkait.'}</p>}</div></div></header>{mode === 'admin' ? <AdminOnlyForm units={units} saving={saving} submit={submit} /> : <UnitCreateForm unit={unit} saving={saving} error={error} setError={setError} submit={submit} />}</main>;
 }

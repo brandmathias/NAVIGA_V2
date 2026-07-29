@@ -355,7 +355,67 @@ function createUnitRegistry({ filePath, bootstrap }) {
     return task;
   }
 
-  return { ensure, authenticate, getActiveUnitByPrefix, listUnits, listUnitAdmins, registerUnit, registerUnitAdmin };
+  function updateUnit(input) {
+    const task = mutationQueue.then(async () => {
+      await ensure();
+      const registry = await readRegistry();
+      const id = normalizeText(input?.id);
+      const unit = registry.units.find((candidate) => candidate.id === id && candidate.active);
+      const name = normalizeText(input?.name);
+      const prefix = validatePrefix(input?.prefix);
+      const domicile = normalizeText(input?.domicile);
+      const province = validateProvince(input?.province);
+      const phone = normalizeText(input?.phone);
+      const address = normalizeText(input?.address);
+      const mapUrl = normalizeText(input?.mapUrl);
+      const managers = normalizePeople(input?.managers, 'pengelola unit');
+      const appraisers = normalizePeople(input?.appraisers, 'penaksir unit');
+      const admins = Array.isArray(input?.admins) && input.admins.length ? normalizeAdmins(input.admins, { unitName: name }) : [];
+
+      if (!unit) throw new Error('Unit aktif tidak ditemukan.');
+      if (!name || !domicile) throw new Error('Nama unit dan domisili wajib diisi.');
+      if (registry.units.some((candidate) => candidate.id !== unit.id && candidate.prefix === prefix)) throw new Error('Prefix SBG sudah digunakan.');
+      if (admins.some((admin) => registry.accounts.some((account) => account.email === admin.email))) throw new Error('Email akun sudah digunakan.');
+
+      const updatedAt = new Date().toISOString();
+      Object.assign(unit, { name, prefix, domicile, province, unitCode: formatUnitCode(domicile, prefix), phone, address, mapUrl, managers, appraisers, updatedAt });
+      registry.accounts.filter((account) => account.role === 'unit' && account.unitId === unit.id).forEach((account) => Object.assign(account, { domicile, address, updatedAt }));
+      registry.accounts.push(...admins.map((admin) => ({ id: randomUUID(), name: admin.name, email: admin.email, passwordHash: hashPassword(admin.password), role: 'unit', unitId: unit.id, domicile, phone: admin.phone, address, active: true, createdAt: updatedAt })));
+      await writeRegistry(registry);
+      return toPublicUnit(registry, unit);
+    });
+    mutationQueue = task.catch(() => undefined);
+    return task;
+  }
+
+  function updateUnitAdmin(input) {
+    const task = mutationQueue.then(async () => {
+      await ensure();
+      const registry = await readRegistry();
+      const id = normalizeText(input?.id);
+      const account = registry.accounts.find((candidate) => candidate.id === id && candidate.role === 'unit' && candidate.active);
+      const unitId = normalizeText(input?.unitId);
+      const unit = registry.units.find((candidate) => candidate.id === unitId && candidate.active);
+      const name = normalizeText(input?.name);
+      const email = normalizeEmail(input?.email);
+      const phone = normalizeText(input?.phone);
+      const password = String(input?.password ?? '');
+
+      if (!account) throw new Error('Akun admin aktif tidak ditemukan.');
+      if (!unit) throw new Error('Unit aktif tidak ditemukan.');
+      if (!name || !email) throw new Error('Nama dan email akun admin wajib diisi.');
+      if (registry.accounts.some((candidate) => candidate.id !== account.id && candidate.email === email)) throw new Error('Email akun sudah digunakan.');
+      if (password && password.length < 8) throw new Error('Password minimal 8 karakter.');
+
+      Object.assign(account, { name, email, unitId: unit.id, domicile: unit.domicile, phone, address: unit.address, ...(password ? { passwordHash: hashPassword(password) } : {}), updatedAt: new Date().toISOString() });
+      await writeRegistry(registry);
+      return toPublicAdmin(registry, account);
+    });
+    mutationQueue = task.catch(() => undefined);
+    return task;
+  }
+
+  return { ensure, authenticate, getActiveUnitByPrefix, listUnits, listUnitAdmins, registerUnit, registerUnitAdmin, updateUnit, updateUnitAdmin };
 }
 
 function bootstrapFromEnvironment() {
@@ -395,4 +455,6 @@ module.exports = {
   listUnitAdmins: defaultRegistry.listUnitAdmins,
   registerUnit: defaultRegistry.registerUnit,
   registerUnitAdmin: defaultRegistry.registerUnitAdmin,
+  updateUnit: defaultRegistry.updateUnit,
+  updateUnitAdmin: defaultRegistry.updateUnitAdmin,
 };

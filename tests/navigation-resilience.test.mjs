@@ -10,7 +10,7 @@ test('unit-management navigation remains available before client hydration', asy
   ]);
 
   assert.match(management, /<Link href="\/unit-management\/new"/);
-  assert.match(management, /onClick=\{\(\) => setIsAdminDialogOpen\(true\)\}/);
+  assert.match(management, /setIsAdminDialogOpen\(true\)/);
   assert.doesNotMatch(management, /href="\/unit-management\/new\?mode=admin"/);
   assert.match(newPage, /redirect\('\/unit-management\?dialog=admin'\)/);
   assert.match(management, /openAdminDialog = false/);

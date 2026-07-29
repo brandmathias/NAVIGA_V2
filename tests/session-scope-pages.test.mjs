@@ -27,11 +27,15 @@ test('unit management is guarded server-side for Superadmin sessions', async () 
   assert.match(pageSource, /getSession/);
   assert.match(pageSource, /session\.role !== 'superadmin'/);
   assert.match(pageSource, /listUnits/);
+  assert.match(pageSource, /listUnitAdmins/);
   assert.match(actionSource, /requireSession/);
   assert.match(actionSource, /session\.role !== 'superadmin'/);
   assert.match(actionSource, /registerUnit/);
+  assert.match(actionSource, /registerUnitAdmin/);
+  assert.match(actionSource, /updateUnit/);
+  assert.match(actionSource, /updateUnitAdmin/);
   assert.match(clientSource, /aria-live="polite"/);
-  assert.match(clientSource, /const \[isSaving, setIsSaving\]/);
+  assert.match(clientSource, /const \[saving, setSaving\]/);
 });
 
 test('broadcast tables do not render follow-up status controls', async () => {
