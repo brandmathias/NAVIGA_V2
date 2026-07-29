@@ -1,0 +1,36 @@
+import os
+from pathlib import Path
+
+from playwright.sync_api import expect, sync_playwright
+
+
+BASE_URL = os.environ.get('NAVIGA_TEST_BASE_URL', 'http://127.0.0.1:3000')
+
+
+def read_local_env(name: str) -> str:
+    for line in Path('.env.local').read_text(encoding='utf-8').splitlines():
+        if line.startswith(f'{name}='):
+            return line.split('=', 1)[1]
+    raise RuntimeError(f'{name} tidak ditemukan di .env.local')
+
+
+with sync_playwright() as playwright:
+    browser = playwright.chromium.launch(headless=True)
+
+    for width in (320, 375, 414, 768):
+        page = browser.new_page(viewport={'width': width, 'height': 900})
+        page.goto(f'{BASE_URL}/unit-management')
+        page.wait_for_url('**/login')
+        page.get_by_label('Email').fill(read_local_env('NAVIGA_SUPERADMIN_EMAIL'))
+        page.locator('input[type="password"]').fill(read_local_env('NAVIGA_SUPERADMIN_PASSWORD'))
+        page.get_by_role('button', name='Log in').click()
+        page.wait_for_url('**/dashboard')
+        page.goto(f'{BASE_URL}/unit-management')
+        page.get_by_role('heading', name='Manajemen Unit').wait_for()
+        expect(page.get_by_text('Pegadaian Wanea')).to_be_visible()
+        expect(page.get_by_text('Pegadaian Ranotana')).to_be_visible()
+        expect(page.get_by_role('button', name='Buat unit dan akun')).to_be_visible()
+        assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+        page.close()
+
+    browser.close()
