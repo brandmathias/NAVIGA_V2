@@ -7,20 +7,14 @@ from playwright.sync_api import expect, sync_playwright
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("pdf")
-parser.add_argument("expected_rows", type=int)
-parser.add_argument("expected_prefix")
 parser.add_argument("--base-url", default="http://127.0.0.1:3000")
-parser.add_argument("--superadmin", action="store_true")
 args = parser.parse_args()
 email = os.environ.get("NAVIGA_TEST_EMAIL", "upc.wanea@pegadaian.co.id")
 password = os.environ.get("NAVIGA_TEST_PASSWORD", "UpcWanea*0")
+fixture = Path(__file__).resolve().parents[1] / "tmp" / "fonnte-fixtures" / "fonnte-gadai-brando.pdf"
 
-if args.superadmin:
-    local_env = Path('.env.local').read_text(encoding='utf-8').splitlines()
-    values = dict(line.split('=', 1) for line in local_env if '=' in line)
-    email = values['NAVIGA_SUPERADMIN_EMAIL']
-    password = values['NAVIGA_SUPERADMIN_PASSWORD']
+assert os.environ.get("FONNTE_ENABLED", "").strip().lower() != "true", "E2E fixture tidak boleh dijalankan saat Fonnte aktif"
+assert fixture.is_file(), f"Fixture PDF aman belum dibuat: {fixture}"
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(headless=True)
@@ -36,18 +30,25 @@ with sync_playwright() as playwright:
         page.goto(f"{args.base_url}/pdf-broadcast")
         page.wait_for_load_state("networkidle")
 
-    page.locator('input[type="file"]').set_input_files(args.pdf)
+    page.locator('input[type="file"]').set_input_files(fixture)
     rows = page.locator("tbody tr")
-    expect(rows).to_have_count(args.expected_rows, timeout=60_000)
+    expect(rows).to_have_count(1, timeout=60_000)
 
-    sbg_values = rows.locator("td:nth-child(2)").all_inner_texts()
-    assert all(value.strip().startswith(args.expected_prefix) for value in sbg_values)
+    sbg_values = [
+        rows.nth(index).locator("td").nth(1).inner_text()
+        for index in range(rows.count())
+    ]
+    assert sbg_values == ["117870009991"]
+    expect(page.get_by_text("Brando Mathias Zusriadi", exact=True)).to_be_visible()
+    expect(page.get_by_role("button", name="Antrekan Terpilih (0)")).to_be_visible()
     assert page.get_by_text("Error Processing PDF").count() == 0
     assert page.get_by_text("Status Follow-up", exact=True).count() == 0
 
     print(json.dumps({
         "rows": len(sbg_values),
-        "prefix": args.expected_prefix,
+        "prefix": "11787",
+        "customer": "Brando Mathias Zusriadi",
+        "fonnte_enabled": False,
         "error_toast": False,
     }))
     browser.close()
