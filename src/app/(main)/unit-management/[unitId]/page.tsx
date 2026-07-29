@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { getSession } from '@/lib/local-auth';
-import { listUnits } from '@/lib/unit-registry';
+import { listUnitAdmins, listUnits } from '@/lib/unit-registry';
 import UnitCreateClient from '../new/unit-create-client';
 
 export default async function EditUnitPage({ params }: { params: Promise<{ unitId: string }> }) {
@@ -9,9 +9,9 @@ export default async function EditUnitPage({ params }: { params: Promise<{ unitI
   if (session.role !== 'superadmin') redirect('/dashboard');
 
   const { unitId } = await params;
-  const units = await listUnits();
+  const [units, admins] = await Promise.all([listUnits(), listUnitAdmins()]);
   const unit = units.find((candidate) => candidate.id === unitId);
   if (!unit) notFound();
 
-  return <UnitCreateClient units={units} mode="edit" unit={unit} />;
+  return <UnitCreateClient units={units} mode="edit" unit={unit} relatedAdmins={admins.filter((admin) => admin.unitId === unit.id)} />;
 }

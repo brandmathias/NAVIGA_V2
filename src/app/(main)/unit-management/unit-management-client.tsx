@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
+  BadgeCheck,
   Building2,
   CheckCircle2,
   ChevronRight,
@@ -220,8 +221,8 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
       <Dialog open={isAdminDialogOpen} onOpenChange={(open) => open ? setIsAdminDialogOpen(true) : closeAdminDialog()}>
         <DialogContent data-testid="admin-registration" className="unit-admin-dialog !max-h-[calc(100dvh-2rem)] !max-w-[47rem] !overflow-hidden !p-5 max-sm:!overflow-y-auto sm:!p-6">
           <DialogHeader className="unit-admin-dialog-header !grid !text-left">
-            <span className="unit-admin-dialog-emblem" aria-hidden="true">{editingAdmin ? <UserRound className="h-10 w-10" strokeWidth={1.55} /> : <ShieldPlus className="h-10 w-10" strokeWidth={1.55} />}</span>
-            <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">{editingAdmin ? 'Edit akun admin unit' : 'Tambah akun admin unit'}</DialogTitle><DialogDescription className="unit-admin-dialog-description">{editingAdmin ? 'Perbarui data akun untuk mengelola unit terkait.' : 'Buat akun admin baru untuk mengelola unit.'}</DialogDescription></div>
+            <span className="unit-admin-dialog-emblem" aria-hidden="true">{editingAdmin ? <BadgeCheck className="h-10 w-10" strokeWidth={1.55} /> : <ShieldPlus className="h-10 w-10" strokeWidth={1.55} />}</span>
+            <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">{editingAdmin ? 'Detail akun admin unit' : 'Tambah akun admin unit'}</DialogTitle><DialogDescription className="unit-admin-dialog-description">{editingAdmin ? 'Informasi akun admin unit.' : 'Buat akun admin baru untuk mengelola unit.'}</DialogDescription></div>
           </DialogHeader>
           <form key={editingAdmin?.id ?? 'new'} className="unit-admin-form" onSubmit={handleAdminSubmit}>
             {editingAdmin && <input type="hidden" name="id" value={editingAdmin.id} />}

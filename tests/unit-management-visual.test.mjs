@@ -3,9 +3,10 @@ import { access, readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 test('unit management matches the operational hierarchy and keeps complete unit and admin fields reachable', async () => {
-  const [page, createPage, shell, styles] = await Promise.all([
+  const [page, createPage, detailPage, shell, styles] = await Promise.all([
     readFile('src/app/(main)/unit-management/unit-management-client.tsx', 'utf8'),
     readFile('src/app/(main)/unit-management/new/unit-create-client.tsx', 'utf8'),
+    readFile('src/app/(main)/unit-management/[unitId]/page.tsx', 'utf8'),
     readFile('src/components/main-shell.tsx', 'utf8'),
     readFile('src/app/globals.css', 'utf8'),
   ]);
@@ -18,8 +19,8 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(page, /<Link href="\/unit-management\/new">/);
   assert.match(page, /router\.push\(`\/unit-management\/\$\{unit\.id\}`\)/);
   assert.match(page, /updateUnitAdminAction/);
-  assert.match(page, /Edit akun admin unit/);
-  assert.match(page, /<UserRound className="h-10 w-10"/);
+  assert.match(page, /Detail akun admin unit/);
+  assert.match(page, /<BadgeCheck className="h-10 w-10"/);
   assert.match(page, /Kode unit/);
   assert.match(page, /setIsAdminDialogOpen\(true\)/);
   assert.doesNotMatch(page, /href="\/unit-management\/new\?mode=admin"/);
@@ -51,6 +52,11 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(createPage, /Detail Unit/);
   assert.doesNotMatch(createPage, /Pencil/);
   assert.match(createPage, /Simpan perubahan/);
+  assert.match(createPage, /relatedAdmins/);
+  assert.match(createPage, /Sudah tersimpan/);
+  assert.match(createPage, /required=\{false\}/);
+  assert.match(detailPage, /listUnitAdmins/);
+  assert.match(detailPage, /filter\(\(admin\) => admin\.unitId === unit\.id\)/);
   assert.match(createPage, /unit-reference-unit-card/);
   assert.match(createPage, /Pengelola Unit/);
   assert.match(createPage, /Penaksir Unit/);
