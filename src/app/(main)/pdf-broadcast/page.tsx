@@ -18,6 +18,7 @@ import { Upload, Send, Loader2, Mic, Bell, ClipboardCopy } from 'lucide-react';
 import type { BroadcastCustomer, HistoryEntry, Customer } from '@/types';
 import { Input } from '@/components/ui/input';
 import { parsePdf } from './actions';
+import { queueGadaiBroadcast } from '@/app/(main)/broadcast/fonnte-actions';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
 import { normalizeIndonesianWhatsAppNumber } from '@/lib/whatsapp-recipient';
@@ -27,7 +28,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { useLocalSession } from '@/components/main-shell';
 
 
@@ -87,7 +87,7 @@ const getUnitLabel = (id: string) => {
 };
 
 type NotificationTemplate = 'jatuh-tempo' | 'keterlambatan' | 'peringatan-lelang';
-type ActionStatus = 'WhatsApp Dibuka' | 'Pesan Disalin';
+type ActionStatus = 'Antrean Fonnte Diterima' | 'WhatsApp Dibuka' | 'Pesan Disalin';
 
 export default function PdfBroadcastPage() {
   const adminUser = useLocalSession();
@@ -96,6 +96,7 @@ export default function PdfBroadcastPage() {
   const [selectedCustomers, setSelectedCustomers] = React.useState<Set<string>>(new Set());
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isQueueing, setIsQueueing] = React.useState(false);
   const [isGeneratingVoicenote, setIsGeneratingVoicenote] = React.useState(false);
   const [activeVoicenote, setActiveVoicenote] = React.useState<{
     audioDataUri: string;
@@ -198,7 +199,9 @@ export default function PdfBroadcastPage() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allSbgNumbers = new Set(extractedData.map((c) => c.sbg_number));
+      const allSbgNumbers = new Set(extractedData
+        .filter((customer) => normalizeIndonesianWhatsAppNumber(customer.phone_number))
+        .map((customer) => customer.sbg_number));
       setSelectedCustomers(allSbgNumbers);
     } else {
       setSelectedCustomers(new Set());
@@ -277,22 +280,39 @@ Terima Kasih`;
     });
   };
 
-  const handleSendNotification = (customer: BroadcastCustomer, template: NotificationTemplate) => {
-    const formattedPhoneNumber = normalizeIndonesianWhatsAppNumber(customer.phone_number);
-    if (!formattedPhoneNumber) {
+  const handleQueueNotification = async (customers: BroadcastCustomer[], template: NotificationTemplate) => {
+    if (customers.some((customer) => !normalizeIndonesianWhatsAppNumber(customer.phone_number))) {
       toast({
         title: 'Nomor WhatsApp Tidak Valid',
-        description: 'Periksa nomor HP hasil OCR sebelum membuka WhatsApp.',
+        description: 'Periksa nomor HP hasil OCR sebelum mengantrekan Fonnte.',
         variant: 'destructive',
       });
       return;
     }
-    const message = getNotificationMessage(customer, template);
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${formattedPhoneNumber}?text=${encodedMessage}`;
-    
-    window.open(whatsappUrl, '_blank');
-    logHistory(customer, 'WhatsApp Dibuka', template);
+
+    const customerCount = customers.length;
+    if (!window.confirm(
+      `Antrekan notifikasi untuk ${customerCount} nasabah terpilih dengan interval 60 detik? Penerimaan antrean bukan bukti pesan terkirim.`,
+    )) return;
+
+    setIsQueueing(true);
+    try {
+      const result = await queueGadaiBroadcast({ customers, template });
+      customers.forEach((customer) => logHistory(customer, 'Antrean Fonnte Diterima', template));
+      toast({
+        title: 'Antrean Fonnte Diterima',
+        description: `${result.accepted} nasabah diterima ke antrean Fonnte dengan interval 60 detik. Ini bukan konfirmasi pesan terkirim.`,
+      });
+      setSelectedCustomers(new Set());
+    } catch (error) {
+      toast({
+        title: 'Gagal Mengantrekan Fonnte',
+        description: error instanceof Error ? error.message : 'Antrean Fonnte tidak dapat diproses. Silakan coba lagi.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsQueueing(false);
+    }
   };
 
    const handleGenerateVoicenote = async (customer: BroadcastCustomer, template: NotificationTemplate) => {
@@ -335,7 +355,7 @@ Terima Kasih`;
     }
   };
 
-  const handleNotifySelected = () => {
+  const handleNotifySelected = async () => {
     if (selectedCustomers.size === 0) {
       toast({
         title: 'No Customers Selected',
@@ -345,21 +365,8 @@ Terima Kasih`;
       return;
     }
 
-    toast({
-      title: 'Opening WhatsApp Tabs',
-      description: `Preparing notifications for ${selectedCustomers.size} customer(s). Please allow pop-ups.`,
-    });
-
     const customersToNotify = extractedData.filter((c) => selectedCustomers.has(c.sbg_number));
-    
-    customersToNotify.forEach((customer, index) => {
-      // Small delay to prevent browsers from blocking too many pop-ups at once
-      setTimeout(() => {
-        handleSendNotification(customer, 'jatuh-tempo');
-      }, index * 200); 
-    });
-    
-    setSelectedCustomers(new Set());
+    await handleQueueNotification(customersToNotify, 'jatuh-tempo');
   };
 
   return (
@@ -400,9 +407,9 @@ Terima Kasih`;
                 accept=".pdf"
             />
             <div className="flex-grow"></div>
-            <Button onClick={handleNotifySelected} disabled={selectedCustomers.size === 0 || isLoading}>
+            <Button onClick={handleNotifySelected} disabled={selectedCustomers.size === 0 || isLoading || isQueueing}>
               <Send className="mr-2 h-4 w-4" />
-              Notify Selected ({selectedCustomers.size})
+              Antrekan Terpilih ({selectedCustomers.size})
             </Button>
           </div>
           <div className="rounded-lg border">
@@ -411,10 +418,10 @@ Terima Kasih`;
                 <TableRow>
                   <TableHead className="w-[40px]">
                     <Checkbox 
-                      checked={selectedCustomers.size > 0 && selectedCustomers.size === extractedData.length && extractedData.length > 0}
+                      checked={selectedCustomers.size > 0 && selectedCustomers.size === extractedData.filter((customer) => normalizeIndonesianWhatsAppNumber(customer.phone_number)).length}
                       onCheckedChange={(checked) => handleSelectAll(!!checked)}
                       aria-label="Select all"
-                      disabled={extractedData.length === 0}
+                      disabled={extractedData.length === 0 || isQueueing}
                     />
                   </TableHead>
                   <TableHead>No. SBG</TableHead>
@@ -466,6 +473,7 @@ Terima Kasih`;
                             checked={selectedCustomers.has(customer.sbg_number)}
                             onCheckedChange={(checked) => handleSelectCustomer(customer.sbg_number, !!checked)}
                             aria-label={`Select ${customer.name}`}
+                            disabled={!canContact || isQueueing}
                         />
                       </TableCell>
                       <TableCell className="font-mono">{customer.sbg_number}</TableCell>
@@ -495,12 +503,12 @@ Terima Kasih`;
                             </DropdownMenu>
                            <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline" disabled={!canContact}><Bell className="h-4 w-4" /></Button>
+                                    <Button size="sm" variant="outline" disabled={!canContact || isQueueing}><Bell className="h-4 w-4" /></Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handleSendNotification(customer, 'jatuh-tempo')}>Kirim Pengingat</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleSendNotification(customer, 'keterlambatan')}>Kirim Keterlambatan</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleSendNotification(customer, 'peringatan-lelang')}>Kirim Peringatan Lelang</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleQueueNotification([customer], 'jatuh-tempo')}>Antrekan Pengingat</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleQueueNotification([customer], 'keterlambatan')}>Antrekan Keterlambatan</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleQueueNotification([customer], 'peringatan-lelang')}>Antrekan Peringatan Lelang</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                             <DropdownMenu>
@@ -526,7 +534,7 @@ Terima Kasih`;
           </div>
             {selectedCustomers.size > 0 && (
                 <div className="text-xs text-muted-foreground mt-2">
-                Browser may ask for permission to open multiple tabs. Please allow it.
+                    Nasabah akan diantrekan melalui Fonnte dengan interval 60 detik. Penerimaan antrean bukan bukti pesan terkirim.
                 </div>
             )}
         </CardContent>
