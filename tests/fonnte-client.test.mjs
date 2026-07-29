@@ -31,7 +31,7 @@ test('queueFonnteMessages posts valid recipients as delayed Fonnte data', async 
       ],
       fetchImpl: async (url, init) => {
         call = { url, init };
-        return new Response(JSON.stringify({ id: 'fonnte-123' }), { status: 200 });
+        return new Response(JSON.stringify({ status: true, id: ['fonnte-123'] }), { status: 200 });
       },
     });
 
@@ -43,6 +43,30 @@ test('queueFonnteMessages posts valid recipients as delayed Fonnte data', async 
     ]);
     assert.deepEqual(result, { accepted: 1, reference: 'fonnte-123' });
     assert.deepEqual(getFonnteStatus(), { enabled: true });
+  });
+});
+
+test('queueFonnteMessages rejects a successful HTTP response that Fonnte declined', async () => {
+  await withFonnteEnvironment({ FONNTE_ENABLED: 'true', FONNTE_TOKEN: 'test-token' }, async () => {
+    await assert.rejects(
+      queueFonnteMessages({
+        recipients: [{ target: '6281234567890', message: 'Halo' }],
+        fetchImpl: async () => new Response(JSON.stringify({ status: false, reason: 'insufficient quota' }), { status: 200 }),
+      }),
+      /insufficient quota/i,
+    );
+  });
+});
+
+test('queueFonnteMessages rejects a successful HTTP response with invalid JSON', async () => {
+  await withFonnteEnvironment({ FONNTE_ENABLED: 'true', FONNTE_TOKEN: 'test-token' }, async () => {
+    await assert.rejects(
+      queueFonnteMessages({
+        recipients: [{ target: '6281234567890', message: 'Halo' }],
+        fetchImpl: async () => new Response('not JSON', { status: 200 }),
+      }),
+      /respons Fonnte tidak valid/i,
+    );
   });
 });
 
