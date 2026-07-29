@@ -18,6 +18,7 @@ export async function registerUnitAction(formData: FormData) {
     name: formData.get('name'),
     prefix: formData.get('prefix'),
     domicile: formData.get('domicile'),
+    province: formData.get('province'),
     phone: formData.get('phone'),
     address: formData.get('address'),
     adminName: formData.get('adminName'),
@@ -27,6 +28,7 @@ export async function registerUnitAction(formData: FormData) {
   });
 
   revalidatePath('/unit-management');
+  revalidatePath('/dashboard');
   return unit;
 }
 

@@ -46,6 +46,11 @@ test('authenticates a persisted unit account with its server-side prefix scope',
       unitId: user.unitId,
       unitName: 'Pegadaian Wanea',
       unitPrefix: '11787',
+      unitCode: '',
+      unitDomicile: '',
+      unitProvince: '',
+      unitPhone: '',
+      unitAddress: '',
       upc: 'Pegadaian Wanea',
     });
   });

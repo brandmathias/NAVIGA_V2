@@ -65,6 +65,8 @@ test('creates a future unit once and rejects a duplicate prefix', async () => {
     const garuda = await registry.registerUnit({
       name: 'Pegadaian Garuda',
       prefix: '11799',
+      domicile: 'Manado',
+      province: 'Sulawesi Utara',
       email: 'upc.garuda@pegadaian.co.id',
       password: 'UpcGaruda*0',
     });
@@ -77,6 +79,8 @@ test('creates a future unit once and rejects a duplicate prefix', async () => {
       registry.registerUnit({
         name: 'Pegadaian Duplikat',
         prefix: '11799',
+        domicile: 'Manado',
+        province: 'Sulawesi Utara',
         email: 'upc.duplikat@pegadaian.co.id',
         password: 'UpcDuplikat*0',
       }),
@@ -96,6 +100,7 @@ test('keeps unit profile fields and lets a Superadmin add another admin to that 
       name: 'Pegadaian Garuda',
       prefix: '11799',
       domicile: 'Manado',
+      province: 'Sulawesi Utara',
       phone: '0431862000',
       address: 'Jl. Garuda No. 1, Manado',
       email: 'upc.garuda@pegadaian.co.id',
@@ -107,6 +112,8 @@ test('keeps unit profile fields and lets a Superadmin add another admin to that 
     assert.deepEqual(
       {
         domicile: unit.domicile,
+        unitCode: unit.unitCode,
+        province: unit.province,
         phone: unit.phone,
         address: unit.address,
         adminName: unit.adminName,
@@ -114,6 +121,8 @@ test('keeps unit profile fields and lets a Superadmin add another admin to that 
       },
       {
         domicile: 'Manado',
+        unitCode: 'CP-MND-11799',
+        province: 'Sulawesi Utara',
         phone: '0431862000',
         address: 'Jl. Garuda No. 1, Manado',
         adminName: 'Rani Garuda',

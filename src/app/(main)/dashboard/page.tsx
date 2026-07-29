@@ -126,7 +126,9 @@ export default function DashboardPage() {
   const profileData = upcProfiles[userUpc as keyof typeof upcProfiles] ?? {
     ...upcProfiles['N/A'],
     name: session.unitName ?? 'Unit Pelayanan Cabang',
-    description: `Profil untuk unit dengan prefix SBG ${session.unitPrefix ?? 'belum diatur'}.`,
+    address: session.unitAddress || [session.unitDomicile, session.unitProvince].filter(Boolean).join(', ') || 'Alamat unit belum diatur.',
+    phone: session.unitPhone || 'Nomor telepon unit belum diatur.',
+    description: `Profil untuk ${session.unitCode || `prefix SBG ${session.unitPrefix ?? 'belum diatur'}`}.`,
   };
 
   return (

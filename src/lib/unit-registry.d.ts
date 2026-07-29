@@ -6,6 +6,8 @@ export interface RegisteredUnit {
   prefix: string;
   active: boolean;
   domicile: string;
+  province: string;
+  unitCode: string;
   phone: string;
   address: string;
   email: string;
@@ -17,6 +19,7 @@ export interface UnitRegistrationInput {
   name: unknown;
   prefix: unknown;
   domicile?: unknown;
+  province?: unknown;
   phone?: unknown;
   address?: unknown;
   adminName?: unknown;
@@ -55,6 +58,11 @@ export interface AuthenticatedRegistryUser {
   unitId: string | null;
   unitName: string | null;
   unitPrefix: string | null;
+  unitCode: string | null;
+  unitDomicile: string | null;
+  unitProvince: string | null;
+  unitPhone: string | null;
+  unitAddress: string | null;
   upc: string;
 }
 

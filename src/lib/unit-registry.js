@@ -1,6 +1,7 @@
 const { randomBytes, randomUUID, scryptSync, timingSafeEqual } = require('node:crypto');
 const { mkdir, readFile, rename, writeFile } = require('node:fs/promises');
 const { dirname, join } = require('node:path');
+const { formatUnitCode } = require('./unit-code');
 
 function normalizeEmail(value) {
   return String(value ?? '').trim().toLowerCase();
@@ -51,6 +52,7 @@ function validateBootstrap(bootstrap) {
     name: normalizeText(unit.name),
     prefix: validatePrefix(unit.prefix),
     domicile: normalizeText(unit.domicile),
+    province: normalizeText(unit.province),
     phone: normalizeText(unit.phone),
     address: normalizeText(unit.address),
     adminName: normalizeText(unit.adminName),
@@ -79,6 +81,8 @@ function toPublicUnit(registry, unit) {
     prefix: unit.prefix,
     active: unit.active,
     domicile: unit.domicile ?? '',
+    province: unit.province ?? '',
+    unitCode: unit.unitCode ?? formatUnitCode(unit.domicile, unit.prefix),
     phone: unit.phone ?? '',
     address: unit.address ?? '',
     email: account?.email ?? '',
@@ -97,6 +101,7 @@ function toPublicAdmin(registry, account) {
     unitId: account.unitId,
     unitName: unit?.name ?? '',
     unitPrefix: unit?.prefix ?? '',
+    unitCode: unit?.unitCode ?? formatUnitCode(unit?.domicile, unit?.prefix),
     domicile: account.domicile ?? unit?.domicile ?? '',
     phone: account.phone ?? '',
     address: account.address ?? unit?.address ?? '',
@@ -114,6 +119,11 @@ function toAuthenticatedUser(registry, account) {
     unitId: unit?.id ?? null,
     unitName: unit?.name ?? null,
     unitPrefix: unit?.prefix ?? null,
+    unitCode: unit?.unitCode ?? (unit ? formatUnitCode(unit.domicile, unit.prefix) : null),
+    unitDomicile: unit?.domicile ?? null,
+    unitProvince: unit?.province ?? null,
+    unitPhone: unit?.phone ?? null,
+    unitAddress: unit?.address ?? null,
     upc: unit?.name ?? 'all',
   };
 }
@@ -154,6 +164,8 @@ function createUnitRegistry({ filePath, bootstrap }) {
             name: unit.name,
             prefix: unit.prefix,
             domicile: unit.domicile,
+            province: unit.province,
+            unitCode: formatUnitCode(unit.domicile, unit.prefix),
             phone: unit.phone,
             address: unit.address,
             active: true,
@@ -232,18 +244,19 @@ function createUnitRegistry({ filePath, bootstrap }) {
       const name = normalizeText(input?.name);
       const prefix = validatePrefix(input?.prefix);
       const domicile = normalizeText(input?.domicile);
+      const province = normalizeText(input?.province);
       const phone = normalizeText(input?.phone);
       const address = normalizeText(input?.address);
       const adminName = normalizeText(input?.adminName) || `Admin ${name}`;
       const adminPhone = normalizeText(input?.adminPhone);
       const email = normalizeEmail(input?.email);
       const password = validatePassword(input?.password);
-      if (!name || !email) throw new Error('Nama unit dan email wajib diisi.');
+      if (!name || !domicile || !province || !email) throw new Error('Nama unit, kota/kabupaten, provinsi, dan email wajib diisi.');
       if (registry.units.some((unit) => unit.prefix === prefix)) throw new Error('Prefix SBG sudah digunakan.');
       if (registry.accounts.some((account) => account.email === email)) throw new Error('Email akun sudah digunakan.');
 
       const now = new Date().toISOString();
-      const unit = { id: randomUUID(), name, prefix, domicile, phone, address, active: true, createdAt: now };
+      const unit = { id: randomUUID(), name, prefix, domicile, province, unitCode: formatUnitCode(domicile, prefix), phone, address, active: true, createdAt: now };
       registry.units.push(unit);
       registry.accounts.push({
         id: randomUUID(),

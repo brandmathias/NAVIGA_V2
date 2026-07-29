@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Building2,
   CheckCircle2,
@@ -22,7 +23,7 @@ import {
   UserRound,
   UsersRound,
 } from 'lucide-react';
-import { registerUnitAction, registerUnitAdminAction } from './actions';
+import { registerUnitAdminAction } from './actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -80,12 +81,11 @@ function AdminFormField({ icon: Icon, id, label, required = true, children, ...p
 
 export default function UnitManagementClient({ units: initialUnits, admins: initialAdmins }: { units: Unit[]; admins: UnitAdmin[] }) {
   const { toast } = useToast();
+  const router = useRouter();
   const [units, setUnits] = React.useState(initialUnits);
   const [admins, setAdmins] = React.useState(initialAdmins);
   const [saving, setSaving] = React.useState<'unit' | 'admin' | null>(null);
-  const [isUnitDialogOpen, setIsUnitDialogOpen] = React.useState(false);
   const [isAdminDialogOpen, setIsAdminDialogOpen] = React.useState(false);
-  const [unitError, setUnitError] = React.useState<string | null>(null);
   const [adminError, setAdminError] = React.useState<string | null>(null);
   const [adminUnitId, setAdminUnitId] = React.useState('');
   const [showAdminPassword, setShowAdminPassword] = React.useState(false);
@@ -99,38 +99,6 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
     [admin.name, admin.unitName, admin.domicile, admin.phone, admin.email].join(' ').toLowerCase().includes(adminQuery.trim().toLowerCase()),
   );
 
-  const handleUnitSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    setUnitError(null);
-    setSaving('unit');
-    try {
-      const unit = await registerUnitAction(new FormData(form)) as Unit;
-      setUnits((current) => [...current, unit].sort((left, right) => left.name.localeCompare(right.name)));
-      setAdmins((current) => [...current, {
-        id: `admin-${unit.id}`,
-        name: unit.adminName,
-        email: unit.email,
-        active: true,
-        unitId: unit.id,
-        unitName: unit.name,
-        unitPrefix: unit.prefix,
-        domicile: unit.domicile,
-        phone: unit.adminPhone,
-        address: unit.address,
-      }].sort((left, right) => left.name.localeCompare(right.name)));
-      form.reset();
-      setIsUnitDialogOpen(false);
-      toast({ title: 'Unit ditambahkan', description: `${unit.name} siap menggunakan filter SBG ${unit.prefix}.` });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Periksa data unit dan coba lagi.';
-      setUnitError(message);
-      toast({ title: 'Unit tidak dapat ditambahkan', description: message, variant: 'destructive' });
-    } finally {
-      setSaving(null);
-    }
-  };
-
   const handleAdminSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -143,18 +111,18 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
       setAdminUnitId('');
       setShowAdminPassword(false);
       setIsAdminDialogOpen(false);
-      toast({ title: 'Akun admin ditambahkan', description: `${admin.name} dapat masuk untuk ${admin.unitName}.` });
+      toast({ title: 'Akun admin ditambahkan', description: `${admin.name} dapat masuk untuk ${admin.unitName}.`, tone: 'success' });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Periksa data akun dan coba lagi.';
       setAdminError(message);
-      toast({ title: 'Akun tidak dapat ditambahkan', description: message, variant: 'destructive' });
+      toast({ title: 'Akun tidak dapat ditambahkan', description: message, variant: 'destructive', tone: 'error' });
     } finally {
       setSaving(null);
     }
   };
 
-  const showUnit = (unit: Unit) => toast({ title: unit.name, description: `${unit.prefix} · ${missingValue(unit.address)}` });
-  const showAdmin = (admin: UnitAdmin) => toast({ title: admin.name, description: `${admin.unitName} · ${admin.email}` });
+  const showUnit = (unit: Unit) => toast({ title: unit.name, description: `${unit.prefix} · ${missingValue(unit.address)}`, tone: 'info' });
+  const showAdmin = (admin: UnitAdmin) => toast({ title: admin.name, description: `${admin.unitName} · ${admin.email}`, tone: 'info' });
 
   return (
     <main className="unit-management-page flex flex-1 flex-col gap-3 px-3 py-4 sm:gap-4 sm:px-5 sm:py-5 xl:px-6">
@@ -176,17 +144,17 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
                   <span className="unit-hero-stat-copy"><strong>{admins.length}</strong><span>Akun admin</span></span>
                 </span>
               </div>
+              <div className="unit-hero-actions relative z-10 mt-4 flex flex-col gap-2.5 sm:flex-row">
+                <Button type="button" onClick={() => router.push('/unit-management/new')} className="unit-hero-secondary group h-12 min-w-[178px] rounded-xl px-5">
+                  <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.7} />
+                  Tambah unit
+                </Button>
+                <Button type="button" onClick={() => router.push('/unit-management/new?mode=admin')} className="unit-hero-primary group h-12 min-w-[220px] rounded-xl px-5">
+                  <UserPlus className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.7} />
+                  Tambahkan akun
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className="relative z-10 flex flex-col gap-3 self-stretch lg:self-end lg:flex-row">
-            <Button type="button" onClick={() => setIsUnitDialogOpen(true)} className="unit-hero-secondary group h-14 min-w-[190px] rounded-xl px-6">
-              <Plus className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.6} />
-              Tambah unit
-            </Button>
-            <Button type="button" onClick={() => setIsAdminDialogOpen(true)} className="unit-hero-primary group h-14 min-w-[245px] rounded-xl px-6">
-              <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={1.6} />
-              Tambahkan akun
-            </Button>
           </div>
         </div>
       </section>
@@ -229,8 +197,6 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
 
         <aside className="naviga-entry naviga-entry-delay-3 naviga-panel h-fit p-5 sm:p-6"><div className="flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e9faf7] text-primary"><UsersRound className="h-5 w-5" strokeWidth={1.6} /></span><h2 className="text-base font-bold tracking-tight text-[#102f45]">Ringkasan</h2></div><div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl border border-[#dcebed] bg-[#fbfefe] p-4 text-center"><p className="text-3xl font-bold tracking-tight text-primary">{units.length}</p><p className="mt-1 text-xs text-[#607786]">Unit terdaftar</p></div><div className="rounded-xl border border-[#dcebed] bg-[#fbfefe] p-4 text-center"><p className="text-3xl font-bold tracking-tight text-primary">{admins.length}</p><p className="mt-1 text-xs text-[#607786]">Akun admin</p></div></div><div className="mt-6 border-t border-[#e2eeee] pt-6"><h3 className="text-base font-bold text-[#102f45]">Informasi cepat</h3><ul className="mt-4 space-y-4 text-sm leading-5 text-[#526b7a]"><li className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Setiap unit dibatasi oleh 5 digit awal kode unit atau nomor angsuran.</li><li className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Akun unit hanya bersifat read-only sesuai cakupan unit.</li><li className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />Kelola akun admin untuk memberikan akses sesuai unit.</li></ul></div><div className="mt-6 rounded-xl border border-[#cbe7e4] bg-[#f0faf9] p-4 text-sm leading-5 text-[#456675]"><div className="flex gap-3"><ShieldCheck className="h-6 w-6 shrink-0 text-primary" strokeWidth={1.6} /><p>Pastikan data unit dan akun selalu terbaru untuk keamanan sistem.</p></div></div></aside>
       </div>
-
-      <Dialog open={isUnitDialogOpen} onOpenChange={setIsUnitDialogOpen}><DialogContent data-testid="unit-registration" className="max-h-[90dvh] overflow-y-auto rounded-[24px] border-[#d8e9ec] bg-white p-6 shadow-[0_24px_70px_rgba(12,68,77,.22)] sm:max-w-xl"><DialogHeader><DialogTitle className="font-headline text-2xl font-bold text-[#102f45]">Tambah unit dan akun</DialogTitle><DialogDescription>Data unit dan admin awal akan tersimpan bersama.</DialogDescription></DialogHeader><form className="mt-2 grid gap-4 sm:grid-cols-2" onSubmit={handleUnitSubmit}><p aria-live="polite" className="min-h-5 text-sm text-destructive sm:col-span-2">{unitError}</p><Field id="unit-name" name="name" label="Nama unit" placeholder="Unit Pelayanan Cabang Garuda" required disabled={saving === 'unit'} /><Field id="unit-prefix" name="prefix" label="Kode unit (5 digit)" inputMode="numeric" pattern="[0-9]{5}" maxLength={5} placeholder="11799" required disabled={saving === 'unit'} /><Field id="unit-domicile" name="domicile" label="Domisili" placeholder="Manado" required disabled={saving === 'unit'} /><Field id="unit-phone" name="phone" label="Nomor telepon unit" placeholder="0431862000" required disabled={saving === 'unit'} /><div className="sm:col-span-2"><Field id="unit-address" name="address" label="Alamat unit" placeholder="Jl. Garuda No. 1, Manado" required disabled={saving === 'unit'} /></div><Field id="unit-admin-name" name="adminName" label="Nama admin awal" placeholder="Nama lengkap admin" required disabled={saving === 'unit'} /><Field id="unit-admin-phone" name="adminPhone" label="Nomor telepon admin" placeholder="081234567890" required disabled={saving === 'unit'} /><Field id="unit-email" name="email" type="email" label="Email akun admin" placeholder="upc.garuda@pegadaian.co.id" required disabled={saving === 'unit'} /><Field id="unit-password" name="password" type="password" minLength={8} label="Password awal" placeholder="Minimal 8 karakter" required disabled={saving === 'unit'} /><Button type="submit" className="group h-11 w-full rounded-xl sm:col-span-2" disabled={saving === 'unit'}>{saving === 'unit' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <KeyRound className="mr-2 h-4 w-4" />} {saving === 'unit' ? 'Menyimpan...' : 'Buat unit dan akun'}</Button></form></DialogContent></Dialog>
 
       <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
         <DialogContent data-testid="admin-registration" className="unit-admin-dialog max-h-[92dvh] overflow-y-auto p-5 sm:p-7">

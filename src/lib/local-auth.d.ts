@@ -8,6 +8,11 @@ export interface LocalUser {
   unitId: string | null;
   unitName: string | null;
   unitPrefix: string | null;
+  unitCode: string | null;
+  unitDomicile: string | null;
+  unitProvince: string | null;
+  unitPhone: string | null;
+  unitAddress: string | null;
   upc: LocalUpc;
 }
 
