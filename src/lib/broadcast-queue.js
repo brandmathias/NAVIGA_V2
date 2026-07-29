@@ -83,16 +83,14 @@ function gadaiMessage(customer, template) {
   return `${header}\n*Yth. Bpk/Ibu ${String(customer?.name ?? '').trim().toLocaleUpperCase()}*\n\n${messageBody}\n\nTerima Kasih`;
 }
 
-function installmentMessage(customer, template) {
+function installmentMessage(customer, template, prefix) {
   const customerName = String(customer?.nasabah ?? '').replace(/\s+/g, ' ').trim();
   const productName = (String(customer?.produk ?? '').split('\n')[0] || '').replace(/\s+-\s+-/, '').trim();
-  const disbursement = String(customer?.pencairan ?? '');
-  const disbursementLower = disbursement.toLowerCase();
-  const header = disbursementLower.includes('wan')
+  const header = prefix === '11787'
     ? 'Nasabah PEGADAIAN WANEA / TANJUNG BATU'
-    : disbursementLower.includes('ranotana')
+    : prefix === '11793'
       ? 'Nasabah PEGADAIAN RANOTANA / RANOTANA'
-      : `Nasabah ${disbursement.toUpperCase()}`;
+      : 'Nasabah PEGADAIAN';
   let messageBody;
 
   switch (template) {
@@ -120,7 +118,7 @@ async function prepareRecipients({ session, customers, template, listUnitsImpl, 
 
     const target = normalizeIndonesianWhatsAppNumber(customer?.phone_number);
     if (!target) throw new Error(`Nomor WhatsApp tidak valid untuk ${label}.`);
-    return { target, message: message(customer, template) };
+    return { target, message: message(customer, template, prefix) };
   });
 }
 

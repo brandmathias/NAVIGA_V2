@@ -75,6 +75,38 @@ test('superadmin queues normalized Gadai recipient with a server-generated messa
   assert.doesNotMatch(queuedRecipients[0].message, /Pesan dari browser/i);
 });
 
+test('validated installment prefix overrides forged pencairan heading before injected queueing', async () => {
+  let queueCalls = 0;
+  let queuedRecipients;
+
+  const result = await queueInstallmentCustomers({
+    session: { role: 'unit', unitPrefix: '11787' },
+    customers: [{
+      account_number: '117870000001',
+      phone_number: '0895803416704',
+      nasabah: 'Brando Mathias Zusriadi',
+      produk: 'Kredit Mikro',
+      pencairan: 'UPC Ranotana',
+      hr_tung: 3,
+      angsuran: 150000,
+      kewajiban: 450000,
+    }],
+    template: 'jatuh-tempo',
+    listUnitsImpl: async () => activeUnits,
+    queueImpl: async ({ recipients }) => {
+      queueCalls += 1;
+      queuedRecipients = recipients;
+      return { accepted: recipients.length, reference: 'fonnte-test-2' };
+    },
+  });
+
+  assert.deepEqual(result, { accepted: 1, reference: 'fonnte-test-2' });
+  assert.equal(queueCalls, 1);
+  assert.equal(queuedRecipients[0].target, '62895803416704');
+  assert.match(queuedRecipients[0].message, /^Nasabah PEGADAIAN WANEA \/ TANJUNG BATU/m);
+  assert.doesNotMatch(queuedRecipients[0].message, /^Nasabah PEGADAIAN RANOTANA/m);
+});
+
 test('only active prefixes are returned for valid sessions', async () => {
   const units = [...activeUnits, { id: 'inactive', name: 'Lama', prefix: '11799', active: false, email: 'old@example.test' }];
 
