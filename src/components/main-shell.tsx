@@ -40,7 +40,20 @@ export default function MainShell({ children, user }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
   const isJatuhTempoActive = pathname.startsWith('/pdf-broadcast') || pathname.startsWith('/xlsx-broadcast');
+
+  React.useEffect(() => {
+    const updateScroll = () => {
+      const nextScrolled = window.scrollY > 12;
+      setIsScrolled((current) => (current === nextScrolled ? current : nextScrolled));
+    };
+
+    updateScroll();
+    window.addEventListener('scroll', updateScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', updateScroll);
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -57,24 +70,24 @@ export default function MainShell({ children, user }: { children: React.ReactNod
 
   return (
     <SessionContext.Provider value={user}>
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader>
-            <button onClick={() => router.push('/dashboard')} className="flex items-center gap-2 text-primary">
+      <SidebarProvider className="naviga-shell bg-[#f7fbfc]" style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
+        <Sidebar variant="floating" className="naviga-sidebar">
+          <SidebarHeader className="border-b border-[#e4eff1] p-5">
+            <button onClick={() => router.push('/dashboard')} className="flex items-center gap-2 text-primary transition-transform duration-200 hover:translate-x-0.5 active:scale-[.98]">
               <Image src="/logo.ico" alt="App Logo" width={40} height={40} />
               <span className="font-headline text-lg">NAVIGA</span>
             </button>
           </SidebarHeader>
-          <SidebarContent>
-            <SidebarMenu>
+          <SidebarContent className="px-2 py-4">
+            <SidebarMenu className="gap-2">
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => router.push('/dashboard')} isActive={pathname.startsWith('/dashboard')} tooltip="Dashboard">
+                <SidebarMenuButton className="h-11 rounded-xl px-3.5 transition-[transform,background-color,box-shadow] duration-200 [transition-timing-function:cubic-bezier(.2,0,0,1)] hover:-translate-y-px hover:shadow-[0_9px_18px_rgba(10,84,89,.08)] active:translate-y-0 active:scale-[.99]" onClick={() => router.push('/dashboard')} isActive={pathname.startsWith('/dashboard')} tooltip="Dashboard">
                   <LayoutDashboard />
                   <span>Dashboard</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => router.push('/tasks')} isActive={pathname.startsWith('/tasks')} tooltip="Lacak Tugas">
+                <SidebarMenuButton className="h-11 rounded-xl px-3.5 transition-[transform,background-color,box-shadow] duration-200 [transition-timing-function:cubic-bezier(.2,0,0,1)] hover:-translate-y-px hover:shadow-[0_9px_18px_rgba(10,84,89,.08)] active:translate-y-0 active:scale-[.99]" onClick={() => router.push('/tasks')} isActive={pathname.startsWith('/tasks')} tooltip="Lacak Tugas">
                   <ClipboardList />
                   <span>Lacak Tugas</span>
                 </SidebarMenuButton>
@@ -85,7 +98,7 @@ export default function MainShell({ children, user }: { children: React.ReactNod
                     <SidebarMenuButton
                       isActive={isJatuhTempoActive}
                       tooltip="Jatuh Tempo Broadcast"
-                      className="w-full justify-between data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                      className="h-11 w-full justify-between rounded-xl px-3.5 transition-[transform,background-color,box-shadow] duration-200 [transition-timing-function:cubic-bezier(.2,0,0,1)] hover:-translate-y-px hover:shadow-[0_9px_18px_rgba(10,84,89,.08)] active:translate-y-0 active:scale-[.99] data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                     >
                       <div className="flex items-center gap-2 overflow-hidden min-w-0">
                         <CalendarClock className="h-4 w-4 shrink-0" />
@@ -111,7 +124,7 @@ export default function MainShell({ children, user }: { children: React.ReactNod
                       </div>
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <span className="text-sm font-medium leading-none">Gadaian Broadcast</span>
-                        <span className="text-[11px] text-muted-foreground leading-none">Format PDF Daftar Jatuh Tempo Gadaian</span>
+                        <span className="text-[11px] text-muted-foreground leading-none">Daftar Jatuh Tempo Barang Gadaian</span>
                       </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -126,38 +139,38 @@ export default function MainShell({ children, user }: { children: React.ReactNod
                       </div>
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <span className="text-sm font-medium leading-none">Angsuran Broadcast</span>
-                        <span className="text-[11px] text-muted-foreground leading-none">Format XLSX Data Angsuran</span>
+                        <span className="text-[11px] text-muted-foreground leading-none">Daftar Jatuh Tempo Tagihan Angsuran</span>
                       </div>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => router.push('/history')} isActive={pathname.startsWith('/history')} tooltip="Riwayat">
-                  <History />
-                  <span>Riwayat</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
               {user.role === 'superadmin' && (
                 <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => router.push('/unit-management')} isActive={pathname.startsWith('/unit-management')} tooltip="Manajemen Unit">
+                  <SidebarMenuButton className="h-11 rounded-xl px-3.5 transition-[transform,background-color,box-shadow] duration-200 [transition-timing-function:cubic-bezier(.2,0,0,1)] hover:-translate-y-px hover:shadow-[0_9px_18px_rgba(10,84,89,.08)] active:translate-y-0 active:scale-[.99]" onClick={() => router.push('/unit-management')} isActive={pathname.startsWith('/unit-management')} tooltip="Manajemen Unit">
                     <ShieldCheck />
                     <span>Manajemen Unit</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
+              <SidebarMenuItem>
+                <SidebarMenuButton className="h-11 rounded-xl px-3.5 transition-[transform,background-color,box-shadow] duration-200 [transition-timing-function:cubic-bezier(.2,0,0,1)] hover:-translate-y-px hover:shadow-[0_9px_18px_rgba(10,84,89,.08)] active:translate-y-0 active:scale-[.99]" onClick={() => router.push('/history')} isActive={pathname.startsWith('/history')} tooltip="Riwayat">
+                  <History />
+                  <span>Riwayat</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
-          <SidebarFooter>
+          <SidebarFooter className="p-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start gap-2 px-2">
+                <Button variant="ghost" className="h-auto w-full justify-start gap-3 rounded-2xl bg-white/70 px-3 py-3 shadow-[0_10px_25px_rgba(9,78,88,.06)] transition-[transform,box-shadow] duration-200 hover:-translate-y-px hover:bg-white hover:shadow-[0_14px_28px_rgba(9,78,88,.10)] active:translate-y-0 active:scale-[.99]">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <div className="text-left">
-                    <p className="text-sm font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="truncate text-sm font-medium">{user.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
@@ -178,12 +191,15 @@ export default function MainShell({ children, user }: { children: React.ReactNod
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          <header className="sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
-            <button onClick={() => router.push('/dashboard')} className="flex items-center gap-2 text-lg font-semibold text-primary">
-              <Image src="/logo.ico" alt="App Logo" width={40} height={40} />
-              <span className="font-headline">NAVIGA</span>
-            </button>
-            <Image src="/PegadaianLogo.png" alt="Logo Pegadaian" width={120} height={40} priority />
+          <header
+            className="naviga-topbar sticky top-0 z-20 flex h-[94px] items-center justify-between gap-4 px-4 md:px-9"
+            data-scrolled={isScrolled ? 'true' : 'false'}
+          >
+            <div className="flex flex-col min-w-0">
+              <span className="font-headline text-[26px] font-bold leading-tight tracking-[-0.025em] text-[#003f46]">NAVIGA Control Center</span>
+              <span className="mt-1 text-[12px] font-medium leading-tight text-[#0b4950]">Monitoring, tugas, broadcast, riwayat, dan manajemen unit dalam satu platform.</span>
+            </div>
+            <Image src="/PegadaianLogo.png" alt="Logo Pegadaian" width={97} height={50} className="h-[50px] w-auto shrink-0 object-contain" priority />
           </header>
           {children}
         </SidebarInset>
