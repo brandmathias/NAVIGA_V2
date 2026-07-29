@@ -48,6 +48,9 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(page, /unit-admin-info/);
   assert.match(page, /Simpan/);
   assert.match(styles, /\.unit-admin-dialog\s*\{/);
+  assert.doesNotMatch(styles, /Full-size admin account modal/);
+  assert.match(styles, /width: min\(calc\(100% - 2rem\), 43rem\)/);
+  assert.match(styles, /height: 2\.9rem/);
   assert.match(styles, /\.unit-admin-select-trigger\[data-state="open"\]/);
   assert.match(styles, /\.unit-admin-select-content\s*\{/);
   assert.match(styles, /\.unit-admin-select-item\[data-highlighted\]/);
