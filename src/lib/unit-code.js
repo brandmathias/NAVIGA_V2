@@ -9,13 +9,21 @@ const PROVINCE_DISPLAY_CODES = Object.freeze({
   'Sulawesi Barat': 'MJU', 'Sulawesi Selatan': 'MKS', 'Sulawesi Tengah': 'PLW', 'Sulawesi Tenggara': 'KDI', 'Sulawesi Utara': 'MND', 'Sumatera Barat': 'PDG', 'Sumatera Selatan': 'PLB', 'Sumatera Utara': 'MDN',
 });
 
-function formatUnitCode(domicile, prefix) {
-  const cleanPrefix = String(prefix ?? '').trim();
+function resolveUnitLocationCode(domicile) {
   const domicileText = String(domicile ?? '').trim();
   const letters = domicileText.toUpperCase().replace(/[^A-Z]/g, '');
-  if (!/^\d{5}$/.test(cleanPrefix) || !letters) return '';
-  const code = PROVINCE_DISPLAY_CODES[domicileText] ?? (letters.replace(/[AIUEO]/g, '') + letters).slice(0, 3).padEnd(3, 'X');
-  return `CP-${code}-${cleanPrefix}`;
+  return PROVINCE_DISPLAY_CODES[domicileText] ?? (letters ? (letters.replace(/[AIUEO]/g, '') + letters).slice(0, 3).padEnd(3, 'X') : '');
 }
 
-module.exports = { INDONESIAN_PROVINCES, formatUnitCode };
+function formatUnitCode(domicile, prefix) {
+  const cleanPrefix = String(prefix ?? '').trim();
+  const code = resolveUnitLocationCode(domicile);
+  return /^\d{5}$/.test(cleanPrefix) && code ? `CP-${code}-${cleanPrefix}` : '';
+}
+
+function formatUnitCodePreview(domicile, prefix) {
+  const cleanPrefix = String(prefix ?? '').trim();
+  return `CP-${resolveUnitLocationCode(domicile) || 'XXX'}-${/^\d{5}$/.test(cleanPrefix) ? cleanPrefix : '00000'}`;
+}
+
+module.exports = { INDONESIAN_PROVINCES, formatUnitCode, formatUnitCodePreview };

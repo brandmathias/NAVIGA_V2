@@ -193,8 +193,8 @@
   .unit-admin-select-content { overflow: hidden; border-color: var(--admin-dialog-line); border-radius: .9rem; background: var(--admin-dialog-surface); box-shadow: 0 16px 34px rgba(6, 76, 85, .16); }
   .unit-admin-select-content[data-state="open"] { animation: unit-admin-select-in 180ms cubic-bezier(.2, 0, 0, 1) both; }
   .unit-admin-select-content[data-state="closed"] { animation: unit-admin-select-out 120ms cubic-bezier(.3, 0, 1, 1) both; }
-  .unit-admin-select-item { min-height: 2.85rem; justify-content: space-between; gap: .75rem; border-radius: .65rem; color: var(--admin-dialog-ink); font-size: .85rem; font-weight: 650; transition: background-color 140ms ease-out, color 140ms ease-out, transform 140ms ease-out; }
-  .unit-admin-select-item span:last-child { color: var(--admin-dialog-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .74rem; }
+  .unit-admin-select-item { min-height: 2.85rem; justify-content: space-between; gap: .75rem; border-radius: .65rem; color: var(--admin-dialog-ink); font-size: 1rem; font-weight: 650; transition: background-color 140ms ease-out, color 140ms ease-out, transform 140ms ease-out; }
+  .unit-admin-select-code { color: var(--admin-dialog-muted); font-family: 'Plus Jakarta Sans', sans-serif; font-size: .88rem; font-weight: 700; letter-spacing: .02em; }
   .unit-admin-select-item[data-highlighted] { background: var(--admin-dialog-teal-soft); color: var(--admin-dialog-teal); transform: translateX(2px); }
   .unit-admin-select-item[data-state="checked"] { background: rgba(0, 143, 132, .10); color: var(--admin-dialog-teal); }
 
@@ -590,5 +590,4 @@
 /* Keep every province in the domicile menu legible and consistent with NAVIGA typography. */
 .unit-reference-select { font-family: 'Plus Jakarta Sans', sans-serif; font-size: .92rem; }
 .unit-admin-select-content { font-family: 'Plus Jakarta Sans', sans-serif; }
-.unit-admin-select-item { font-family: 'Plus Jakarta Sans', sans-serif; font-size: .96rem; font-weight: 650; letter-spacing: .01em; }
-.unit-admin-select-code { color: var(--admin-dialog-muted); font-family: 'Plus Jakarta Sans', sans-serif; font-size: .82rem; font-weight: 700; letter-spacing: .02em; }
+.unit-admin-select-item { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 650; letter-spacing: .01em; }

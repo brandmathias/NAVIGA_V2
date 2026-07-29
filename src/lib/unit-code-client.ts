@@ -1,1 +1,1 @@
-export { INDONESIAN_PROVINCES, formatUnitCode } from './unit-code';
+export { INDONESIAN_PROVINCES, formatUnitCode, formatUnitCodePreview } from './unit-code';

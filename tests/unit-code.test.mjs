@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { formatUnitCode } from '../src/lib/unit-code.js';
+import { formatUnitCode, formatUnitCodePreview } from '../src/lib/unit-code.js';
 import gadaiParser from '../src/lib/gadai-ocr-parser.js';
 import installmentImporter from '../src/lib/installment-import.js';
 
@@ -12,6 +12,11 @@ test('formats a display code without changing the five-digit extraction prefix',
 test('uses the provincial capital initials when a domicile province is selected', () => {
   assert.equal(formatUnitCode('Bali', '11787'), 'CP-DPS-11787');
   assert.equal(formatUnitCode('DKI Jakarta', '11787'), 'CP-JKT-11787');
+});
+
+test('updates the display code when either required input is entered first', () => {
+  assert.equal(formatUnitCodePreview('', '11787'), 'CP-XXX-11787');
+  assert.equal(formatUnitCodePreview('Bali', ''), 'CP-DPS-00000');
 });
 
 test('gadai and angsuran filters accept only the raw five-digit prefix, never its display code', () => {

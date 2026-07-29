@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { INDONESIAN_PROVINCES, formatUnitCode } from '@/lib/unit-code-client';
+import { INDONESIAN_PROVINCES, formatUnitCodePreview } from '@/lib/unit-code-client';
 import { registerUnitAction, registerUnitAdminAction } from '../actions';
 
 type Unit = { id: string; name: string; prefix: string; unitCode: string };
@@ -56,7 +56,7 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
   const [appraisers, setAppraisers] = React.useState<Person[]>([]);
   const [admins, setAdmins] = React.useState<Admin[]>([]);
   const [showPassword, setShowPassword] = React.useState(false);
-  const unitCode = formatUnitCode(province, prefix);
+  const unitCode = formatUnitCodePreview(province, prefix);
 
   function addAdmin() {
     if (!adminDraft.name.trim() || !adminDraft.email.trim() || !adminDraft.phone.trim() || adminDraft.password.length < 8) {
