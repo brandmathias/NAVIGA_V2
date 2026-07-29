@@ -30,9 +30,10 @@ Untuk menjalankan fitur lokal, gunakan skrip di `scripts/setup-piper.ps1`,
 - Superadmin dapat mengimpor semua unit aktif dan mendaftarkan unit baru.
 - UPC Garuda belum didaftarkan karena kode lima digitnya belum tersedia.
 
-Excel angsuran tidak memuat nomor WhatsApp. Karena itu fiturnya hanya salin
-template dan pembuatan/pratinjau/unduh WAV Piper lokal. Aksi WhatsApp hanya
-tersedia pada hasil PDF gadai dengan nomor seluler Indonesia yang valid.
+Excel angsuran tanpa nomor WhatsApp yang valid tetap hanya menyediakan salin
+template dan pembuatan/pratinjau/unduh WAV Piper lokal. Baris XLSX dengan nomor
+seluler Indonesia yang valid dapat diantrekan melalui Fonnte; penerimaan antrean
+bukan bukti pesan telah terkirim.
 
 ## Antrean Fonnte (opsional)
 

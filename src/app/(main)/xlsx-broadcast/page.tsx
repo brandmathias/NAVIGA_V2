@@ -14,11 +14,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Upload, Loader2, Mic, ClipboardCopy } from 'lucide-react';
+import { Upload, Loader2, Mic, ClipboardCopy, Bell, Send } from 'lucide-react';
 import type { InstallmentCustomer, HistoryEntry } from '@/types';
 import { Input } from '@/components/ui/input';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
+import { Checkbox } from '@/components/ui/checkbox';
+import { queueInstallmentBroadcast } from '@/app/(main)/broadcast/fonnte-actions';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
+import { normalizeIndonesianWhatsAppNumber } from '@/lib/whatsapp-recipient';
 import { parseXlsx } from './actions';
 import { useLocalSession } from '@/components/main-shell';
 import {
@@ -51,14 +54,16 @@ const formatDate = (value: string | number): string => {
 
 
 type NotificationTemplate = 'jatuh-tempo' | 'keterlambatan' | 'peringatan-lelang';
-type ActionStatus = 'Pesan Disalin';
+type ActionStatus = 'Antrean Fonnte Diterima' | 'Pesan Disalin';
 
 export default function XlsxBroadcastPage() {
   const adminUser = useLocalSession();
   const { toast } = useToast();
   const [importedData, setImportedData] = React.useState<InstallmentCustomer[]>([]);
+  const [selectedCustomers, setSelectedCustomers] = React.useState<Set<string>>(new Set());
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isQueueing, setIsQueueing] = React.useState(false);
 
   const [isGeneratingVoicenote, setIsGeneratingVoicenote] = React.useState(false);
   const [activeVoicenote, setActiveVoicenote] = React.useState<{
@@ -109,6 +114,7 @@ export default function XlsxBroadcastPage() {
 
     setIsLoading(true);
     setImportedData([]);
+    setSelectedCustomers(new Set());
     toast({
         title: 'Memproses XLSX...',
         description: 'Membaca data dari file. Ini mungkin memakan waktu sejenak.',
@@ -133,6 +139,23 @@ export default function XlsxBroadcastPage() {
     } finally {
       setIsLoading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleSelectCustomer = (customerId: string, checked: boolean) => {
+    const nextSelection = new Set(selectedCustomers);
+    if (checked) nextSelection.add(customerId);
+    else nextSelection.delete(customerId);
+    setSelectedCustomers(nextSelection);
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedCustomers(new Set(importedData
+        .filter((customer) => normalizeIndonesianWhatsAppNumber(customer.phone_number))
+        .map((customer) => customer.id)));
+    } else {
+      setSelectedCustomers(new Set());
     }
   };
 
@@ -205,6 +228,40 @@ Terima Kasih`;
     });
   };
 
+  const handleQueueNotification = async (customers: InstallmentCustomer[], template: NotificationTemplate) => {
+    if (customers.some((customer) => !normalizeIndonesianWhatsAppNumber(customer.phone_number))) {
+      toast({
+        title: 'Nomor WhatsApp Tidak Valid',
+        description: 'Periksa nomor HP hasil impor sebelum mengantrekan Fonnte.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!window.confirm(
+      `Antrekan notifikasi untuk ${customers.length} nasabah terpilih dengan interval 60 detik? Penerimaan antrean bukan bukti pesan terkirim.`,
+    )) return;
+
+    setIsQueueing(true);
+    try {
+      const result = await queueInstallmentBroadcast({ customers, template });
+      customers.forEach((customer) => logHistory(customer, 'Antrean Fonnte Diterima', template));
+      toast({
+        title: 'Antrean Fonnte Diterima',
+        description: `${result.accepted} nasabah diterima ke antrean Fonnte dengan interval 60 detik. Ini bukan konfirmasi pesan terkirim.`,
+      });
+      setSelectedCustomers(new Set());
+    } catch (error) {
+      toast({
+        title: 'Gagal Mengantrekan Fonnte',
+        description: error instanceof Error ? error.message : 'Antrean Fonnte tidak dapat diproses. Silakan coba lagi.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsQueueing(false);
+    }
+  };
+
   const handleGenerateVoicenote = async (customer: InstallmentCustomer, template: NotificationTemplate) => {
     setIsGeneratingVoicenote(true);
     toast({
@@ -231,6 +288,14 @@ Terima Kasih`;
     }
   };
 
+  const handleNotifySelected = async () => {
+    if (selectedCustomers.size === 0) return;
+    await handleQueueNotification(
+      importedData.filter((customer) => selectedCustomers.has(customer.id)),
+      'jatuh-tempo',
+    );
+  };
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         {activeVoicenote && (
@@ -248,7 +313,7 @@ Terima Kasih`;
         <CardHeader>
           <CardTitle>Panel Angsuran Broadcast</CardTitle>
           <CardDescription>
-            Impor data nasabah dari file .xlsx untuk menyalin template pengingat dan membuat pesan suara. Data akan otomatis difilter berdasarkan UPC Anda.
+            Impor data nasabah dari file .xlsx untuk menyalin template, membuat pesan suara, atau mengantrekan nomor WhatsApp valid. Data akan otomatis difilter berdasarkan UPC Anda.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -264,16 +329,29 @@ Terima Kasih`;
                 className="hidden"
                 accept=".xlsx"
             />
+            <div className="flex-grow" />
+            <Button onClick={handleNotifySelected} disabled={selectedCustomers.size === 0 || isLoading || isQueueing}>
+              <Send className="mr-2 h-4 w-4" />
+              Antrekan Terpilih ({selectedCustomers.size})
+            </Button>
           </div>
            {importedData.length > 0 && (
              <div className="text-sm text-yellow-600 bg-yellow-50 p-3 rounded-md border border-yellow-200 mb-4">
-               <strong>Perhatian:</strong> Data Excel angsuran tidak memuat nomor WhatsApp. Fitur yang tersedia adalah salin template dan pembuatan pesan suara Piper secara lokal.
+               <strong>Perhatian:</strong> Hanya baris dengan nomor WhatsApp Indonesia yang valid yang dapat diantrekan ke Fonnte. Baris lain tetap dapat memakai salin template dan Piper lokal.
              </div>
             )}
           <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[40px]">
+                    <Checkbox
+                      checked={selectedCustomers.size > 0 && selectedCustomers.size === importedData.filter((customer) => normalizeIndonesianWhatsAppNumber(customer.phone_number)).length}
+                      onCheckedChange={(checked) => handleSelectAll(!!checked)}
+                      aria-label="Pilih semua nomor WhatsApp valid"
+                      disabled={importedData.length === 0 || isQueueing}
+                    />
+                  </TableHead>
                   <TableHead>Nasabah</TableHead>
                   <TableHead>Produk</TableHead>
                   <TableHead>Pinjaman</TableHead>
@@ -291,20 +369,30 @@ Terima Kasih`;
               <TableBody>
                 {isLoading ? (
                     <TableRow>
-                        <TableCell colSpan={12} className="h-24 text-center">
+                        <TableCell colSpan={13} className="h-24 text-center">
                             <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
                             <p className="mt-2 text-muted-foreground">Memproses file XLSX...</p>
                         </TableCell>
                     </TableRow>
                 ) : importedData.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={12} className="h-24 text-center">
+                      <TableCell colSpan={13} className="h-24 text-center">
                           Tidak ada data. Klik "Impor XLSX" untuk memulai.
                       </TableCell>
                     </TableRow>
                 ) : (
-                  importedData.map((customer) => (
-                    <TableRow key={customer.id}>
+                  importedData.map((customer) => {
+                    const canContact = Boolean(normalizeIndonesianWhatsAppNumber(customer.phone_number));
+                    return (
+                    <TableRow key={customer.id} data-state={selectedCustomers.has(customer.id) ? 'selected' : ''}>
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedCustomers.has(customer.id)}
+                          onCheckedChange={(checked) => handleSelectCustomer(customer.id, !!checked)}
+                          aria-label={`Pilih ${customer.nasabah.split('\n')[0]}`}
+                          disabled={!canContact || isQueueing}
+                        />
+                      </TableCell>
                       <TableCell className="font-medium whitespace-pre-line">{customer.nasabah}</TableCell>
                       <TableCell className="whitespace-pre-line">{customer.produk}</TableCell>
                       <TableCell className="text-right">{formatCurrency(customer.pinjaman)}</TableCell>
@@ -330,6 +418,16 @@ Terima Kasih`;
                             </DropdownMenu>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
+                                    <Button size="sm" variant="outline" disabled={!canContact || isQueueing}><Bell className="h-4 w-4" /></Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuItem onClick={() => handleQueueNotification([customer], 'jatuh-tempo')}>Antrekan Pengingat</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleQueueNotification([customer], 'keterlambatan')}>Antrekan Keterlambatan</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleQueueNotification([customer], 'peringatan-lelang')}>Antrekan Peringatan Lelang</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
                                     <Button size="sm" disabled={isGeneratingVoicenote}>
                                         {isGeneratingVoicenote ? <Loader2 className="h-4 w-4 animate-spin"/> : <Mic className="h-4 w-4" />}
                                     </Button>
@@ -343,11 +441,16 @@ Terima Kasih`;
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))
+                  )})
                 )}
               </TableBody>
             </Table>
           </div>
+          {selectedCustomers.size > 0 && (
+            <div className="mt-2 text-xs text-muted-foreground">
+              Nasabah akan diantrekan melalui Fonnte dengan interval 60 detik. Penerimaan antrean bukan bukti pesan terkirim.
+            </div>
+          )}
         </CardContent>
       </Card>
     </main>

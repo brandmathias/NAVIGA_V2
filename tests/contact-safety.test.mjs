@@ -53,7 +53,7 @@ test('rejects a Piper endpoint that is not bound to localhost', async () => {
   );
 });
 
-test('PDF text broadcast queues Fonnte instead of opening WhatsApp tabs', async () => {
+test('PDF and XLSX broadcasts queue Fonnte without opening WhatsApp tabs', async () => {
   const pdfSource = await readFile(new URL('../src/app/(main)/pdf-broadcast/page.tsx', import.meta.url), 'utf8');
   const xlsxSource = await readFile(new URL('../src/app/(main)/xlsx-broadcast/page.tsx', import.meta.url), 'utf8');
 
@@ -63,6 +63,11 @@ test('PDF text broadcast queues Fonnte instead of opening WhatsApp tabs', async 
   assert.match(pdfSource, /60 detik/);
   assert.doesNotMatch(pdfSource, /Opening WhatsApp Tabs/);
   assert.doesNotMatch(pdfSource, /wa\.me\/\$\{formattedPhoneNumber\}\?text=/);
+  assert.match(xlsxSource, /import\s*\{\s*queueInstallmentBroadcast\s*\}/);
+  assert.match(xlsxSource, /import\s*\{\s*normalizeIndonesianWhatsAppNumber\s*\}/);
+  assert.match(xlsxSource, /queueInstallmentBroadcast\s*\(/);
+  assert.match(xlsxSource, /Antrean Fonnte Diterima/);
+  assert.match(xlsxSource, /60 detik/);
   assert.doesNotMatch(xlsxSource, /Notifikasi Terkirim/);
   assert.doesNotMatch(xlsxSource, /wa\.me/);
   assert.doesNotMatch(xlsxSource, /620000000000/);
