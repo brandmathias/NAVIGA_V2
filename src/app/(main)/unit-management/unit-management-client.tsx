@@ -37,11 +37,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { formatUnitCodePreview } from '@/lib/unit-code-client';
 
 type Unit = {
   id: string;
   name: string;
   prefix: string;
+  unitCode: string;
   active: boolean;
   domicile: string;
   phone: string;
@@ -200,7 +202,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
       </div>
 
       <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-        <DialogContent data-testid="admin-registration" className="unit-admin-dialog !max-h-[calc(100dvh-2rem)] !overflow-hidden !p-5 max-sm:!overflow-y-auto sm:!p-6">
+        <DialogContent data-testid="admin-registration" className="unit-admin-dialog !max-h-[calc(100dvh-2rem)] !max-w-[47rem] !overflow-hidden !p-5 max-sm:!overflow-y-auto sm:!p-6">
           <DialogHeader className="unit-admin-dialog-header !grid !text-left">
             <span className="unit-admin-dialog-emblem" aria-hidden="true"><ShieldPlus className="h-10 w-10" strokeWidth={1.55} /></span>
             <div className="min-w-0"><DialogTitle className="unit-admin-dialog-title">Tambah akun admin unit</DialogTitle><DialogDescription className="unit-admin-dialog-description">Buat akun admin baru untuk mengelola unit.</DialogDescription></div>
@@ -213,7 +215,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
                 <div className="min-w-0"><Label htmlFor="admin-unit" className="unit-admin-field-label">Unit terkait <span aria-hidden="true">*</span></Label>
                   <Select name="unitId" value={adminUnitId} onValueChange={setAdminUnitId} required disabled={saving === 'admin' || !units.length}>
                     <SelectTrigger id="admin-unit" aria-label="Unit terkait" className="unit-admin-select-trigger mt-2"><SelectValue placeholder="Pilih unit terkait" /></SelectTrigger>
-                    <SelectContent className="unit-admin-select-content" position="popper">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item"><span>{unit.name}</span><span className="unit-admin-select-code">{unit.prefix}</span></SelectItem>)}</SelectContent>
+                    <SelectContent className="unit-admin-select-content" position="popper">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item">{`${unit.name} - ${unit.unitCode || formatUnitCodePreview(unit.domicile, unit.prefix)}`}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
               </div>

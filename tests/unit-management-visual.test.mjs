@@ -56,7 +56,8 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(page, /Simpan/);
   assert.match(styles, /\.unit-admin-dialog\s*\{/);
   assert.doesNotMatch(styles, /Full-size admin account modal/);
-  assert.match(styles, /width: min\(calc\(100% - 2rem\), 43rem\)/);
+  assert.match(page, /!max-w-\[47rem\]/);
+  assert.match(styles, /width: min\(calc\(100% - 2rem\), 47rem\)/);
   assert.match(styles, /height: 2\.9rem/);
   assert.match(styles, /\.unit-admin-fields\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(styles, /\.unit-admin-field--unit\s*\{[\s\S]*?grid-column:\s*1\s*\/\s*-1/);
@@ -70,8 +71,10 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /\.unit-admin-select-content\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif/);
   assert.match(styles, /\.unit-admin-select-item\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif[\s\S]*?font-size:\s*1rem/);
   assert.doesNotMatch(styles, /\.unit-admin-select-item span:last-child/);
-  assert.match(page, /unit-admin-select-code/);
-  assert.match(styles, /\.unit-admin-select-code\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif[\s\S]*?font-size:\s*\.88rem/);
+  assert.match(page, /unit\.name\} - \$\{unit\.unitCode/);
+  assert.match(page, /formatUnitCodePreview\(unit\.domicile, unit\.prefix\)/);
+  assert.doesNotMatch(page, /unit-admin-select-code/);
+  assert.doesNotMatch(styles, /unit-admin-select-code/);
   assert.match(styles, /\.unit-reference-two-columns\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(page, /Domisili/);
   assert.match(page, /Nomor telepon/);
