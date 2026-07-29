@@ -213,7 +213,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
                 <div className="min-w-0"><Label htmlFor="admin-unit" className="unit-admin-field-label">Unit terkait <span aria-hidden="true">*</span></Label>
                   <Select name="unitId" value={adminUnitId} onValueChange={setAdminUnitId} required disabled={saving === 'admin' || !units.length}>
                     <SelectTrigger id="admin-unit" aria-label="Unit terkait" className="unit-admin-select-trigger mt-2"><SelectValue placeholder="Pilih unit terkait" /></SelectTrigger>
-                    <SelectContent className="unit-admin-select-content" position="popper">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item"><span>{unit.name}</span><span>{unit.prefix}</span></SelectItem>)}</SelectContent>
+                    <SelectContent className="unit-admin-select-content" position="popper">{units.map((unit) => <SelectItem key={unit.id} value={unit.id} className="unit-admin-select-item"><span>{unit.name}</span><span className="unit-admin-select-code">{unit.prefix}</span></SelectItem>)}</SelectContent>
                   </Select>
                 </div>
               </div>

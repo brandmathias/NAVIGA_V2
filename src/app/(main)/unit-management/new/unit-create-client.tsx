@@ -48,7 +48,6 @@ function PersonCard({ title, Icon, actionLabel, draft, setDraft, people, setPeop
 
 function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; error: string; setError: React.Dispatch<React.SetStateAction<string>>; submit: (event: React.FormEvent<HTMLFormElement>) => Promise<void> }) {
   const [prefix, setPrefix] = React.useState('');
-  const [domicile, setDomicile] = React.useState('');
   const [province, setProvince] = React.useState('');
   const [managerDraft, setManagerDraft] = React.useState<DraftPerson>({ name: '', nip: '', phone: '' });
   const [appraiserDraft, setAppraiserDraft] = React.useState<DraftPerson>({ name: '', nip: '', phone: '' });
@@ -57,7 +56,7 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
   const [appraisers, setAppraisers] = React.useState<Person[]>([]);
   const [admins, setAdmins] = React.useState<Admin[]>([]);
   const [showPassword, setShowPassword] = React.useState(false);
-  const unitCode = formatUnitCode(domicile, prefix);
+  const unitCode = formatUnitCode(province, prefix);
 
   function addAdmin() {
     if (!adminDraft.name.trim() || !adminDraft.email.trim() || !adminDraft.phone.trim() || adminDraft.password.length < 8) {
@@ -93,8 +92,7 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
         <Field id="unit-phone" name="phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" disabled={saving} />
         <div className="unit-reference-field unit-reference-address"><Label htmlFor="unit-address">Alamat <span>*</span></Label><textarea id="unit-address" name="address" required placeholder="Masukkan alamat lengkap unit" className="unit-reference-textarea" disabled={saving} /></div>
         <Field id="unit-map" name="mapUrl" label="Link Google Maps Alamat" placeholder="Masukkan link Google Maps alamat unit" type="url" disabled={saving} />
-        <Field id="unit-domicile" name="domicile" label="Kota / kabupaten" placeholder="Contoh: Manado" value={domicile} onChange={(event) => setDomicile(event.target.value)} disabled={saving} />
-        <div className="unit-code-preview"><span>Kode tampilan unit</span><strong>{unitCode || 'CP-XXX-00000'}</strong><small>Terbentuk otomatis dari kota/kabupaten dan kode unit 5 digit.</small></div>
+        <div className="unit-code-preview"><span>Kode tampilan unit</span><strong>{unitCode || 'CP-XXX-00000'}</strong><small>Terbentuk otomatis dari domisili dan kode unit 5 digit.</small></div>
       </div>
     </section>
 
@@ -113,7 +111,7 @@ function UnitCreateForm({ saving, error, setError, submit }: { saving: boolean; 
       </div>
       <div className="unit-reference-table-wrap"><table className="unit-reference-table unit-reference-admin-table"><thead><tr><th>Nama admin unit</th><th>Email akun</th><th>Nomor telepon</th><th>Terakhir diperbarui</th><th aria-label="Aksi">Aksi</th></tr></thead><tbody>{admins.length ? admins.map((admin) => <tr key={admin.email}><td>{admin.name}</td><td>{admin.email}</td><td>{admin.phone}</td><td>Belum disimpan</td><td><button type="button" className="unit-reference-more" onClick={() => setAdmins((current) => current.filter((candidate) => candidate !== admin))} aria-label={`Hapus ${admin.name}`} title={`Hapus ${admin.name}`}><MoreVertical /></button></td></tr>) : <EmptyRows colSpan={5} message="Belum ada akun admin unit." />}</tbody></table></div>
     </section>
-    <input type="hidden" name="managers" value={JSON.stringify(managers)} /><input type="hidden" name="appraisers" value={JSON.stringify(appraisers)} /><input type="hidden" name="admins" value={JSON.stringify(admins)} />
+    <input type="hidden" name="domicile" value={province} /><input type="hidden" name="managers" value={JSON.stringify(managers)} /><input type="hidden" name="appraisers" value={JSON.stringify(appraisers)} /><input type="hidden" name="admins" value={JSON.stringify(admins)} />
     <footer className="unit-reference-footer"><Button type="submit" className="unit-reference-save" disabled={saving}>{saving ? <Loader2 className="animate-spin" /> : <Save />}{saving ? 'Menyimpan...' : 'Simpan unit'}</Button><Button asChild type="button" variant="outline" className="unit-reference-cancel" aria-disabled={saving}><Link href="/unit-management">Batal</Link></Button></footer>
   </form>;
 }

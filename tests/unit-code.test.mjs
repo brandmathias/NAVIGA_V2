@@ -9,6 +9,11 @@ test('formats a display code without changing the five-digit extraction prefix',
   assert.equal(formatUnitCode('Manado', '1178'), '');
 });
 
+test('uses the provincial capital initials when a domicile province is selected', () => {
+  assert.equal(formatUnitCode('Bali', '11787'), 'CP-DPS-11787');
+  assert.equal(formatUnitCode('DKI Jakarta', '11787'), 'CP-JKT-11787');
+});
+
 test('gadai and angsuran filters accept only the raw five-digit prefix, never its display code', () => {
   const displayCode = formatUnitCode('Manado', '11787');
   const gadaiCustomers = [{ sbg_number: '1178725010004741' }];

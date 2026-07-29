@@ -36,7 +36,10 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(createPage, /<Select name="unitId"/);
   assert.match(createPage, /name="prefix"/);
   assert.match(createPage, /pattern="\[0-9\]\{5\}"/);
-  assert.match(createPage, /formatUnitCode\(domicile, prefix\)/);
+  assert.match(createPage, /formatUnitCode\(province, prefix\)/);
+  assert.doesNotMatch(createPage, /id="unit-domicile"/);
+  assert.match(createPage, /name="domicile" value=\{province\}/);
+  assert.match(createPage, /Terbentuk otomatis dari domisili dan kode unit 5 digit\./);
   assert.match(createPage, /router\.push\('\/unit-management'\)/);
   assert.match(createPage, /unit-reference-unit-card/);
   assert.match(createPage, /Pengelola Unit/);
@@ -63,6 +66,11 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /\.unit-reference-page\s*\{[\s\S]*?83\.5rem/);
   assert.match(styles, /\.unit-reference-select\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif/);
   assert.match(styles, /\.unit-reference-select\s*\{[\s\S]*?font-size:\s*\.78rem[\s\S]*?font-weight:\s*650/);
+  assert.match(styles, /\.unit-reference-select\s*\{[\s\S]*?font-size:\s*\.92rem/);
+  assert.match(styles, /\.unit-admin-select-content\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif/);
+  assert.match(styles, /\.unit-admin-select-item\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif[\s\S]*?font-size:\s*\.96rem/);
+  assert.match(page, /unit-admin-select-code/);
+  assert.match(styles, /\.unit-admin-select-code\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif[\s\S]*?font-size:\s*\.82rem/);
   assert.match(styles, /\.unit-reference-two-columns\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(page, /Domisili/);
   assert.match(page, /Nomor telepon/);
