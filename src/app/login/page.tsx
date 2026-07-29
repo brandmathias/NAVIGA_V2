@@ -109,8 +109,10 @@ export default function LoginPage() {
               )}
             />
             <Button type="submit" className="login-submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? 'Memproses...' : 'Log in'}
+              <span>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading ? 'Memproses...' : 'Log in'}
+              </span>
             </Button>
           </form>
         </Form>

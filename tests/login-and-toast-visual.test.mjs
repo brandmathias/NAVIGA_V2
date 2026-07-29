@@ -27,9 +27,15 @@ test('login presents the supplied backdrop with a compact form, clean brand, and
   assert.match(styles, /background: linear-gradient\(135deg, #078f86, #006d68\)/);
   assert.match(styles, /\.login-field:hover/);
   assert.match(styles, /\.login-field:focus-within/);
-  assert.match(styles, /\.login-field:hover[^}]*transform: translateY\(-1px\)/);
+  assert.match(styles, /\.login-field::before/);
+  assert.match(styles, /\.login-field::after/);
+  assert.match(styles, /\.login-field:focus-within::after[^}]*transform: scaleX\(1\)/);
+  assert.match(styles, /\.login-field:hover[^}]*transform: translateY\(-2px\)/);
   assert.match(styles, /\.login-field:has\(input:active\) \.login-field-icon/);
   assert.match(styles, /\.login-submit:active/);
+  assert.match(styles, /\.login-submit::before/);
+  assert.match(styles, /\.login-submit:hover[^}]*transform: translateY\(-2px\)/);
+  assert.match(styles, /\.login-submit:active[^}]*transform: translateY\(1px\) scale\(\.98\)/);
   assert.doesNotMatch(styles, /transform: scale\(\.995\)/);
   assert.match(styles, /\.login-brand/);
   assert.match(styles, /\.login-brand-image \{ width: 7\.75rem/);
