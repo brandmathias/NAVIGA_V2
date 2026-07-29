@@ -80,18 +80,24 @@ function AdminFormField({ icon: Icon, id, label, required = true, children, ...p
   </div>;
 }
 
-export default function UnitManagementClient({ units: initialUnits, admins: initialAdmins }: { units: Unit[]; admins: UnitAdmin[] }) {
+export default function UnitManagementClient({ units: initialUnits, admins: initialAdmins, openAdminDialog = false }: { units: Unit[]; admins: UnitAdmin[]; openAdminDialog?: boolean }) {
   const { toast } = useToast();
   const router = useRouter();
   const [units, setUnits] = React.useState(initialUnits);
   const [admins, setAdmins] = React.useState(initialAdmins);
   const [saving, setSaving] = React.useState<'unit' | 'admin' | null>(null);
-  const [isAdminDialogOpen, setIsAdminDialogOpen] = React.useState(false);
+  const [isAdminDialogOpen, setIsAdminDialogOpen] = React.useState(openAdminDialog);
   const [adminError, setAdminError] = React.useState<string | null>(null);
   const [adminUnitId, setAdminUnitId] = React.useState('');
   const [showAdminPassword, setShowAdminPassword] = React.useState(false);
   const [unitQuery, setUnitQuery] = React.useState('');
   const [adminQuery, setAdminQuery] = React.useState('');
+
+  React.useEffect(() => {
+    if (!openAdminDialog) return;
+    setIsAdminDialogOpen(true);
+    router.replace('/unit-management');
+  }, [openAdminDialog, router]);
 
   const visibleUnits = units.filter((unit) =>
     [unit.name, unit.prefix, unit.domicile, unit.phone, unit.address].join(' ').toLowerCase().includes(unitQuery.trim().toLowerCase()),

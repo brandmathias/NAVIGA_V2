@@ -9,6 +9,6 @@ export default async function NewUnitPage({ searchParams }: { searchParams: Prom
   if (session.role !== 'superadmin') redirect('/dashboard');
 
   const { mode } = await searchParams;
-  if (mode === 'admin') redirect('/unit-management');
+  if (mode === 'admin') redirect('/unit-management?dialog=admin');
   return <UnitCreateClient units={await listUnits()} mode="unit" />;
 }
