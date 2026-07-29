@@ -13,7 +13,7 @@ function validRecipient(recipient) {
 }
 
 async function queueFonnteMessages({ recipients, fetchImpl = fetch }) {
-  if (!getFonnteStatus().enabled) throw new Error('Fonnte belum diaktifkan atau token belum tersedia.');
+  if (!getFonnteStatus().enabled) return { accepted: 0, unavailable: true };
 
   const data = (Array.isArray(recipients) ? recipients : [])
     .filter(validRecipient)

@@ -3,7 +3,7 @@ import type { RegisteredUnit } from './unit-registry';
 
 export type BroadcastTemplate = 'jatuh-tempo' | 'keterlambatan' | 'peringatan-lelang';
 export type BroadcastSession = { role: 'superadmin' | 'unit'; unitPrefix?: string | null };
-export type QueueResult = { accepted: number; reference?: string };
+export type QueueResult = { accepted: number; reference?: string; unavailable?: true };
 export type ListUnitsImpl = () => Promise<RegisteredUnit[]>;
 export type QueueImpl = (input: { recipients: FonnteRecipient[] }) => Promise<QueueResult>;
 export type GadaiQueueCustomer = {

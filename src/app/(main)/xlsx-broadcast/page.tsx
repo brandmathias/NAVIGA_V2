@@ -245,6 +245,14 @@ Terima Kasih`;
     setIsQueueing(true);
     try {
       const result = await queueInstallmentBroadcast({ customers, template });
+      if (result.unavailable) {
+        toast({
+          title: 'Fonnte Belum Aktif',
+          description: 'Fonnte belum dikonfigurasi di server. Tambahkan FONNTE_ENABLED=true dan FONNTE_TOKEN sebelum mengantrekan pesan.',
+          variant: 'destructive',
+        });
+        return;
+      }
       customers.forEach((customer) => logHistory(customer, 'Antrean Fonnte Diterima', template));
       toast({
         title: 'Antrean Fonnte Diterima',

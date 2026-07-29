@@ -70,36 +70,32 @@ test('queueFonnteMessages rejects a successful HTTP response with invalid JSON',
   });
 });
 
-test('queueFonnteMessages rejects while Fonnte is disabled before calling fetch', async () => {
+test('queueFonnteMessages returns an unavailable result while Fonnte is disabled before calling fetch', async () => {
   await withFonnteEnvironment({ FONNTE_ENABLED: 'false', FONNTE_TOKEN: 'test-token' }, async () => {
     let called = false;
 
-    await assert.rejects(
-      queueFonnteMessages({
-        recipients: [{ target: '6281234567890', message: 'Halo' }],
-        fetchImpl: async () => { called = true; },
-      }),
-      /Fonnte belum diaktifkan/i,
-    );
+    const result = await queueFonnteMessages({
+      recipients: [{ target: '6281234567890', message: 'Halo' }],
+      fetchImpl: async () => { called = true; },
+    });
 
     assert.equal(called, false);
+    assert.deepEqual(result, { accepted: 0, unavailable: true });
     assert.deepEqual(getFonnteStatus(), { enabled: false });
   });
 });
 
-test('queueFonnteMessages rejects when its Fonnte token is missing before calling fetch', async () => {
+test('queueFonnteMessages returns an unavailable result when its token is missing before calling fetch', async () => {
   await withFonnteEnvironment({ FONNTE_ENABLED: 'true', FONNTE_TOKEN: '' }, async () => {
     let called = false;
 
-    await assert.rejects(
-      queueFonnteMessages({
-        recipients: [{ target: '6281234567890', message: 'Halo' }],
-        fetchImpl: async () => { called = true; },
-      }),
-      /token belum tersedia/i,
-    );
+    const result = await queueFonnteMessages({
+      recipients: [{ target: '6281234567890', message: 'Halo' }],
+      fetchImpl: async () => { called = true; },
+    });
 
     assert.equal(called, false);
+    assert.deepEqual(result, { accepted: 0, unavailable: true });
     assert.deepEqual(getFonnteStatus(), { enabled: false });
   });
 });

@@ -36,11 +36,16 @@ with sync_playwright() as playwright:
     expect(page.get_by_role('button', name='Antrekan Terpilih (0)')).to_be_visible()
     assert page.get_by_text('Gagal Memproses File', exact=True).count() == 0
     assert page.get_by_text('Status Follow-up', exact=True).count() == 0
+    page.get_by_role('checkbox', name='Pilih Brando Mathias Zusriadi').check()
+    page.on('dialog', lambda dialog: dialog.accept())
+    page.get_by_role('button', name='Antrekan Terpilih (1)').click()
+    expect(page.get_by_text('Fonnte Belum Aktif', exact=True)).to_be_visible()
+    expect(page.get_by_text('Fonnte belum dikonfigurasi di server. Tambahkan FONNTE_ENABLED=true dan FONNTE_TOKEN sebelum mengantrekan pesan.', exact=True)).to_be_visible()
     print(json.dumps({
         'rows': 1,
         'prefix': '11787',
         'customer': 'Brando Mathias Zusriadi',
         'fonnte_enabled': False,
-        'error_toast': False,
+        'unavailable_toast': True,
     }))
     browser.close()

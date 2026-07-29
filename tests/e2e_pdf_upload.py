@@ -44,11 +44,17 @@ with sync_playwright() as playwright:
     assert page.get_by_text("Error Processing PDF").count() == 0
     assert page.get_by_text("Status Follow-up", exact=True).count() == 0
 
+    page.get_by_role("checkbox", name="Select Brando Mathias Zusriadi").check()
+    page.on("dialog", lambda dialog: dialog.accept())
+    page.get_by_role("button", name="Antrekan Terpilih (1)").click()
+    expect(page.get_by_text("Fonnte Belum Aktif", exact=True)).to_be_visible()
+    expect(page.get_by_text("Fonnte belum dikonfigurasi di server. Tambahkan FONNTE_ENABLED=true dan FONNTE_TOKEN sebelum mengantrekan pesan.", exact=True)).to_be_visible()
+
     print(json.dumps({
         "rows": len(sbg_values),
         "prefix": "11787",
         "customer": "Brando Mathias Zusriadi",
         "fonnte_enabled": False,
-        "error_toast": False,
+        "unavailable_toast": True,
     }))
     browser.close()
