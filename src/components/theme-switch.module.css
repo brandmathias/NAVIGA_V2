@@ -1,0 +1,176 @@
+.themeSwitch {
+  --switch-ink: #356092;
+  --switch-track: #d9eee9;
+  --switch-track-active: #079c91;
+  --switch-thumb: #ffffff;
+  position: relative;
+  display: grid;
+  min-height: 64px;
+  grid-template-columns: 36px 1fr 36px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  overflow: hidden;
+  border: 1px solid rgba(216, 232, 234, .94);
+  border-radius: 19px;
+  background: rgba(255, 255, 255, .72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .92), 0 9px 24px rgba(16, 42, 67, .045);
+}
+
+.themeSwitch::before {
+  position: absolute;
+  inset: 8px auto 8px 50%;
+  width: 64px;
+  transform: translateX(-50%) scale(.82);
+  border-radius: 999px;
+  background: rgba(15, 173, 156, .18);
+  content: '';
+  opacity: 0;
+  transition: transform 420ms cubic-bezier(.23, 1, .32, 1), opacity 260ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.themeSwitch[data-theme='dark']::before {
+  transform: translateX(-50%) scale(1.8);
+  opacity: 1;
+}
+
+.sun,
+.moon {
+  position: relative;
+  z-index: 1;
+  width: 21px;
+  height: 21px;
+  justify-self: center;
+  color: var(--switch-ink);
+  transition: transform 380ms cubic-bezier(.23, 1, .32, 1), color 220ms cubic-bezier(.23, 1, .32, 1), opacity 220ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.themeSwitch[data-theme='light'] .sun,
+.themeSwitch[data-theme='dark'] .moon {
+  color: var(--switch-track-active);
+  transform: scale(1.12) rotate(12deg);
+}
+
+.themeSwitch[data-theme='dark'] .sun {
+  transform: scale(.82) rotate(-18deg);
+  opacity: .6;
+}
+
+.themeSwitch[data-theme='light'] .moon {
+  transform: scale(.82) rotate(18deg);
+  opacity: .6;
+}
+
+.control {
+  position: relative;
+  z-index: 1;
+  width: 78px;
+  height: 42px;
+  justify-self: center;
+  padding: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(8, 155, 143, .19);
+  border-radius: 999px;
+  background: var(--switch-track);
+  box-shadow: inset 0 2px 5px rgba(0, 91, 85, .12), inset 0 1px 0 rgba(255, 255, 255, .66);
+  cursor: pointer;
+  transition: background-color 280ms cubic-bezier(.23, 1, .32, 1), border-color 280ms cubic-bezier(.23, 1, .32, 1), box-shadow 280ms cubic-bezier(.23, 1, .32, 1), transform 150ms cubic-bezier(.2, 0, 0, 1);
+}
+
+.control::before {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: 34px;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, .28);
+  content: '';
+  opacity: 0;
+  transform: translateX(0) scaleX(.65);
+  transition: transform 420ms cubic-bezier(.23, 1, .32, 1), opacity 220ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.themeSwitch[data-theme='dark'] .control {
+  border-color: rgba(70, 238, 210, .42);
+  background: var(--switch-track-active);
+  box-shadow: inset 0 2px 6px rgba(0, 61, 60, .24), 0 5px 14px rgba(3, 148, 136, .22);
+}
+
+.themeSwitch[data-theme='dark'] .control::before {
+  transform: translateX(32px) scaleX(1);
+  opacity: 1;
+}
+
+.control:hover {
+  box-shadow: inset 0 2px 6px rgba(0, 91, 85, .16), 0 7px 18px rgba(3, 148, 136, .18);
+  transform: translateY(-1px);
+}
+
+.control:active {
+  transform: translateY(1px) scale(.96);
+}
+
+.control:focus-visible {
+  outline: 3px solid rgba(12, 174, 159, .34);
+  outline-offset: 3px;
+}
+
+.thumb {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--switch-thumb);
+  box-shadow: 0 4px 10px rgba(0, 69, 66, .2), inset 0 1px 1px rgba(255, 255, 255, .96);
+  color: #079c91;
+  transform: translateX(0) rotate(0deg);
+  transition: transform 420ms cubic-bezier(.23, 1, .32, 1), background-color 280ms cubic-bezier(.23, 1, .32, 1), color 280ms cubic-bezier(.23, 1, .32, 1), box-shadow 280ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.themeSwitch[data-theme='dark'] .thumb {
+  background: #e9fffb;
+  box-shadow: 0 4px 12px rgba(0, 47, 47, .28), inset 0 1px 1px rgba(255, 255, 255, .98);
+  color: #007c73;
+  transform: translateX(32px) rotate(-18deg);
+}
+
+.thumbSun,
+.thumbMoon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transition: transform 320ms cubic-bezier(.23, 1, .32, 1), opacity 180ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.thumbMoon {
+  opacity: 0;
+  transform: scale(.55) rotate(34deg);
+}
+
+.themeSwitch[data-theme='dark'] .thumbSun {
+  opacity: 0;
+  transform: scale(.55) rotate(-34deg);
+}
+
+.themeSwitch[data-theme='dark'] .thumbMoon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .themeSwitch::before,
+  .sun,
+  .moon,
+  .control,
+  .control::before,
+  .thumb,
+  .thumbSun,
+  .thumbMoon {
+    transition-duration: 1ms;
+  }
+}

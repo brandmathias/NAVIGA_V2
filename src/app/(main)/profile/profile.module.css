@@ -642,3 +642,56 @@
     transform: translateY(0);
   }
 }
+
+:global(.dark) .profilePage {
+  --profile-navy: #e6fffa;
+  --profile-navy-soft: #afd0cb;
+  --profile-teal: #54d8c6;
+  --profile-teal-bright: #71ead7;
+  --profile-mint: #16494d;
+  --profile-page: #071f24;
+  --profile-border: rgba(138, 227, 214, .18);
+}
+
+:global(.dark) .profilePage::before,
+:global(.dark) .profilePage::after {
+  opacity: .28;
+}
+
+:global(.dark) .profilePanel,
+:global(.dark) .panelBackdrop,
+:global(.dark) .infoCard,
+:global(.dark) .securityPanel,
+:global(.dark) .accountDialog,
+:global(.dark) .loginHistoryItem {
+  border-color: var(--profile-border);
+  background-color: #10353a;
+  background-image: none;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(214, 255, 248, .05);
+}
+
+:global(.dark) .avatarFrame,
+:global(.dark) .infoIcon,
+:global(.dark) .securityIcon,
+:global(.dark) .dialogEmblem,
+:global(.dark) .historyIcon,
+:global(.dark) .formField input,
+:global(.dark) .dialogSecondaryButton,
+:global(.dark) .loginHistoryItem code {
+  border-color: var(--profile-border);
+  background: #17464b;
+  color: var(--profile-navy);
+}
+
+:global(.dark) .description,
+:global(.dark) .infoLabel,
+:global(.dark) .securityDescription,
+:global(.dark) .dialogDescription,
+:global(.dark) .formField,
+:global(.dark) .historyEmpty,
+:global(.dark) .historyCopy time,
+:global(.dark) .historyLocation,
+:global(.dark) .loginHistoryItem code,
+:global(.dark) .copyright {
+  color: var(--profile-navy-soft);
+}

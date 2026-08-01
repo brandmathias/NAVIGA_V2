@@ -590,3 +590,70 @@
 .unit-reference-select { font-family: 'Plus Jakarta Sans', sans-serif; font-size: .92rem; }
 .unit-admin-select-content { font-family: 'Plus Jakarta Sans', sans-serif; }
 .unit-admin-select-item { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 650; letter-spacing: .01em; }
+
+/* Shared dark surface contract: pages and Radix portal content use the same NAVIGA depth. */
+.dark {
+  --naviga-dark-page: #071f24;
+  --naviga-dark-surface: #10353a;
+  --naviga-dark-surface-raised: #17464b;
+  --naviga-dark-border: rgba(138, 227, 214, .18);
+  --naviga-dark-ink: #e5fbf7;
+  --naviga-dark-muted: #a3c8c3;
+}
+
+.dark .naviga-shell :where([class*="bg-white"], [class*="bg-[#f"], [class*="bg-[#e"]) {
+  background-color: var(--naviga-dark-surface) !important;
+}
+
+.dark .naviga-shell :where([class*="bg-[linear-gradient"], [class*="bg-[radial-gradient"]) {
+  background-color: var(--naviga-dark-surface-raised) !important;
+  background-image: none !important;
+}
+
+.dark .naviga-shell :where([class*="border-[#"], [class*="divide-[#"]) {
+  border-color: var(--naviga-dark-border) !important;
+}
+
+.dark .naviga-shell :where([class*="text-[#0"], [class*="text-[#1"], [class*="text-[#3"], [class*="text-[#4"], [class*="text-[#5"], [class*="text-[#6"], [class*="text-[#7"], [class*="text-[#8"], [class*="text-[#9"]) {
+  color: var(--naviga-dark-ink) !important;
+}
+
+.dark :where([role='dialog'], [data-radix-popper-content-wrapper] > *) {
+  border-color: var(--naviga-dark-border) !important;
+  background-color: var(--naviga-dark-surface) !important;
+  color: var(--naviga-dark-ink) !important;
+  box-shadow: 0 24px 68px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(214, 255, 248, .05) !important;
+}
+
+.dark :where([role='dialog'], [data-radix-popper-content-wrapper] > *) :where([class*="bg-white"], [class*="bg-[#f"], [class*="bg-[#e"], [class*="bg-[linear-gradient"], [class*="bg-[radial-gradient"]) {
+  background-color: var(--naviga-dark-surface-raised) !important;
+  background-image: none !important;
+}
+
+.dark .toast-shell {
+  --toast-ink: #edfffc;
+  --toast-muted: #aed2cd;
+  --toast-surface: rgba(16, 53, 58, .98);
+  border-color: var(--naviga-dark-border);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(214, 255, 248, .06);
+}
+
+.dark .unit-admin-dialog {
+  --admin-dialog-ink: #e8fffb;
+  --admin-dialog-muted: #aaccc7;
+  --admin-dialog-teal-soft: #164a4e;
+  --admin-dialog-line: rgba(121, 230, 214, .26);
+  --admin-dialog-surface: #10353a;
+}
+
+.dark .unit-reference-page { color: var(--naviga-dark-ink); }
+.dark .unit-reference-card, .dark .unit-reference-input, .dark .unit-reference-select, .dark .unit-reference-textarea, .dark .unit-reference-table-wrap { border-color: var(--naviga-dark-border); background: var(--naviga-dark-surface); color: var(--naviga-dark-ink); }
+.dark .unit-reference-heading, .dark .unit-reference-title, .dark .unit-reference-title h2, .dark .unit-reference-field > label, .dark .unit-reference-table th, .dark .unit-reference-table { color: var(--naviga-dark-ink); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-theme-transition='true'] :where(.naviga-shell, .naviga-shell *, [role='dialog'], [role='dialog'] *, [data-radix-popper-content-wrapper], [data-radix-popper-content-wrapper] *) {
+    transition-property: background-color, border-color, color, box-shadow, fill, stroke;
+    transition-duration: 360ms;
+    transition-timing-function: cubic-bezier(.23, 1, .32, 1);
+  }
+}
