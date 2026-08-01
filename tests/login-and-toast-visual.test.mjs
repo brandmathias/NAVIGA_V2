@@ -42,10 +42,11 @@ test('login presents the supplied backdrop with a compact form, clean brand, and
 });
 
 test('all toast variants use consistent entrance and exit motion', async () => {
-  const [toast, toaster, styles] = await Promise.all([
+  const [toast, toaster, styles, toastHook] = await Promise.all([
     readFile('src/components/ui/toast.tsx', 'utf8'),
     readFile('src/components/ui/toaster.tsx', 'utf8'),
     readFile('src/app/globals.css', 'utf8'),
+    readFile('src/hooks/use-toast.ts', 'utf8'),
   ]);
 
   assert.match(toast, /toast-shell/);
@@ -62,6 +63,9 @@ test('all toast variants use consistent entrance and exit motion', async () => {
   assert.match(toast, /destructive group border-destructive text-\[#9b2020\]/);
   assert.doesNotMatch(toast, /destructive group border-destructive bg-destructive/);
   assert.match(toaster, /strokeWidth=\{2\.25\}/);
+  assert.match(toastHook, /export type ToastTone/);
+  assert.match(toastHook, /tone\?: ToastTone/);
+  assert.match(toaster, /data-tone=\{resolvedTone\}/);
   assert.match(styles, /\.toast-title \{[^}]*font-weight: 750/);
   assert.match(styles, /\.toast-description \{[^}]*font-weight: 600/);
   assert.match(styles, /\.toast-shell::after/);

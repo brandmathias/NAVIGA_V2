@@ -25,10 +25,11 @@ test('theme switch persists a browser preference and exposes an accessible switc
   assert.match(switchStyles, /\.control:active/);
 });
 
-test('main shell places the theme control directly before the account card', async () => {
+test('main shell keeps the account card without mounting a theme switch control', async () => {
   const shell = await readFile('src/components/main-shell.tsx', 'utf8');
 
-  assert.match(shell, /<ThemeSwitch\s*\/>\s*<DropdownMenu>/s);
+  assert.doesNotMatch(shell, /ThemeSwitch/);
+  assert.match(shell, /<SidebarFooter[\s\S]*?<DropdownMenu>/s);
 });
 
 test('dark mode reaches shared page surfaces, popups, and the profile stylesheet', async () => {

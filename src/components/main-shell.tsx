@@ -30,7 +30,6 @@ import { cn } from '@/lib/utils';
 import type { LocalSession } from '@/lib/local-auth';
 
 import styles from './main-shell.module.css';
-import { ThemeSwitch } from '@/components/theme-switch';
 const SessionContext = React.createContext<LocalSession | null>(null);
 
 export function useLocalSession(): LocalSession {
@@ -188,7 +187,6 @@ export default function MainShell({ children, user }: { children: React.ReactNod
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="naviga-sidebar-footer p-4 pt-0">
-            <ThemeSwitch />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="naviga-sidebar-profile h-[82px] w-full justify-start gap-3 rounded-[18px] border border-[#e4edef] bg-white/90 px-3 py-3 shadow-[0_10px_28px_rgba(16,42,67,.07)] transition-[transform,border-color,box-shadow,background-color] duration-200 focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-offset-2 active:scale-[.98]">
