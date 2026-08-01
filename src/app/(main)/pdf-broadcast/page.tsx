@@ -19,6 +19,7 @@ import type { BroadcastCustomer, HistoryEntry, Customer } from '@/types';
 import { Input } from '@/components/ui/input';
 import { parsePdf } from './actions';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
+import { buildGadaiSpeechScript } from '@/lib/tts-text';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
 import { normalizeIndonesianWhatsAppNumber } from '@/lib/whatsapp-recipient';
 import {
@@ -313,8 +314,15 @@ Terima Kasih`;
     try {
         const whatsappUrl = `https://wa.me/${formattedPhoneNumber}`;
 
-        const message = getNotificationMessage(customer, template);
-        const { audioDataUri } = await generateCustomerVoicenote({ text: message });
+        const speechText = buildGadaiSpeechScript({
+          template,
+          unitName: getUnitLabel(customer.sbg_number),
+          customerName: customer.name,
+          sbgNumber: customer.sbg_number,
+          collateral: customer.barang_jaminan,
+          dueDate: customer.due_date,
+        });
+        const { audioDataUri } = await generateCustomerVoicenote({ text: speechText });
 
         setActiveVoicenote({
             audioDataUri,

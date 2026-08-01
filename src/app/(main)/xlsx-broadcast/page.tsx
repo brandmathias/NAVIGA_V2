@@ -19,6 +19,7 @@ import type { InstallmentCustomer, HistoryEntry } from '@/types';
 import { Input } from '@/components/ui/input';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
+import { buildInstallmentSpeechScript } from '@/lib/tts-text';
 import { parseXlsx } from './actions';
 import { useLocalSession } from '@/components/main-shell';
 import {
@@ -212,8 +213,16 @@ Terima Kasih`;
         description: `Piper sedang membuat pesan suara untuk ${customer.nasabah.split('\n')[0]}.`,
     });
     try {
-        const message = getNotificationMessage(customer, template);
-        const { audioDataUri } = await generateCustomerVoicenote({ text: message });
+        const speechText = buildInstallmentSpeechScript({
+          template,
+          unitName: customer.pencairan,
+          customerName: customer.nasabah,
+          productName: customer.produk,
+          installmentAmount: customer.angsuran,
+          obligationAmount: customer.kewajiban,
+          overdueDays: customer.hr_tung,
+        });
+        const { audioDataUri } = await generateCustomerVoicenote({ text: speechText });
 
         setActiveVoicenote({
             audioDataUri,
