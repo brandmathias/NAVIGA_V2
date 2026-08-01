@@ -103,25 +103,6 @@
   color: #72f0df;
 }
 
-:global(.dark) :global(.naviga-topbar) {
-  background-color: rgb(8 35 40 / var(--naviga-glass-alpha));
-  border-bottom-color: rgba(120, 239, 222, .13);
-  box-shadow: 0 3px 14px rgba(0, 0, 0, .16);
-}
-
-:global(.dark) :global(.naviga-topbar[data-scrolled='true']) {
-  border-color: rgba(120, 239, 222, .06);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
-}
-
-:global(.dark) :global(.naviga-topbar .font-headline) {
-  color: #effffd;
-}
-
-:global(.dark) :global(.naviga-topbar .font-headline + span) {
-  color: #a9d9d3;
-}
-
 @media (hover: hover) and (pointer: fine) {
   :global(.dark) .navigaSidebar :global(.naviga-sidebar-menu-button:hover) {
     border-color: rgba(84, 229, 205, .35);
