@@ -29,7 +29,9 @@ test('sidebar reference treatment and unit header copy remain role-aware', async
   ]);
 
   assert.match(shell, /const isUnitUser = user\.role === 'unit';/);
-  assert.match(shell, /Operations Center/);
+  assert.match(shell, /headerTitle = isUnitUser \? `\$\{unitName\} Control Center`/);
+  assert.match(shell, /Kelola tugas, jatuh tempo broadcast, dan riwayat operasional \$\{unitName\}/);
+  assert.doesNotMatch(shell, /isUnitUser \? `\$\{unitName\} Operations Center`/);
   assert.match(shell, /naviga-sidebar-brand/);
   assert.match(shellStyles, /\.naviga-sidebar-menu-button/);
   assert.match(shellStyles, /@media \(prefers-reduced-motion: reduce\)/);

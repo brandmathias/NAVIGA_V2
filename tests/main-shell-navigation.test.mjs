@@ -12,11 +12,12 @@ test('sidebar routes use links while the broadcast trigger remains an action', a
   assert.match(shell, /<DropdownMenuTrigger asChild>/);
 });
 
-test('sidebar keeps all labels visible in a compact shell with a light initial avatar', async () => {
+test('sidebar uses a compact brand header with a legible logo lockup and light initial avatar', async () => {
   const shell = await readFile('src/components/main-shell.tsx', 'utf8');
 
-  assert.match(shell, /h-\[100px\]/);
-  assert.doesNotMatch(shell, /h-\[166px\]/);
+  assert.match(shell, /h-20 shrink-0/);
+  assert.match(shell, /width=\{44\} height=\{44\} className="h-11 w-11 shrink-0"/);
+  assert.match(shell, /text-\[26px\] font-medium/);
   assert.match(shell, /whitespace-normal/);
   assert.match(shell, /AvatarFallback className="bg-white/);
   assert.match(shell, /text-\[#087f76\]/);

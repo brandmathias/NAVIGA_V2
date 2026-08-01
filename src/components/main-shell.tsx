@@ -47,9 +47,9 @@ export default function MainShell({ children, user }: { children: React.ReactNod
 
   const isUnitUser = user.role === 'unit';
   const unitName = user.unitName?.trim() || 'NAVIGA Unit';
-  const headerTitle = isUnitUser ? `${unitName} Operations Center` : 'NAVIGA Control Center';
+  const headerTitle = isUnitUser ? `${unitName} Control Center` : 'NAVIGA Control Center';
   const headerDescription = isUnitUser
-    ? `Kelola tugas, broadcast, dan riwayat operasional ${unitName}.`
+    ? `Kelola tugas, jatuh tempo broadcast, dan riwayat operasional ${unitName}.`
     : 'Monitoring, tugas, broadcast, riwayat, dan manajemen unit dalam satu platform.';
   const menuButtonClassName = 'naviga-sidebar-menu-button h-14 rounded-[16px] border border-[#edf2f3] bg-white/70 px-4 font-medium text-[#334e68] shadow-[0_7px_18px_rgba(16,42,67,.045)] transition-[transform,background-color,border-color,box-shadow,color] duration-200 focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-offset-2 active:scale-[.98]';
 
@@ -82,15 +82,15 @@ export default function MainShell({ children, user }: { children: React.ReactNod
     <SessionContext.Provider value={user}>
       <SidebarProvider className="naviga-shell" style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
         <Sidebar variant="floating" className={cn('naviga-sidebar', styles.navigaSidebar)}>
-          <SidebarHeader className="naviga-sidebar-brand relative h-[100px] shrink-0 overflow-hidden border-b border-[#d5ece9] p-0">
-            <svg aria-hidden="true" className="pointer-events-none absolute -right-4 top-0 h-[96px] w-[144px] text-white/75" viewBox="0 0 220 170" fill="none">
+          <SidebarHeader className="naviga-sidebar-brand relative h-20 shrink-0 overflow-hidden border-b border-[#d5ece9] p-0">
+            <svg aria-hidden="true" className="pointer-events-none absolute -right-3 top-0 h-20 w-32 text-white/75" viewBox="0 0 220 170" fill="none">
               {Array.from({ length: 11 }).map((_, index) => (
                 <path key={index} d={`M${12 + index * 2} 168C52 ${118 - index * 3} 90 ${148 - index * 2} 124 ${93 - index * 2}C150 ${50 - index} 185 ${58 - index * 2} 224 ${12 + index * 2}`} stroke="currentColor" strokeWidth="1.4" opacity={0.85 - index * 0.045} />
               ))}
             </svg>
-            <Link href="/dashboard" className="naviga-sidebar-brand-link relative z-10 flex h-full w-full items-center gap-2.5 px-5 text-[#003f46] transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-inset active:scale-[.98]">
-              <Image src="/logo.ico" alt="NAVIGA" width={32} height={32} className="h-8 w-8 shrink-0" priority />
-              <span className="font-headline text-[22px] font-medium tracking-[-.04em]">NAV<span className="text-[#0aa99c]">IGA</span></span>
+            <Link href="/dashboard" className="naviga-sidebar-brand-link relative z-10 flex h-full w-full items-center gap-3 px-4 text-[#003f46] transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-inset active:scale-[.98]">
+              <Image src="/logo.ico" alt="NAVIGA" width={44} height={44} className="h-11 w-11 shrink-0" priority />
+              <span className="font-headline text-[26px] font-medium tracking-[-.04em]">NAV<span className="text-[#0aa99c]">IGA</span></span>
             </Link>
           </SidebarHeader>
           <SidebarContent className="naviga-sidebar-content px-4 py-4">
