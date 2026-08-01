@@ -21,3 +21,16 @@ test('main header drops artwork and becomes translucent after the page scrolls',
   assert.doesNotMatch(shell, /h-auto w-\[124px\]/);
   assert.doesNotMatch(shell, /brightness-0 invert/);
 });
+
+test('sidebar reference treatment and unit header copy remain role-aware', async () => {
+  const [shell, shellStyles] = await Promise.all([
+    readFile('src/components/main-shell.tsx', 'utf8'),
+    readFile('src/components/main-shell.module.css', 'utf8'),
+  ]);
+
+  assert.match(shell, /const isUnitUser = user\.role === 'unit';/);
+  assert.match(shell, /Operations Center/);
+  assert.match(shell, /naviga-sidebar-brand/);
+  assert.match(shellStyles, /\.naviga-sidebar-menu-button/);
+  assert.match(shellStyles, /@media \(prefers-reduced-motion: reduce\)/);
+});

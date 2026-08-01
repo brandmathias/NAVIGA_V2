@@ -124,7 +124,7 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /\.naviga-panel\s*\{[\s\S]*?background:\s*#ffffff[\s\S]*?box-shadow:\s*inset 0 1px 0 rgba\(255,255,255,\.9\)/);
   assert.match(shell, /'--sidebar-width': '19rem'/);
   assert.match(shell, /<Sidebar variant="floating"/);
-  assert.ok(shell.indexOf("router.push('/unit-management')") < shell.indexOf("router.push('/history')"));
+  assert.ok(shell.indexOf('href="/unit-management"') < shell.indexOf('href="/history"'));
   assert.match(shell, /min-w-0/);
   assert.match(shell, /truncate/);
   assert.match(shell, /const header = headerRef\.current;/);
@@ -132,5 +132,5 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(shell, /header\?\.style\.setProperty\('--naviga-glass-alpha'/);
   assert.match(shell, /requestAnimationFrame/);
   assert.match(shell, /NAV<span className="text-\[#0aa99c\]">IGA<\/span>/);
-  assert.match(shell, /gap-2 text-\[#003f46\] transition-transform/);
+  assert.match(shell, /naviga-sidebar-brand/);
 });
