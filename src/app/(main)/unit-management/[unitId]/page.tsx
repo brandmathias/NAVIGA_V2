@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
-import { getSession } from '@/lib/local-auth';
-import { listUnitAdmins, listUnits } from '@/lib/unit-registry';
+import { getSession } from '@/lib/auth-session';
+import { listUnitAdmins, listUnits } from '@/lib/naviga-directory.mjs';
 import UnitCreateClient from '../new/unit-create-client';
 
 export default async function EditUnitPage({ params }: { params: Promise<{ unitId: string }> }) {

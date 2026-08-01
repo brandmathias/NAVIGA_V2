@@ -29,3 +29,30 @@ test('returns Markdown produced by the local RapidDoc runner', async () => {
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test('passes a safe image extension to the local RapidDoc runner', async () => {
+  const { extractRapidDocMarkdown } = await import('../src/lib/rapid-doc-client.js');
+  const directory = await mkdtemp(join(tmpdir(), 'naviga-rapid-doc-image-test-'));
+  const runnerPath = join(directory, 'runner.mjs');
+
+  await writeFile(runnerPath, [
+    "import { writeFile } from 'node:fs/promises';",
+    'const [, , inputPath, outputPath] = process.argv;',
+    "if (!inputPath.endsWith('.png')) throw new Error('PNG input is required');",
+    "await writeFile(outputPath, '| Nasabah | Produk |\\n| --- | --- |\\n| Siti | KCA |');",
+  ].join('\n'));
+
+  try {
+    const markdown = await extractRapidDocMarkdown(Buffer.from('png'), {
+      command: process.execPath,
+      args: [runnerPath],
+      fileLabel: 'foto',
+      inputName: '../../foto-tabel.png',
+      timeoutMs: 3_000,
+    });
+
+    assert.match(markdown, /Siti/);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

@@ -1,8 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireSession } from '@/lib/local-auth';
-import { registerUnit, registerUnitAdmin, updateUnit, updateUnitAdmin } from '@/lib/unit-registry';
+import { headers } from 'next/headers';
+import { requireSession } from '@/lib/auth-session';
+import { registerUnit, registerUnitAdmin, updateUnit, updateUnitAdmin } from '@/lib/naviga-directory.mjs';
 
 async function requireSuperadmin() {
   const session = await requireSession();
@@ -41,7 +42,7 @@ export async function registerUnitAction(formData: FormData) {
     adminPhone: formData.get('adminPhone'),
     email: formData.get('email'),
     password: formData.get('password'),
-  });
+  }, await headers());
 
   revalidatePath('/unit-management');
   revalidatePath('/dashboard');
@@ -59,7 +60,7 @@ export async function registerUnitAdminAction(formData: FormData) {
     address: formData.get('address'),
     email: formData.get('email'),
     password: formData.get('password'),
-  });
+  }, await headers());
 
   revalidatePath('/unit-management');
   return admin;
@@ -80,7 +81,7 @@ export async function updateUnitAction(formData: FormData) {
     managers: readList(formData, 'managers'),
     appraisers: readList(formData, 'appraisers'),
     admins: readList(formData, 'admins'),
-  });
+  }, await headers());
 
   revalidatePath('/unit-management');
   revalidatePath(`/unit-management/${unit.id}`);
@@ -98,7 +99,7 @@ export async function updateUnitAdminAction(formData: FormData) {
     email: formData.get('email'),
     phone: formData.get('phone'),
     password: formData.get('password'),
-  });
+  }, await headers());
 
   revalidatePath('/unit-management');
   revalidatePath('/dashboard');

@@ -46,6 +46,13 @@ export interface ScheduledTask {
 }
 
 // Types for the new Task Workflow Tracker
+export interface TaskAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -56,6 +63,7 @@ export interface Task {
   };
   labels?: string[];
   dueDate?: string;
+  attachment?: TaskAttachment;
 }
 
 export interface Column {

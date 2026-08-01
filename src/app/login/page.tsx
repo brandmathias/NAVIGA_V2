@@ -10,6 +10,7 @@ import { Eye, EyeOff, Loader2, LockKeyhole, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { authClient } from '@/lib/auth-client';
 import {
   Form,
   FormControl,
@@ -39,22 +40,16 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const result = (await response.json()) as { error?: string; user?: { name: string } };
-
-      if (!response.ok || !result.user) {
-        toast({ title: 'Login Gagal', description: result.error ?? 'Email atau sandi tidak valid.', variant: 'destructive' });
+      const result = await authClient.signIn.email(data);
+      if (result.error || !result.data?.user) {
+        toast({ title: 'Login Gagal', description: result.error?.message ?? 'Email atau sandi tidak valid.', variant: 'destructive', tone: 'error' });
         return;
       }
 
-      toast({ title: 'Login Berhasil', description: `Selamat datang, ${result.user.name}.` });
+      toast({ title: 'Login Berhasil', description: `Selamat datang, ${result.data.user.name}.`, tone: 'success' });
       router.replace('/dashboard');
     } catch {
-      toast({ title: 'Login Gagal', description: 'Server autentikasi tidak dapat dihubungi.', variant: 'destructive' });
+      toast({ title: 'Login Gagal', description: 'Server autentikasi tidak dapat dihubungi.', variant: 'destructive', tone: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +60,7 @@ export default function LoginPage() {
       <section className="login-card" aria-labelledby="login-title">
         <header className="login-card-header">
           <Image src="/logo.ico" alt="NAVIGA" width={84} height={84} className="login-app-mark" priority />
-          <h1 id="login-title" className="login-title">NAVIGA <span>Admin</span></h1>
+          <h1 id="login-title" className="login-title">NAV<span>IGA</span></h1>
           <p className="login-description">Masuk dengan akun Superadmin atau akun unit yang telah terdaftar.</p>
           <div className="login-title-rule" aria-hidden="true" />
         </header>

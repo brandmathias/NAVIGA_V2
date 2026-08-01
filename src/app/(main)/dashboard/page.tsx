@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocalSession } from '@/components/main-shell';
+import { ScrollReveal, MotionCard, StaggerContainer, StaggerItem } from '@/components/motion';
 
 interface UpcProfileData {
   name: string;
@@ -141,14 +142,17 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="flex items-center">
-          <h1 className="text-2xl font-bold tracking-tight font-headline">
-            Profil Unit Pelayanan Cabang (UPC)
-          </h1>
-        </div>
+        <ScrollReveal direction="up">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold tracking-tight font-headline">
+              Profil Unit Pelayanan Cabang (UPC)
+            </h1>
+          </div>
+        </ScrollReveal>
 
         <div className="grid gap-6">
           {/* UPC Profile Card */}
+          <MotionCard delay={0.06}>
           <Card className="transition-shadow duration-200 hover:shadow-xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -217,11 +221,13 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+          </MotionCard>
         </div>
 
         {userUpc !== 'all' && (
-          <div className="grid gap-6 md:grid-cols-2">
+          <StaggerContainer stagger={0.08} delayChildren={0.12} className="grid gap-6 md:grid-cols-2">
             {/* Staff Cards */}
+            <StaggerItem>
             <Card className="transition-shadow duration-200 hover:shadow-xl">
               <CardHeader className="flex flex-row items-center gap-4 space-y-0">
                 <Avatar className="h-12 w-12">
@@ -241,6 +247,8 @@ export default function DashboardPage() {
                 </div>
               </CardHeader>
             </Card>
+            </StaggerItem>
+            <StaggerItem>
             <Card className="transition-shadow duration-200 hover:shadow-xl">
               <CardHeader className="flex flex-row items-center gap-4 space-y-0">
                 <Avatar className="h-12 w-12">
@@ -260,7 +268,8 @@ export default function DashboardPage() {
                 </div>
               </CardHeader>
             </Card>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         )}
       </main>
     </div>

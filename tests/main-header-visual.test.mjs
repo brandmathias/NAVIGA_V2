@@ -10,10 +10,13 @@ test('main header drops artwork and becomes translucent after the page scrolls',
 
   assert.doesNotMatch(styles, /naviga-control-center-bg\.png/);
   assert.match(styles, /\.naviga-topbar\[data-scrolled="true"\]/);
-  assert.match(styles, /background: #ffffff/);
-  assert.match(styles, /backdrop-filter: blur\(14px\)/);
+  assert.match(styles, /background-color:\s*rgb\(255 255 255 \/ var\(--naviga-glass-alpha\)\)/);
+  assert.match(styles, /backdrop-filter:\s*blur\(var\(--naviga-glass-blur\)\) saturate\(1\.08\)/);
   assert.match(shell, /const \[isScrolled, setIsScrolled\]/);
+  assert.match(shell, /const getScrollTop = \(\) =>/);
+  assert.match(shell, /document\.scrollingElement \?\? document\.documentElement/);
   assert.match(shell, /window\.addEventListener\('scroll', updateScroll/);
+  assert.match(shell, /document\.addEventListener\('scroll', updateScroll/);
   assert.match(shell, /data-scrolled=\{isScrolled \? 'true' : 'false'\}/);
   assert.match(shell, /h-\[94px\]/);
   assert.match(shell, /text-\[#003f46\]/);

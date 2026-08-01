@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -17,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Upload, Send, Loader2, Mic, Bell, ClipboardCopy } from 'lucide-react';
 import type { BroadcastCustomer, HistoryEntry, Customer } from '@/types';
 import { Input } from '@/components/ui/input';
-import { parsePdf } from './actions';
+import { parseGadaiImage, parsePdf } from './actions';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
 import { buildGadaiSpeechScript } from '@/lib/tts-text';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
@@ -30,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { useLocalSession } from '@/components/main-shell';
+import { ScrollReveal, MotionCard } from '@/components/motion';
 
 
 const parseDateForFormatting = (dateString: string): Date | null => {
@@ -71,6 +71,7 @@ const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
 }
 
+
 const getUpcFromId = (id: string): Customer['upc'] => {
   const prefix = id.substring(0, 5);
   if (prefix === '11787') {
@@ -95,7 +96,7 @@ export default function PdfBroadcastPage() {
   const { toast } = useToast();
   const [extractedData, setExtractedData] = React.useState<BroadcastCustomer[]>([]);
   const [selectedCustomers, setSelectedCustomers] = React.useState<Set<string>>(new Set());
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const importFileInputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isGeneratingVoicenote, setIsGeneratingVoicenote] = React.useState(false);
   const [activeVoicenote, setActiveVoicenote] = React.useState<{
@@ -131,59 +132,54 @@ export default function PdfBroadcastPage() {
     }
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (file.type !== 'application/pdf') {
-        toast({
-            title: 'Invalid File Type',
-            description: 'Please upload a PDF file.',
-            variant: 'destructive',
-        });
-        return;
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+    if (!isPdf && !isImage) {
+      toast({ title: 'Jenis File Tidak Valid', description: 'Pilih PDF, JPG, PNG, atau WEBP.', variant: 'destructive', tone: 'error' });
+      return;
     }
 
     setIsLoading(true);
     setExtractedData([]);
     setSelectedCustomers(new Set());
-    toast({
-        title: 'Memproses PDF lokal...',
-        description: 'Data sedang diekstraksi di komputer ini.',
-    });
+    toast({ title: 'Memproses file lokal...', description: isPdf ? 'Mengekstrak PDF di komputer ini.' : 'OCR membaca foto tabel di komputer ini.', tone: 'processing' });
 
     const formData = new FormData();
-    formData.append('pdf-file', file);
+    formData.append(isPdf ? 'pdf-file' : 'gadai-image', file);
 
     try {
-        const results = await parsePdf(formData);
+        const results = isPdf ? await parsePdf(formData) : await parseGadaiImage(formData);
         
         if (results.length === 0) {
             toast({
-                title: 'No Data Extracted',
+                title: 'Data Tidak Ditemukan',
                 description: adminUser.role === 'superadmin'
-                    ? 'The AI could not find any customer data in the PDF.'
-                    : `Tidak ada data untuk prefix unit ${adminUser.unitPrefix ?? '-'} pada PDF ini.`,
+                    ? 'Tidak ada data gadai lengkap yang ditemukan dalam file.'
+                    : `Tidak ada data untuk prefix unit ${adminUser.unitPrefix ?? '-'} pada file ini.`,
                 variant: 'destructive',
             });
         } else {
             setExtractedData(results);
             toast({
-                title: 'Extraction Complete',
-                description: `${results.length} records have been loaded from the PDF.`,
+                title: 'Impor Selesai',
+                description: `${results.length} data gadai berhasil dimuat.`,
+                tone: 'success',
             });
         }
     } catch (error: any) {
         toast({
-            title: 'Error Processing PDF',
-            description: error.message || 'An unknown error occurred.',
+            title: 'Gagal Memproses File',
+            description: error.message || 'Terjadi kesalahan saat memproses file.',
             variant: 'destructive',
         });
-        console.error("PDF processing error:", error);
+        console.error('File processing error:', error);
     } finally {
         setIsLoading(false);
-        // Reset file input
-        if(fileInputRef.current) fileInputRef.current.value = '';
+        if (importFileInputRef.current) importFileInputRef.current.value = '';
     }
   };
 
@@ -266,6 +262,7 @@ Terima Kasih`;
       toast({
         title: 'Pesan Disalin',
         description: `Pesan untuk ${customer.name} telah disalin ke clipboard.`,
+        tone: 'copy',
       });
       logHistory(customer, 'Pesan Disalin', template);
     }).catch(err => {
@@ -294,6 +291,7 @@ Terima Kasih`;
     
     window.open(whatsappUrl, '_blank');
     logHistory(customer, 'WhatsApp Dibuka', template);
+    toast({ title: 'WhatsApp dibuka', description: `Pesan untuk ${customer.name} siap dikirim.`, tone: 'message' });
   };
 
    const handleGenerateVoicenote = async (customer: BroadcastCustomer, template: NotificationTemplate) => {
@@ -310,6 +308,7 @@ Terima Kasih`;
     toast({
         title: 'Membuat Pesan Suara...',
         description: `Piper sedang membuat pesan suara untuk ${customer.name}.`,
+        tone: 'processing',
     });
     try {
         const whatsappUrl = `https://wa.me/${formattedPhoneNumber}`;
@@ -331,6 +330,7 @@ Terima Kasih`;
             customer,
             template,
         });
+        toast({ title: 'Pesan suara siap', description: `Pratinjau untuk ${customer.name} telah dibuat.`, tone: 'success' });
     } catch (error) {
         console.error('Voicenote generation failed:', error);
         toast({
@@ -356,6 +356,7 @@ Terima Kasih`;
     toast({
       title: 'Opening WhatsApp Tabs',
       description: `Preparing notifications for ${selectedCustomers.size} customer(s). Please allow pop-ups.`,
+      tone: 'message',
     });
 
     const customersToNotify = extractedData.filter((c) => selectedCustomers.has(c.sbg_number));
@@ -371,7 +372,7 @@ Terima Kasih`;
   };
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+    <main className="flex min-w-0 flex-1 flex-col gap-5 p-4 md:gap-5 md:p-4">
        {activeVoicenote && (
           <VoicenotePreviewDialog
             isOpen={!!activeVoicenote}
@@ -384,163 +385,172 @@ Terima Kasih`;
             }}
           />
         )}
-      <div className="flex items-center">
-          <h1 className="text-2xl font-bold tracking-tight font-headline">Gadaian Broadcast</h1>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Panel Gadaian Broadcast</CardTitle>
-          <CardDescription>
-            Impor data nasabah langsung dari file PDF untuk mengirim notifikasi massal. Data akan otomatis difilter berdasarkan UPC Anda.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-            <Button onClick={() => fileInputRef.current?.click()} disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                {isLoading ? 'Processing...' : 'Import PDF'}
-            </Button>
-            <Input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                accept=".pdf"
-            />
-            <div className="flex-grow"></div>
-            <Button onClick={handleNotifySelected} disabled={selectedCustomers.size === 0 || isLoading}>
-              <Send className="mr-2 h-4 w-4" />
-              Notify Selected ({selectedCustomers.size})
-            </Button>
-          </div>
-          <div className="rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40px]">
-                    <Checkbox 
-                      checked={selectedCustomers.size > 0 && selectedCustomers.size === extractedData.length && extractedData.length > 0}
-                      onCheckedChange={(checked) => handleSelectAll(!!checked)}
-                      aria-label="Select all"
-                      disabled={extractedData.length === 0}
-                    />
-                  </TableHead>
-                  <TableHead>No. SBG</TableHead>
-                  <TableHead>Nasabah</TableHead>
-                  <TableHead>Rubrik</TableHead>
-                  <TableHead>Tgl. Kredit &amp; Jth Tempo</TableHead>
-                  <TableHead>Barang Jaminan</TableHead>
-                  <TableHead>Taksiran</TableHead>
-                  <TableHead>UP (Uang Pinjaman)</TableHead>
-                  <TableHead>SM (Sewa Modal)</TableHead>
-                  <TableHead>Telp/HP</TableHead>
-                  <TableHead>Alamat</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                     <TableRow>
-                        <TableCell colSpan={12} className="h-24 text-center">
-                            <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                            <p className="mt-2 text-muted-foreground">Data sedang diekstraksi secara lokal...</p>
+      <ScrollReveal direction="up">
+        <div className="flex items-center">
+            <h1 className="text-2xl font-bold tracking-tight font-headline">Gadaian Broadcast</h1>
+        </div>
+      </ScrollReveal>
+      <MotionCard delay={0.06}>
+        <Card className="overflow-hidden">
+          <CardHeader className="space-y-2 px-5 pb-4 pt-5 md:px-6">
+            <CardTitle className="text-xl">Panel Gadaian Broadcast</CardTitle>
+            <CardDescription>
+              Impor data nasabah dari PDF atau foto tabel untuk menyiapkan notifikasi. Data otomatis difilter berdasarkan UPC Anda.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="flex flex-col items-stretch gap-3 border-y border-border/70 px-5 py-3.5 md:flex-row md:items-center md:px-6">
+              <Button onClick={() => importFileInputRef.current?.click()} disabled={isLoading}>
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                  {isLoading ? 'Memproses...' : 'Import File'}
+              </Button>
+              <Input
+                  type="file"
+                  ref={importFileInputRef}
+                  onChange={handleImportFileChange}
+                  className="hidden"
+                  accept=".pdf,image/jpeg,image/png,image/webp"
+                  aria-label="Pilih file gadaian"
+              />
+              <span className="text-xs text-muted-foreground">PDF, JPG, PNG, WEBP · maks. 10 MB</span>
+              <div className="flex-grow"></div>
+              <Button onClick={handleNotifySelected} disabled={selectedCustomers.size === 0 || isLoading}>
+                <Send className="mr-2 h-4 w-4" />
+                Notify Selected ({selectedCustomers.size})
+              </Button>
+            </div>
+            <div className="px-4 pb-4 pt-3 md:px-4">
+              <div className="rounded-lg border border-border/80 bg-card">
+              <Table className="w-full table-fixed text-[11px] leading-4 [&_td]:align-top [&_td]:break-words [&_td]:px-2.5 [&_td]:py-2 [&_th]:h-10 [&_th]:bg-muted/70 [&_th]:px-2.5 [&_th]:py-2 [&_th]:text-[10px] [&_th]:font-semibold [&_th]:[line-height:0.875rem] [&_th]:text-foreground/70 [&_th]:whitespace-normal">
+                <TableHeader className="bg-muted/95 shadow-[0_1px_0_rgba(15,23,42,.08)]">
+                  <TableRow>
+                    <TableHead className="w-9">
+                      <Checkbox
+                        checked={selectedCustomers.size > 0 && selectedCustomers.size === extractedData.length && extractedData.length > 0}
+                        onCheckedChange={(checked) => handleSelectAll(!!checked)}
+                        aria-label="Select all"
+                        disabled={extractedData.length === 0}
+                      />
+                    </TableHead>
+                    <TableHead className="w-[16%]">Nasabah &amp; SBG</TableHead>
+                    <TableHead className="w-[14%]">Kredit</TableHead>
+                    <TableHead className="w-[23%]">Barang Jaminan</TableHead>
+                    <TableHead className="w-[15%]">Nilai Gadai</TableHead>
+                    <TableHead className="w-[17%]">Kontak &amp; Alamat</TableHead>
+                    <TableHead className="w-[6.5rem]">Aksi</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                       <TableRow>
+                          <TableCell colSpan={7} className="h-24 text-center">
+                              <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+                              <p className="mt-2 text-muted-foreground">Data sedang diekstraksi secara lokal...</p>
+                          </TableCell>
+                      </TableRow>
+                  ) : extractedData.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center">
+                                Tidak ada data. Klik "Import File" untuk memulai.
                         </TableCell>
-                    </TableRow>
-                ) : extractedData.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={12} className="h-24 text-center">
-                          No data extracted. Click "Import PDF" to begin.
-                      </TableCell>
-                    </TableRow>
-                ) : (
-                  extractedData.map((customer, index) => {
-                    const canContact = Boolean(normalizeIndonesianWhatsAppNumber(customer.phone_number));
-                    // Logic to ensure credit date is always before due date
-                    const creditDateObj = parseDateForFormatting(customer.credit_date);
-                    const dueDateObj = parseDateForFormatting(customer.due_date);
-                    
-                    let displayCreditDate = customer.credit_date;
-                    let displayDueDate = customer.due_date;
+                      </TableRow>
+                  ) : (
+                    extractedData.map((customer, index) => {
+                      const canContact = Boolean(normalizeIndonesianWhatsAppNumber(customer.phone_number));
+                      // Logic to ensure credit date is always before due date
+                      const creditDateObj = parseDateForFormatting(customer.credit_date);
+                      const dueDateObj = parseDateForFormatting(customer.due_date);
 
-                    if (creditDateObj && dueDateObj && creditDateObj > dueDateObj) {
-                        displayCreditDate = customer.due_date;
-                        displayDueDate = customer.credit_date;
-                    }
+                      let displayCreditDate = customer.credit_date;
+                      let displayDueDate = customer.due_date;
 
-                    return (
-                    <TableRow key={customer.sbg_number || index} data-state={selectedCustomers.has(customer.sbg_number) ? 'selected' : ''}>
-                      <TableCell>
-                        <Checkbox
-                            checked={selectedCustomers.has(customer.sbg_number)}
-                            onCheckedChange={(checked) => handleSelectCustomer(customer.sbg_number, !!checked)}
-                            aria-label={`Select ${customer.name}`}
-                        />
-                      </TableCell>
-                      <TableCell className="font-mono">{customer.sbg_number}</TableCell>
-                      <TableCell className="font-medium">{customer.name}</TableCell>
-                      <TableCell>{customer.rubrik}</TableCell>
-                      <TableCell>
-                        <div>{formatDate(displayCreditDate)}</div>
-                        <div className='font-bold'>{formatDate(displayDueDate)}</div>
-                      </TableCell>
-                      <TableCell>{customer.barang_jaminan}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.taksiran)}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.loan_value)}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.sewa_modal)}</TableCell>
-                      <TableCell>{customer.phone_number}</TableCell>
-                      <TableCell>{customer.alamat}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                           <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline"><ClipboardCopy className="h-4 w-4" /></Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'jatuh-tempo')}>Copy Pengingat</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'keterlambatan')}>Copy Keterlambatan</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'peringatan-lelang')}>Copy Peringatan Lelang</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                           <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline" disabled={!canContact}><Bell className="h-4 w-4" /></Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handleSendNotification(customer, 'jatuh-tempo')}>Kirim Pengingat</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleSendNotification(customer, 'keterlambatan')}>Kirim Keterlambatan</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleSendNotification(customer, 'peringatan-lelang')}>Kirim Peringatan Lelang</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button size="sm" disabled={isGeneratingVoicenote || !canContact}>
-                                        {isGeneratingVoicenote ? <Loader2 className="h-4 w-4 animate-spin"/> : <Mic className="h-4 w-4" />}
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'jatuh-tempo')}>Buat VN Pengingat</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'keterlambatan')}>Buat VN Keterlambatan</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'peringatan-lelang')}>Buat VN Peringatan Lelang</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })
-                )}
-              </TableBody>
-            </Table>
-          </div>
-            {selectedCustomers.size > 0 && (
-                <div className="text-xs text-muted-foreground mt-2">
-                Browser may ask for permission to open multiple tabs. Please allow it.
-                </div>
-            )}
-        </CardContent>
-      </Card>
+                      if (creditDateObj && dueDateObj && creditDateObj > dueDateObj) {
+                          displayCreditDate = customer.due_date;
+                          displayDueDate = customer.credit_date;
+                      }
+
+                      return (
+                      <TableRow key={customer.sbg_number || index} data-state={selectedCustomers.has(customer.sbg_number) ? 'selected' : ''}>
+                        <TableCell>
+                          <Checkbox
+                              checked={selectedCustomers.has(customer.sbg_number)}
+                              onCheckedChange={(checked) => handleSelectCustomer(customer.sbg_number, !!checked)}
+                              aria-label={`Select ${customer.name}`}
+                          />
+                        </TableCell>
+                        <TableCell className="min-w-0">
+                          <div className="font-medium leading-4">{customer.name}</div>
+                          <div className="mt-1 font-mono text-[10px] text-muted-foreground [font-variant-numeric:tabular-nums]">{customer.sbg_number}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium">{customer.rubrik}</div>
+                          <div className="mt-1 text-muted-foreground">Kredit: {formatDate(displayCreditDate)}</div>
+                          <div className="font-semibold">Jth tempo: {formatDate(displayDueDate)}</div>
+                        </TableCell>
+                        <TableCell>{customer.barang_jaminan}</TableCell>
+                        <TableCell className="[font-variant-numeric:tabular-nums]">
+                          <div className="grid gap-1">
+                            <div className="flex items-baseline justify-between gap-2"><span className="text-muted-foreground">Taksiran</span><span className="whitespace-nowrap text-right">{formatCurrency(customer.taksiran)}</span></div>
+                            <div className="flex items-baseline justify-between gap-2"><span className="text-muted-foreground">UP</span><span className="whitespace-nowrap text-right">{formatCurrency(customer.loan_value)}</span></div>
+                            <div className="flex items-baseline justify-between gap-2"><span className="text-muted-foreground">SM</span><span className="whitespace-nowrap text-right">{formatCurrency(customer.sewa_modal)}</span></div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="[font-variant-numeric:tabular-nums]">{customer.phone_number}</div>
+                          <div className="mt-1 text-muted-foreground">{customer.alamat}</div>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="flex items-center gap-1.5">
+                             <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                      <Button size="sm" variant="outline" className="h-7 w-7 p-0" aria-label={`Salin template untuk ${customer.name}`}><ClipboardCopy className="h-4 w-4" /></Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent>
+                                      <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'jatuh-tempo')}>Copy Pengingat</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'keterlambatan')}>Copy Keterlambatan</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'peringatan-lelang')}>Copy Peringatan Lelang</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                              </DropdownMenu>
+                             <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                      <Button size="sm" variant="outline" className="h-7 w-7 p-0" disabled={!canContact} aria-label={`Pilih notifikasi untuk ${customer.name}`}><Bell className="h-4 w-4" /></Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent>
+                                      <DropdownMenuItem onClick={() => handleSendNotification(customer, 'jatuh-tempo')}>Kirim Pengingat</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleSendNotification(customer, 'keterlambatan')}>Kirim Keterlambatan</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleSendNotification(customer, 'peringatan-lelang')}>Kirim Peringatan Lelang</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                              </DropdownMenu>
+                              <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                      <Button size="sm" className="h-7 w-7 p-0" disabled={isGeneratingVoicenote || !canContact} aria-label={`Buat pesan suara untuk ${customer.name}`}>
+                                          {isGeneratingVoicenote ? <Loader2 className="h-4 w-4 animate-spin"/> : <Mic className="h-4 w-4" />}
+                                      </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent>
+                                      <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'jatuh-tempo')}>Buat VN Pengingat</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'keterlambatan')}>Buat VN Keterlambatan</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'peringatan-lelang')}>Buat VN Peringatan Lelang</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                              </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
+                  )}
+                </TableBody>
+              </Table>
+              </div>
+            </div>
+              {selectedCustomers.size > 0 && (
+                  <div className="text-xs text-muted-foreground mt-2">
+                  Browser may ask for permission to open multiple tabs. Please allow it.
+                  </div>
+              )}
+          </CardContent>
+        </Card>
+      </MotionCard>
     </main>
   );
 }
-
-    

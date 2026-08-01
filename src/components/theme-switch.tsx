@@ -6,6 +6,10 @@ import styles from './theme-switch.module.css';
 
 type Theme = 'light' | 'dark';
 
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => { finished: Promise<void> };
+};
+
 const THEME_STORAGE_KEY = 'naviga-theme';
 
 function getSystemTheme(): Theme {
@@ -19,7 +23,9 @@ function applyTheme(theme: Theme) {
 
 export function ThemeSwitch() {
   const [theme, setTheme] = React.useState<Theme>('light');
+  const [isSwitching, setIsSwitching] = React.useState(false);
   const transitionTimerRef = React.useRef<number | null>(null);
+  const transitionSequenceRef = React.useRef(0);
 
   React.useEffect(() => {
     try {
@@ -35,6 +41,7 @@ export function ThemeSwitch() {
   }, []);
 
   React.useEffect(() => () => {
+    transitionSequenceRef.current += 1;
     if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current);
     document.documentElement.removeAttribute('data-theme-transition');
   }, []);
@@ -48,9 +55,33 @@ export function ThemeSwitch() {
 
     if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current);
 
+    setIsSwitching(true);
     root.dataset.themeTransition = 'true';
+    const transitionId = ++transitionSequenceRef.current;
+    const finishTransition = () => {
+      if (transitionSequenceRef.current !== transitionId) return;
+      if (transitionTimerRef.current !== null) {
+        window.clearTimeout(transitionTimerRef.current);
+        transitionTimerRef.current = null;
+      }
+      root.removeAttribute('data-theme-transition');
+      setIsSwitching(false);
+    };
+    const viewTransitionDocument = document as ViewTransitionDocument;
+
+    if (typeof viewTransitionDocument.startViewTransition === 'function') {
+      try {
+        const viewTransition = viewTransitionDocument.startViewTransition(() => applyTheme(nextTheme));
+        void viewTransition.finished.then(finishTransition, finishTransition);
+        transitionTimerRef.current = window.setTimeout(finishTransition, 360);
+        return;
+      } catch {
+        // A rapid second click can overlap a native transition; use the light fallback.
+      }
+    }
+
     applyTheme(nextTheme);
-    transitionTimerRef.current = window.setTimeout(() => root.removeAttribute('data-theme-transition'), 460);
+    transitionTimerRef.current = window.setTimeout(finishTransition, 220);
   };
 
   const toggleTheme = () => {
@@ -68,8 +99,7 @@ export function ThemeSwitch() {
   const isDark = theme === 'dark';
 
   return (
-    <div className={styles.themeSwitch} data-theme={theme}>
-      <Sun aria-hidden="true" className={styles.sun} strokeWidth={1.8} />
+    <div className={styles.themeSwitch} data-theme={theme} data-switching={isSwitching || undefined}>
       <button
         type="button"
         role="switch"
@@ -78,9 +108,11 @@ export function ThemeSwitch() {
         className={styles.control}
         onClick={toggleTheme}
       >
-        <span aria-hidden="true" className={styles.thumb} />
+        <span aria-hidden="true" className={styles.iconStage}>
+          <Sun className={styles.sun} strokeWidth={1.8} />
+          <Moon className={styles.moon} strokeWidth={1.8} />
+        </span>
       </button>
-      <Moon aria-hidden="true" className={styles.moon} strokeWidth={1.8} />
     </div>
   );
 }

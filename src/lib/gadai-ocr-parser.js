@@ -2,7 +2,7 @@ const FIELD_ALIASES = {
   sbg_number: ['sbg', 'nosbg', 'nomorsbg', 'sbgnumber', 'suratbuktigadai'],
   rubrik: ['rubrik', 'koderubrik'],
   name: ['nama', 'namanasabah', 'nasabah'],
-  phone_number: ['nohp', 'nomorhp', 'notelepon', 'nomortelepon', 'notelp', 'telp', 'telepon', 'phone', 'phonenumber'],
+  phone_number: ['nohp', 'nomorhp', 'notelepon', 'nomortelepon', 'notelp', 'telp', 'telphp', 'telepon', 'phone', 'phonenumber'],
   credit_date: ['tglkredit', 'tanggalkredit', 'creditdate'],
   due_date: ['jatuhtempo', 'tgljatuhtempo', 'tanggaljatuhtempo', 'duedate'],
   loan_value: ['up', 'uangpinjaman', 'nilaipinjaman', 'loanvalue', 'pinjaman'],
@@ -29,7 +29,10 @@ function normalizeHeader(value) {
 }
 
 function getField(header) {
-  return aliasToField.get(normalizeHeader(header));
+  const normalized = normalizeHeader(header);
+  if (normalized.includes('nosbg')) return 'sbg_number';
+  if (normalized.includes('tglkredit') && normalized.includes('jatuhtempo')) return 'report_dates';
+  return aliasToField.get(normalized);
 }
 
 function cleanText(value) {
@@ -131,6 +134,92 @@ function parseMarkdownTables(markdown) {
       const customer = toCustomer(values);
       if (isCompleteCustomer(customer)) customers.push(customer);
     }
+  }
+
+  return customers;
+}
+
+function cleanHtmlCell(value) {
+  return cleanText(
+    String(value ?? '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+  );
+}
+
+function parseHtmlRows(table) {
+  return [...table.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((row) =>
+    [...row[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((cell) => cleanHtmlCell(cell[1]))
+  ).filter((row) => row.length > 0);
+}
+
+function looksLikeAddress(value) {
+  return /\b(?:lingkungan|rt\s*\/\s*rw|kode\s*pos|jalan|jaga|kelurahan|tanjung|ranoiapo)\b/i.test(value);
+}
+
+function collectDates(value) {
+  return String(value ?? '').match(/\b\d{2}[-/]\d{2}[-/]\d{4}\b/g) ?? [];
+}
+
+function collectPhones(value) {
+  const compactNumbers = String(value ?? '').match(/(?:\+?62|0)8\d{7,11}/g) ?? [];
+  if (compactNumbers.length) return compactNumbers;
+  return String(value ?? '').match(/(?:\+?62|0)8(?:[\s.-]?\d){7,11}/g) ?? [];
+}
+
+function parseHtmlTables(markdown) {
+  const customers = [];
+
+  for (const table of String(markdown ?? '').match(/<table\b[\s\S]*?<\/table>/gi) ?? []) {
+    const rows = parseHtmlRows(table);
+    const headerIndex = rows.findIndex((row) => row.map(getField).includes('sbg_number'));
+    if (headerIndex < 0) continue;
+
+    const fields = rows[headerIndex].map(getField);
+    let values = null;
+
+    const flush = () => {
+      if (!values) return;
+      const dates = collectDates(values.report_dates);
+      const phones = collectPhones(values.phone_number);
+      const customer = toCustomer({
+        ...values,
+        credit_date: dates.length > 1 ? dates.at(-2) : dates[0] ?? '',
+        due_date: dates.at(-1) ?? '',
+        phone_number: phones[0] ?? values.phone_number,
+      });
+      if (isCompleteCustomer(customer)) customers.push(customer);
+      values = null;
+    };
+
+    for (const row of rows.slice(headerIndex + 1)) {
+      const mapped = {};
+      fields.forEach((field, index) => {
+        if (field && row[index]) mapped[field] = row[index];
+      });
+
+      if (String(mapped.sbg_number ?? '').replace(/\D/g, '').length >= 10) {
+        flush();
+        values = mapped;
+        continue;
+      }
+      if (!values) continue;
+
+      Object.entries(mapped).forEach(([field, value]) => {
+        if (field === 'name' && looksLikeAddress(value)) {
+          values.alamat = [values.alamat, value].filter(Boolean).join(' ');
+          return;
+        }
+        if (field === 'barang_jaminan') {
+          values[field] = [values[field], value].filter(Boolean).join(' ');
+          return;
+        }
+        values[field] = [values[field], value].filter(Boolean).join(' ');
+      });
+    }
+    flush();
   }
 
   return customers;
@@ -253,6 +342,7 @@ function parseGadaiOcrOutput(markdown) {
 
   const customers = [
     ...parseMarkdownTables(markdown),
+    ...parseHtmlTables(markdown),
     ...parseKeyValueRecords(markdown),
     ...parsePegadaianLayoutText(markdown),
   ];

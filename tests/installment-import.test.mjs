@@ -49,3 +49,15 @@ test('filters installment rows by the first five digits of their identifier', ()
     ['Garuda'],
   );
 });
+
+test('uses the UPC prefix in Pencairan when a photographed row has no credit-number column', () => {
+  const rows = [
+    ['NASABAH', 'PRODUK', 'PINJAMAN', 'OSL', 'KOL', 'HR TUNG', 'TENOR', 'ANGSURAN', 'KEWAJIBAN', 'PENCAIRAN', 'KUNJUNGAN TERAKHIR'],
+    ['Fersi Imanuel Marthens', 'Mulia Ultimate Konven', '1,634,550', '1,634,550', '4', '0', '0/12', '153,905', '0', '11793 - UPC RANOTANA', '2025-08-22 09:35:22'],
+  ];
+
+  const customers = parseInstallmentRows(rows);
+
+  assert.equal(customers[0].account_number, '11793');
+  assert.equal(filterInstallmentCustomersByPrefix(customers, '11793').length, 1);
+});

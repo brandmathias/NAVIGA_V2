@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/local-auth';
-import { listUnitAdmins, listUnits } from '@/lib/unit-registry';
+import { getSession } from '@/lib/auth-session';
+import { listUnitAdmins, listUnits } from '@/lib/naviga-directory.mjs';
 import UnitManagementClient from './unit-management-client';
 
 export default async function UnitManagementPage({ searchParams }: { searchParams: Promise<{ dialog?: string }> }) {
