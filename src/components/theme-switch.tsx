@@ -19,7 +19,6 @@ function applyTheme(theme: Theme) {
 
 export function ThemeSwitch() {
   const [theme, setTheme] = React.useState<Theme>('light');
-  const transitionFrameRef = React.useRef<number | null>(null);
   const transitionTimerRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
@@ -36,7 +35,6 @@ export function ThemeSwitch() {
   }, []);
 
   React.useEffect(() => () => {
-    if (transitionFrameRef.current !== null) window.cancelAnimationFrame(transitionFrameRef.current);
     if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current);
     document.documentElement.removeAttribute('data-theme-transition');
   }, []);
@@ -48,15 +46,11 @@ export function ThemeSwitch() {
       return;
     }
 
-    if (transitionFrameRef.current !== null) window.cancelAnimationFrame(transitionFrameRef.current);
     if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current);
 
     root.dataset.themeTransition = 'true';
-    transitionFrameRef.current = window.requestAnimationFrame(() => {
-      applyTheme(nextTheme);
-      transitionTimerRef.current = window.setTimeout(() => root.removeAttribute('data-theme-transition'), 460);
-      transitionFrameRef.current = null;
-    });
+    applyTheme(nextTheme);
+    transitionTimerRef.current = window.setTimeout(() => root.removeAttribute('data-theme-transition'), 460);
   };
 
   const toggleTheme = () => {
@@ -80,7 +74,7 @@ export function ThemeSwitch() {
         type="button"
         role="switch"
         aria-checked={isDark}
-        aria-label="Aktifkan mode gelap"
+        aria-label={isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}
         className={styles.control}
         onClick={toggleTheme}
       >

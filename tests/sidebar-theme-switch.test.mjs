@@ -7,8 +7,10 @@ test('theme switch persists a browser preference and exposes an accessible switc
 
   assert.match(source, /localStorage\.setItem\('naviga-theme'/);
   assert.match(source, /role="switch"/);
-  assert.match(source, /aria-label="Aktifkan mode gelap"/);
+  assert.match(source, /aria-label=\{isDark \? 'Aktifkan mode terang' : 'Aktifkan mode gelap'\}/);
   assert.match(source, /data-theme-transition/);
+  assert.match(source, /root\.dataset\.themeTransition = 'true';\s*applyTheme\(nextTheme\);\s*transitionTimerRef\.current = window\.setTimeout/s);
+  assert.doesNotMatch(source, /requestAnimationFrame\(\(\) => \{\s*applyTheme\(nextTheme\)/s);
 });
 
 test('main shell places the theme control directly before the account card', async () => {
