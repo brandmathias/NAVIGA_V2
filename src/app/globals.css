@@ -37,6 +37,13 @@
     --sidebar-accent-foreground: 174 100% 25%;
     --sidebar-border: 193 32% 89%;
     --sidebar-ring: 174 100% 25%;
+    --naviga-switch-surface: #ffffff;
+    --naviga-switch-border: #e3ecee;
+    --naviga-switch-ink: #5b7590;
+    --naviga-switch-track: #d9eee9;
+    --naviga-switch-accent: #08a995;
+    --naviga-switch-thumb: #ffffff;
+    --naviga-switch-focus: rgba(8, 169, 149, .45);
   }
   .dark {
     --background: 220 13% 10%;
@@ -630,6 +637,21 @@
   background-image: none !important;
 }
 
+.dark :where([role='dialog'], [data-radix-popper-content-wrapper] > *) :where([class*="text-[#0"], [class*="text-[#1"], [class*="text-[#3"], [class*="text-[#4"], [class*="text-[#5"], [class*="text-[#6"], [class*="text-[#7"], [class*="text-[#8"], [class*="text-[#9"], [class*="text-muted-foreground"]) {
+  color: var(--naviga-dark-ink) !important;
+}
+
+.dark :where([role='dialog'], [data-radix-popper-content-wrapper] > *) :where(input, textarea, [role='combobox']) {
+  border-color: var(--naviga-dark-border) !important;
+  background-color: var(--naviga-dark-surface-raised) !important;
+  color: var(--naviga-dark-ink) !important;
+}
+
+.dark :where([role='dialog'], [data-radix-popper-content-wrapper] > *) :where(input, textarea)::placeholder {
+  color: var(--naviga-dark-muted) !important;
+  opacity: 1;
+}
+
 .dark .toast-shell {
   --toast-ink: #edfffc;
   --toast-muted: #aed2cd;
@@ -649,6 +671,9 @@
 .dark .unit-reference-page { color: var(--naviga-dark-ink); }
 .dark .unit-reference-card, .dark .unit-reference-input, .dark .unit-reference-select, .dark .unit-reference-textarea, .dark .unit-reference-table-wrap { border-color: var(--naviga-dark-border); background: var(--naviga-dark-surface); color: var(--naviga-dark-ink); }
 .dark .unit-reference-heading, .dark .unit-reference-title, .dark .unit-reference-title h2, .dark .unit-reference-field > label, .dark .unit-reference-table th, .dark .unit-reference-table { color: var(--naviga-dark-ink); }
+
+.dark .unit-hero h1 { color: #064c55 !important; }
+.dark .unit-hero p { color: #12394a !important; }
 
 .dark .naviga-topbar {
   background-color: rgb(8 35 40 / var(--naviga-glass-alpha));

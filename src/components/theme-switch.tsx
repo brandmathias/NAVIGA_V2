@@ -78,10 +78,7 @@ export function ThemeSwitch() {
         className={styles.control}
         onClick={toggleTheme}
       >
-        <span className={styles.thumb}>
-          <Sun aria-hidden="true" className={styles.thumbSun} strokeWidth={2} />
-          <Moon aria-hidden="true" className={styles.thumbMoon} strokeWidth={2} />
-        </span>
+        <span aria-hidden="true" className={styles.thumb} />
       </button>
       <Moon aria-hidden="true" className={styles.moon} strokeWidth={1.8} />
     </div>
