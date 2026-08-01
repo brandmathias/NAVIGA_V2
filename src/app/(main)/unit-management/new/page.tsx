@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/local-auth';
-import { listUnits } from '@/lib/unit-registry';
+import { getSession } from '@/lib/auth-session';
+import { listUnits } from '@/lib/naviga-directory.mjs';
 import UnitCreateClient from './unit-create-client';
 
 export default async function NewUnitPage({ searchParams }: { searchParams: Promise<{ mode?: string }> }) {

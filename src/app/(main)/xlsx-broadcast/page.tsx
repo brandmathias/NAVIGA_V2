@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
 import { buildInstallmentSpeechScript } from '@/lib/tts-text';
-import { parseXlsx } from './actions';
+import { parseInstallmentImage, parseXlsx } from './actions';
 import { useLocalSession } from '@/components/main-shell';
 import {
   DropdownMenu,
@@ -28,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ScrollReveal, MotionCard } from '@/components/motion';
 
 
 const formatCurrency = (value: number | string | undefined) => {
@@ -58,7 +59,7 @@ export default function XlsxBroadcastPage() {
   const adminUser = useLocalSession();
   const { toast } = useToast();
   const [importedData, setImportedData] = React.useState<InstallmentCustomer[]>([]);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const importFileInputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const [isGeneratingVoicenote, setIsGeneratingVoicenote] = React.useState(false);
@@ -95,45 +96,41 @@ export default function XlsxBroadcastPage() {
     }
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.name.endsWith('.xlsx')) {
-        toast({
-            title: 'Jenis File Tidak Valid',
-            description: 'Silakan unggah file .xlsx.',
-            variant: 'destructive',
-        });
-        return;
+    const isXlsx = file.name.toLowerCase().endsWith('.xlsx');
+    const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+    if (!isXlsx && !isImage) {
+      toast({ title: 'Jenis File Tidak Valid', description: 'Pilih XLSX, JPG, PNG, atau WEBP.', variant: 'destructive', tone: 'error' });
+      return;
     }
 
     setIsLoading(true);
     setImportedData([]);
-    toast({
-        title: 'Memproses XLSX...',
-        description: 'Membaca data dari file. Ini mungkin memakan waktu sejenak.',
-    });
+    toast({ title: 'Memproses file lokal...', description: isXlsx ? 'Membaca data XLSX.' : 'OCR membaca foto tabel angsuran.', tone: 'processing' });
 
     try {
       const formData = new FormData();
-      formData.append('xlsx-file', file);
-      const customers = await parseXlsx(formData);
+      formData.append(isXlsx ? 'xlsx-file' : 'angsuran-image', file);
+      const customers = isXlsx ? await parseXlsx(formData) : await parseInstallmentImage(formData);
       setImportedData(customers);
       toast({
         title: 'Impor Selesai',
         description: `${customers.length} data telah berhasil dimuat.`,
+        tone: 'success',
       });
     } catch (error) {
-      console.error('XLSX parsing error:', error);
+      console.error('File parsing error:', error);
       toast({
         title: 'Gagal Memproses File',
-        description: error instanceof Error ? error.message : 'Terjadi kesalahan saat membaca file XLSX. Pastikan formatnya benar.',
+        description: error instanceof Error ? error.message : 'Terjadi kesalahan saat membaca file. Pastikan formatnya benar.',
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (importFileInputRef.current) importFileInputRef.current.value = '';
     }
   };
 
@@ -194,6 +191,7 @@ Terima Kasih`;
       toast({
         title: 'Pesan Disalin',
         description: `Pesan untuk ${customer.nasabah.split('\n')[0]} telah disalin ke clipboard.`,
+        tone: 'copy',
       });
       logHistory(customer, 'Pesan Disalin', template);
     }).catch(err => {
@@ -211,6 +209,7 @@ Terima Kasih`;
     toast({
         title: 'Membuat Pesan Suara...',
         description: `Piper sedang membuat pesan suara untuk ${customer.nasabah.split('\n')[0]}.`,
+        tone: 'processing',
     });
     try {
         const speechText = buildInstallmentSpeechScript({
@@ -228,6 +227,7 @@ Terima Kasih`;
             audioDataUri,
             customerName: customer.nasabah.split('\n')[0],
         });
+        toast({ title: 'Pesan suara siap', description: `Pratinjau untuk ${customer.nasabah.split('\n')[0]} telah dibuat.`, tone: 'success' });
     } catch (error) {
         console.error('Voicenote generation failed:', error);
         toast({
@@ -241,7 +241,7 @@ Terima Kasih`;
   };
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+    <main className="flex min-w-0 flex-1 flex-col gap-5 p-4 md:gap-5 md:p-4">
         {activeVoicenote && (
           <VoicenotePreviewDialog
             isOpen={!!activeVoicenote}
@@ -250,115 +250,121 @@ Terima Kasih`;
             customerName={activeVoicenote.customerName}
           />
         )}
-      <div className="flex items-center">
-          <h1 className="text-2xl font-bold tracking-tight font-headline">Angsuran Broadcast</h1>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Panel Angsuran Broadcast</CardTitle>
-          <CardDescription>
-            Impor data nasabah dari file .xlsx untuk menyalin template pengingat dan membuat pesan suara. Data akan otomatis difilter berdasarkan UPC Anda.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-            <Button onClick={() => fileInputRef.current?.click()} disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-              {isLoading ? 'Memproses...' : 'Impor XLSX'}
-            </Button>
-            <Input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                accept=".xlsx"
-            />
-          </div>
-           {importedData.length > 0 && (
-             <div className="text-sm text-yellow-600 bg-yellow-50 p-3 rounded-md border border-yellow-200 mb-4">
-               <strong>Perhatian:</strong> Data Excel angsuran tidak memuat nomor WhatsApp. Fitur yang tersedia adalah salin template dan pembuatan pesan suara Piper secara lokal.
-             </div>
-            )}
-          <div className="rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nasabah</TableHead>
-                  <TableHead>Produk</TableHead>
-                  <TableHead>Pinjaman</TableHead>
-                  <TableHead>Osl</TableHead>
-                  <TableHead>Kol</TableHead>
-                  <TableHead>Hr tung</TableHead>
-                  <TableHead>Tenor</TableHead>
-                  <TableHead>Angsuran</TableHead>
-                  <TableHead>Kewajiban</TableHead>
-                  <TableHead>Pencairan</TableHead>
-                  <TableHead>Kunjungan Terakhir</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                    <TableRow>
-                        <TableCell colSpan={12} className="h-24 text-center">
-                            <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                            <p className="mt-2 text-muted-foreground">Memproses file XLSX...</p>
+      <ScrollReveal direction="up">
+        <div className="flex items-center">
+            <h1 className="text-2xl font-bold tracking-tight font-headline">Angsuran Broadcast</h1>
+        </div>
+      </ScrollReveal>
+      <MotionCard delay={0.06}>
+        <Card className="overflow-hidden">
+          <CardHeader className="space-y-2 px-5 pb-4 pt-5 md:px-6">
+            <CardTitle className="text-xl">Panel Angsuran Broadcast</CardTitle>
+            <CardDescription>
+              Impor data nasabah dari file .xlsx atau foto tabel untuk menyalin template pengingat dan membuat pesan suara. Data otomatis difilter berdasarkan UPC Anda.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="flex flex-col items-stretch gap-3 border-y border-border/70 px-5 py-3.5 md:flex-row md:items-center md:px-6">
+              <Button onClick={() => importFileInputRef.current?.click()} disabled={isLoading}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                {isLoading ? 'Memproses...' : 'Import File'}
+              </Button>
+              <Input
+                  type="file"
+                  ref={importFileInputRef}
+                  onChange={handleImportFileChange}
+                  className="hidden"
+                  accept=".xlsx,image/jpeg,image/png,image/webp"
+                  aria-label="Pilih file angsuran"
+              />
+              <span className="text-xs text-muted-foreground">XLSX, JPG, PNG, WEBP · maks. 10 MB</span>
+            </div>
+            <div className="px-4 pb-4 pt-3 md:px-4">
+             {importedData.length > 0 && (
+                <div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-700">
+                 <strong>Perhatian:</strong> Data Excel angsuran tidak memuat nomor WhatsApp. Fitur yang tersedia adalah salin template dan pembuatan pesan suara Piper secara lokal.
+                </div>
+              )}
+              <div className="rounded-lg border border-border/80 bg-card">
+              <Table className="w-full table-fixed text-[11px] leading-4 [&_td]:align-top [&_td]:break-words [&_td]:px-2.5 [&_td]:py-2 [&_th]:h-10 [&_th]:bg-muted/70 [&_th]:px-2.5 [&_th]:py-2 [&_th]:text-[10px] [&_th]:font-semibold [&_th]:[line-height:0.875rem] [&_th]:text-foreground/70 [&_th]:whitespace-normal">
+                <TableHeader className="bg-muted/95 shadow-[0_1px_0_rgba(15,23,42,.08)]">
+                  <TableRow>
+                    <TableHead className="w-[28%]">Nasabah &amp; Produk</TableHead>
+                    <TableHead className="w-[31%]">Nilai &amp; Status</TableHead>
+                    <TableHead className="w-[26%]">Informasi</TableHead>
+                    <TableHead className="w-[4.5rem]">Aksi</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                      <TableRow>
+                          <TableCell colSpan={4} className="h-24 text-center">
+                              <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+                              <p className="mt-2 text-muted-foreground">Memproses file XLSX...</p>
+                          </TableCell>
+                      </TableRow>
+                  ) : importedData.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="h-24 text-center">
+                            Tidak ada data. Klik "Import File" untuk memulai.
                         </TableCell>
-                    </TableRow>
-                ) : importedData.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={12} className="h-24 text-center">
-                          Tidak ada data. Klik "Impor XLSX" untuk memulai.
-                      </TableCell>
-                    </TableRow>
-                ) : (
-                  importedData.map((customer) => (
-                    <TableRow key={customer.id}>
-                      <TableCell className="font-medium whitespace-pre-line">{customer.nasabah}</TableCell>
-                      <TableCell className="whitespace-pre-line">{customer.produk}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.pinjaman)}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.osl)}</TableCell>
-                      <TableCell className="text-center">{customer.kol}</TableCell>
-                      <TableCell className="text-center">{customer.hr_tung}</TableCell>
-                      <TableCell className="text-center">{customer.tenor}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.angsuran)}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(customer.kewajiban)}</TableCell>
-                      <TableCell>{customer.pencairan}</TableCell>
-                      <TableCell>{formatDate(customer.kunjungan_terakhir)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                           <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline"><ClipboardCopy className="h-4 w-4" /></Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'jatuh-tempo')}>Copy Pengingat</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'keterlambatan')}>Copy Keterlambatan</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'peringatan-lelang')}>Copy Peringatan Lelang</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button size="sm" disabled={isGeneratingVoicenote}>
-                                        {isGeneratingVoicenote ? <Loader2 className="h-4 w-4 animate-spin"/> : <Mic className="h-4 w-4" />}
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'jatuh-tempo')}>Buat VN Pengingat</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'keterlambatan')}>Buat VN Keterlambatan</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'peringatan-lelang')}>Buat VN Peringatan Lelang</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                      </TableRow>
+                  ) : (
+                    importedData.map((customer) => (
+                      <TableRow key={customer.id}>
+                        <TableCell className="min-w-0">
+                          <div className="font-medium whitespace-pre-line">{customer.nasabah}</div>
+                          <div className="mt-1 whitespace-pre-line text-muted-foreground"><span className="font-medium text-foreground/70">Produk: </span>{customer.produk}</div>
+                        </TableCell>
+                        <TableCell className="[font-variant-numeric:tabular-nums]">
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                            <div><span className="text-muted-foreground">Pinjaman</span><div className="whitespace-nowrap">{formatCurrency(customer.pinjaman)}</div></div>
+                            <div><span className="text-muted-foreground">OSL</span><div className="whitespace-nowrap">{formatCurrency(customer.osl)}</div></div>
+                            <div><span className="text-muted-foreground">Angsuran</span><div className="whitespace-nowrap">{formatCurrency(customer.angsuran)}</div></div>
+                            <div><span className="text-muted-foreground">Kewajiban</span><div className="whitespace-nowrap">{formatCurrency(customer.kewajiban)}</div></div>
+                          </div>
+                          <div className="mt-1 text-muted-foreground">Kol {customer.kol} · Tunggakan {customer.hr_tung} hari · Tenor {customer.tenor}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div><span className="text-muted-foreground">Pencairan: </span>{customer.pencairan}</div>
+                          <div className="mt-1"><span className="text-muted-foreground">Kunjungan: </span>{formatDate(customer.kunjungan_terakhir)}</div>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="flex items-center gap-1.5">
+                             <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                      <Button size="sm" variant="outline" className="h-7 w-7 p-0" aria-label={`Salin template untuk ${customer.nasabah.split('\n')[0]}`}><ClipboardCopy className="h-4 w-4" /></Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent>
+                                      <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'jatuh-tempo')}>Copy Pengingat</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'keterlambatan')}>Copy Keterlambatan</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleCopyMessage(customer, 'peringatan-lelang')}>Copy Peringatan Lelang</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                              </DropdownMenu>
+                              <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                      <Button size="sm" className="h-7 w-7 p-0" disabled={isGeneratingVoicenote} aria-label={`Buat pesan suara untuk ${customer.nasabah.split('\n')[0]}`}>
+                                          {isGeneratingVoicenote ? <Loader2 className="h-4 w-4 animate-spin"/> : <Mic className="h-4 w-4" />}
+                                      </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent>
+                                      <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'jatuh-tempo')}>Buat VN Pengingat</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'keterlambatan')}>Buat VN Keterlambatan</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => handleGenerateVoicenote(customer, 'peringatan-lelang')}>Buat VN Peringatan Lelang</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                              </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </MotionCard>
     </main>
   );
 }

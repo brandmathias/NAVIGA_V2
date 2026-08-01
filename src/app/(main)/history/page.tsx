@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useLocalSession } from '@/components/main-shell';
+import { ScrollReveal, MotionCard } from '@/components/motion';
 
 export default function HistoryPage() {
   const { upc: userUpc } = useLocalSession();
@@ -83,10 +84,13 @@ export default function HistoryPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-      <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight font-headline">Riwayat Aktivitas Broadcast</h1>
-      </div>
-      <Card>
+      <ScrollReveal direction="up">
+        <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold tracking-tight font-headline">Riwayat Aktivitas Broadcast</h1>
+        </div>
+      </ScrollReveal>
+      <MotionCard delay={0.08}>
+        <Card>
         <CardHeader>
           <CardTitle>Log Aktivitas</CardTitle>
           <CardDescription>
@@ -195,6 +199,7 @@ export default function HistoryPage() {
           </div>
         </CardContent>
       </Card>
+      </MotionCard>
     </main>
   );
 }

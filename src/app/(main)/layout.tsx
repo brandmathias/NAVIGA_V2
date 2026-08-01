@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import MainShell from '@/components/main-shell';
-import { getSession } from '@/lib/local-auth';
+import { getSession } from '@/lib/auth-session';
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();

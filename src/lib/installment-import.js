@@ -60,7 +60,9 @@ function findVisitColumn(rows) {
 
 function getIdentifier(row, identifierColumn) {
   if (identifierColumn >= 0) return String(row[identifierColumn] ?? '').trim();
-  return String(row[0] ?? '').match(/\d{5,}/)?.[0] ?? '';
+  return String(row[0] ?? '').match(/\d{5,}/)?.[0]
+    ?? String(row[9] ?? '').match(/\b\d{5,}\b/)?.[0]
+    ?? '';
 }
 
 function parseInstallmentRows(rows) {

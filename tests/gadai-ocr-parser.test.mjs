@@ -154,3 +154,45 @@ test('limits gadai records by any registered five-digit SBG prefix', async () =>
     ['Garuda'],
   );
 });
+
+test('parses RapidDoc HTML tables from a photographed gadai report', async () => {
+  const { parseGadaiOcrOutput } = await loadParser();
+  const html = `
+<table>
+  <tr><td>No.</td><td>No. SBG</td><td>Rubrik</td><td>Nasabah</td><td>Telp/HP.</td><td>Tgl Kredit Tgl Jatuh Tempo</td><td>Barang Jaminan</td><td>Taksiran</td><td>Uang Pinjaman</td><td>SM</td></tr>
+  <tr><td>1</td><td>1178725010004741</td><td>A - KT</td><td>ESRYANTI MASAMBE</td><td></td><td>08-04-2025</td><td>SATU CINCIN UKIR RUSAK DITAKSIR</td><td>534,148</td><td>490,000</td><td>39,200</td></tr>
+  <tr><td>-</td><td></td><td></td><td>LINGKUNGAN I RT/RW: 000/01 KodePOS 95246</td><td>081218539816</td><td>05-08-2025</td><td>PERHIASAN EMAS 16 KARAT BERAT 0.53/0.53 GRAM</td><td></td><td></td><td></td></tr>
+</table>`;
+
+  assert.deepEqual(parseGadaiOcrOutput(html), [
+    {
+      sbg_number: '1178725010004741',
+      rubrik: 'A - KT',
+      name: 'ESRYANTI MASAMBE',
+      phone_number: '081218539816',
+      credit_date: '08-04-2025',
+      due_date: '05-08-2025',
+      loan_value: 490000,
+      barang_jaminan: 'SATU CINCIN UKIR RUSAK DITAKSIR PERHIASAN EMAS 16 KARAT BERAT 0.53/0.53 GRAM',
+      taksiran: 534148,
+      sewa_modal: 39200,
+      alamat: 'LINGKUNGAN I RT/RW: 000/01 KodePOS 95246',
+      status: '',
+    },
+  ]);
+});
+
+test('keeps the primary phone and treats a city line as the customer address', async () => {
+  const { parseGadaiOcrOutput } = await loadParser();
+  const html = `
+<table>
+  <tr><td>No.</td><td>No. SBG</td><td>Rubrik</td><td>Nasabah</td><td>Telp/HP.</td><td>Tgl Kredit Tgl Jatuh Tempo</td></tr>
+  <tr><td>1</td><td>1178724010022779</td><td>B1 - KT</td><td>SILVIA GANHA</td><td>081341391598</td><td>08-04-2025</td></tr>
+  <tr><td></td><td></td><td></td><td>TANJUNG BATU</td><td>081355703575</td><td>05-08-2025</td></tr>
+</table>`;
+
+  const [customer] = parseGadaiOcrOutput(html);
+  assert.equal(customer.name, 'SILVIA GANHA');
+  assert.equal(customer.phone_number, '081341391598');
+  assert.equal(customer.alamat, 'TANJUNG BATU');
+});

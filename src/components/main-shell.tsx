@@ -4,6 +4,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { PageTransition } from '@/components/motion/page-transition';
 import {
   Sidebar,
   SidebarContent,
@@ -27,9 +28,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import type { LocalSession } from '@/lib/local-auth';
-
+import type { LocalSession } from '@/lib/auth-session';
+import { authClient } from '@/lib/auth-client';
 import styles from './main-shell.module.css';
+import { useToast } from '@/hooks/use-toast';
+
 const SessionContext = React.createContext<LocalSession | null>(null);
 
 export function useLocalSession(): LocalSession {
@@ -40,11 +43,13 @@ export function useLocalSession(): LocalSession {
 
 export default function MainShell({ children, user }: { children: React.ReactNode; user: LocalSession }) {
   const router = useRouter();
+  const { toast } = useToast();
   const pathname = usePathname();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const headerRef = React.useRef<HTMLElement>(null);
+  const scrollFrameRef = React.useRef<number | null>(null);
   const isJatuhTempoActive = pathname.startsWith('/pdf-broadcast') || pathname.startsWith('/xlsx-broadcast');
-
   const isUnitUser = user.role === 'unit';
   const unitName = user.unitName?.trim() || 'NAVIGA Unit';
   const headerTitle = isUnitUser ? `${unitName} Control Center` : 'NAVIGA Control Center';
@@ -54,26 +59,51 @@ export default function MainShell({ children, user }: { children: React.ReactNod
   const menuButtonClassName = 'naviga-sidebar-menu-button h-14 rounded-[16px] border border-[#edf2f3] bg-white/70 px-4 font-medium text-[#334e68] shadow-[0_7px_18px_rgba(16,42,67,.045)] transition-[transform,background-color,border-color,box-shadow,color] duration-200 focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-offset-2 active:scale-[.98]';
 
   React.useEffect(() => {
+    const getScrollTop = () => {
+      if (typeof document === 'undefined') return 0;
+
+      const root = document.scrollingElement ?? document.documentElement;
+      return root?.scrollTop ?? window.scrollY ?? 0;
+    };
+
     const updateScroll = () => {
-      const nextScrolled = window.scrollY > 12;
-      setIsScrolled((current) => (current === nextScrolled ? current : nextScrolled));
+      if (scrollFrameRef.current !== null) return;
+
+      scrollFrameRef.current = window.requestAnimationFrame(() => {
+        const scrollTop = getScrollTop();
+        const progress = Math.min(scrollTop / 220, 1);
+        const nextScrolled = scrollTop > 12;
+        const header = headerRef.current;
+
+        header?.style.setProperty('--naviga-glass-alpha', (0.98 - progress * 0.78).toFixed(3));
+        header?.style.setProperty('--naviga-glass-blur', `${(progress * 18).toFixed(1)}px`);
+        setIsScrolled((current) => (current === nextScrolled ? current : nextScrolled));
+        scrollFrameRef.current = null;
+      });
     };
 
     updateScroll();
     window.addEventListener('scroll', updateScroll, { passive: true });
+    document.addEventListener('scroll', updateScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', updateScroll);
+    return () => {
+      window.removeEventListener('scroll', updateScroll);
+      document.removeEventListener('scroll', updateScroll);
+      if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
+    };
   }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const response = await fetch('/api/auth/logout', { method: 'POST' });
-      if (!response.ok) throw new Error('Logout gagal.');
+      const result = await authClient.signOut();
+      if (result.error) throw new Error(result.error.message ?? 'Logout gagal.');
+      toast({ title: 'Logout berhasil', description: 'Sesi Anda telah diakhiri dengan aman.', tone: 'success' });
       router.replace('/login');
       router.refresh();
     } catch (error) {
       console.error(error);
+      toast({ title: 'Logout gagal', description: 'Sesi belum dapat diakhiri. Silakan coba lagi.', variant: 'destructive', tone: 'error' });
       setIsLoggingOut(false);
     }
   };
@@ -219,6 +249,7 @@ export default function MainShell({ children, user }: { children: React.ReactNod
         </Sidebar>
         <SidebarInset>
           <header
+            ref={headerRef}
             className="naviga-topbar sticky top-0 z-20 flex h-[94px] items-center justify-between gap-4 px-4 md:px-9"
             data-scrolled={isScrolled ? 'true' : 'false'}
           >
@@ -226,9 +257,13 @@ export default function MainShell({ children, user }: { children: React.ReactNod
               <span className="font-headline text-[26px] font-bold leading-tight tracking-[-0.025em] text-[#003f46]">{headerTitle}</span>
               <span className="mt-1 text-[12px] font-medium leading-tight text-[#0b4950]">{headerDescription}</span>
             </div>
-            <Image src="/PegadaianLogo.png" alt="Logo Pegadaian" width={97} height={50} className="h-[50px] w-auto shrink-0 object-contain" priority />
+            <div className="flex shrink-0 items-center gap-4">
+              <Image src="/PegadaianLogo.png" alt="Logo Pegadaian" width={97} height={50} className="h-[50px] w-auto shrink-0 object-contain" priority />
+            </div>
           </header>
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </SidebarInset>
       </SidebarProvider>
     </SessionContext.Provider>

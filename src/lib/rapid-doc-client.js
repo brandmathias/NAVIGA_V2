@@ -15,15 +15,21 @@ async function pathExists(path) {
   }
 }
 
-async function extractRapidDocMarkdown(pdf, options) {
-  if (!Buffer.isBuffer(pdf) || !pdf.length) throw new Error('File PDF kosong.');
+function safeInputName(inputName = 'document.pdf') {
+  const matchedExtension = String(inputName).toLowerCase().match(/\.(pdf|jpe?g|png|webp)$/);
+  return `document${matchedExtension ? matchedExtension[0] : '.pdf'}`;
+}
+
+async function extractRapidDocMarkdown(document, options) {
+  const fileLabel = options.fileLabel ?? 'PDF';
+  if (!Buffer.isBuffer(document) || !document.length) throw new Error(`File ${fileLabel} kosong.`);
 
   const workDir = await mkdtemp(join(tmpdir(), 'naviga-rapid-doc-'));
-  const inputPath = join(workDir, 'gadai.pdf');
+  const inputPath = join(workDir, safeInputName(options.inputName));
   const outputPath = join(workDir, 'gadai.md');
 
   try {
-    await writeFile(inputPath, pdf);
+    await writeFile(inputPath, document);
     const { stderr } = await execFile(options.command, [...(options.args ?? []), inputPath, outputPath], {
       timeout: options.timeoutMs,
       windowsHide: true,
@@ -39,7 +45,7 @@ async function extractRapidDocMarkdown(pdf, options) {
     return markdown;
   } catch (error) {
     if (error && error.killed) {
-      throw new Error('RapidDoc melebihi batas waktu pemrosesan PDF. Tutup aplikasi berat lalu coba lagi.');
+      throw new Error(`RapidDoc melebihi batas waktu pemrosesan ${fileLabel}. Tutup aplikasi berat lalu coba lagi.`);
     }
     if (error && error.code === 'ENOENT') {
       throw new Error('OCR RapidDoc belum dipasang. Jalankan scripts/setup-local-pdf.ps1 terlebih dahulu.');

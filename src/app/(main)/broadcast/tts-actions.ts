@@ -1,6 +1,6 @@
 'use server';
 
-import { requireSession } from '@/lib/local-auth';
+import { requireSession } from '@/lib/auth-session';
 import { synthesizePiperWav } from '@/lib/piper-tts';
 import { normalizeSpeechText } from '@/lib/tts-text';
 
