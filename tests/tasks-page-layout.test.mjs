@@ -38,8 +38,11 @@ test('kanban cards keep complete Indonesian month names and compact creator row'
   assert.match(boardSource, /className="mt-2 flex min-w-0 items-center gap-2/);
 });
 
-test('only the To Do column exposes the add-task shortcut and column progress bars are removed', () => {
-  assert.match(boardSource, /index === 0/);
+test('only the page header opens add-task and column progress bars are removed', async () => {
+  const tasksPageSource = await readFile(new URL('../src/app/(main)/tasks/page.tsx', import.meta.url), 'utf8');
+  assert.match(tasksPageSource, /boardData\.columnOrder\[0\]/);
+  assert.doesNotMatch(boardSource, /onAddTask/);
+  assert.doesNotMatch(boardSource, /Tambah tugas di/);
   assert.doesNotMatch(boardSource, /progress:/);
   assert.doesNotMatch(boardSource, /animate=\{\{ width:/);
 });
@@ -47,7 +50,11 @@ test('only the To Do column exposes the add-task shortcut and column progress ba
 test('task loading copy stays understandable for end users', async () => {
   const tasksPageSource = await readFile(new URL('../src/app/(main)/tasks/page.tsx', import.meta.url), 'utf8');
   assert.doesNotMatch(tasksPageSource, /PostgreSQL|DATABASE_URL|OCR|Piper|Genkit|Gemini/);
-  assert.match(tasksPageSource, /Tugas belum dapat dimuat/);
+  assert.match(tasksPageSource, /tasks-loading-hero/);
+  assert.match(tasksPageSource, /tasks-loading-hero-chip/);
+  assert.match(tasksPageSource, /tasks-loading-panel/);
+  assert.match(tasksPageSource, /tasks-loading-orbit/);
+  assert.match(tasksPageSource, /tasks-loading-track/);
   assert.match(tasksPageSource, /Perubahan tugas belum tersimpan/);
 });
 

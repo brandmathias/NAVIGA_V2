@@ -34,7 +34,6 @@ interface TaskKanbanBoardProps {
   boardData: TaskBoardData;
   setBoardData: React.Dispatch<React.SetStateAction<TaskBoardData>>;
   onTaskClick: (task: Task) => void;
-  onAddTask: (columnId: string) => void;
   onToggleFavorite: (taskId: string) => void;
   viewMode: ViewMode;
   isReadOnlyView?: boolean;
@@ -309,7 +308,6 @@ export default function TaskKanbanBoard({
   boardData,
   setBoardData,
   onTaskClick,
-  onAddTask,
   onToggleFavorite,
   viewMode,
   isReadOnlyView = false,
@@ -397,31 +395,6 @@ export default function TaskKanbanBoard({
                               <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', tone.icon)}><ColumnIcon className="h-4 w-4" strokeWidth={1.8} /></span>
                               <h3 className="min-w-0 flex-1 truncate text-[14px] font-bold text-[#173d56]">{column.title}</h3>
                               <span className="grid h-6 min-w-6 place-items-center rounded-full px-1.5 text-[11px] font-extrabold" style={{ backgroundColor: tone.soft, color: tone.accent }}>{tasks.length}</span>
-                              {index === 0 && (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-7 w-7 shrink-0 rounded-lg border transition-[transform,background-color,border-color,color] duration-200 hover:scale-105 active:scale-95"
-                                    style={{ borderColor: tone.border, backgroundColor: tone.soft, color: tone.accent }}
-                                    onClick={(event) => {
-                                      event.preventDefault();
-                                      event.stopPropagation();
-                                      onAddTask(column.id);
-                                    }}
-                                    onMouseDown={(event) => event.stopPropagation()}
-                                    aria-label={`Tambah tugas di ${column.title}`}
-                                  >
-                                    <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent className="border-[#d8ece9] bg-[#12324a] text-xs font-semibold text-white">
-                                    Tambah tugas di {column.title}
-                                  </TooltipContent>
-                                </Tooltip>
-                              )}
                             </div>
                           </div>
 

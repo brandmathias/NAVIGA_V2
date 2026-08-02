@@ -263,54 +263,135 @@ export default function TasksPage() {
         <section className="relative overflow-hidden border-b border-[#e1eeec] bg-white px-4 py-4 sm:px-6 lg:px-8">
           <div className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full border border-[#d9f0ec]" />
           <div className="pointer-events-none absolute right-16 -top-8 h-20 w-20 rounded-full border border-[#e9f6f3]" />
-          <div className="relative flex min-w-0 flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#e2f7f2] text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)]"><ClipboardList className="h-6 w-6" strokeWidth={1.8} /></span>
-              <div className="min-w-0">
-                <h1 className="truncate font-headline text-xl font-extrabold tracking-[-0.03em] text-[#12324a] sm:text-2xl">Lacak Tugas &amp; Alur Kerja</h1>
-                <p className="mt-1 truncate text-xs text-[#6d879b] sm:text-sm">Pantau seluruh progres pekerjaan secara real-time dan kolaboratif.</p>
+          {isBoardLoading ? (
+            <div className="tasks-loading-hero relative flex min-w-0 flex-col gap-4 xl:flex-row xl:items-center xl:justify-between" aria-hidden="true">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-[#dcebe9] bg-[#f3fbf8]">
+                  <span className="tasks-loading-hero-icon" />
+                </span>
+                <div className="min-w-0 space-y-2">
+                  <span className="tasks-loading-hero-line h-7 w-[240px] max-w-[72vw]" />
+                  <span className="tasks-loading-hero-line h-4 w-[360px] max-w-[82vw]" />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 xl:shrink-0">
+                <span className="tasks-loading-hero-chip h-10 w-[108px] rounded-xl" />
+                <span className="tasks-loading-hero-chip h-10 w-[122px] rounded-xl" />
+                <span className="tasks-loading-hero-chip h-10 w-[158px] rounded-xl" />
               </div>
             </div>
+          ) : (
+            <>
+              <div className="relative flex min-w-0 flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#e2f7f2] text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)]"><ClipboardList className="h-6 w-6" strokeWidth={1.8} /></span>
+                  <div className="min-w-0">
+                    <h1 className="truncate font-headline text-xl font-extrabold tracking-[-0.03em] text-[#12324a] sm:text-2xl">Lacak Tugas &amp; Alur Kerja</h1>
+                    <p className="mt-1 truncate text-xs text-[#6d879b] sm:text-sm">Pantau seluruh progres pekerjaan secara real-time dan kolaboratif.</p>
+                  </div>
+                </div>
 
-            <div className="flex flex-wrap items-center gap-2 xl:shrink-0">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button type="button" variant="outline" aria-pressed={labelFilter !== 'all'} className={labelFilter !== 'all' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><Filter className="h-4 w-4" /> Filter</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-44 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
-                  {labelFilterOptions.map((option) => (
-                    <DropdownMenuItem key={option.value} onClick={() => setLabelFilter(option.value)} className="flex items-center justify-between rounded-lg text-xs font-semibold text-[#173d56]">
-                      {option.label}
-                      {labelFilter === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button type="button" variant="outline" aria-pressed={sortMode !== 'manual'} className={sortMode !== 'manual' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><ArrowUpDown className="h-4 w-4" /> Urutkan</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
-                  {sortOptions.map((option) => (
-                    <DropdownMenuItem key={option.value} onClick={() => setSortMode(option.value)} className="flex items-center justify-between rounded-lg text-xs font-semibold text-[#173d56]">
-                      {option.label}
-                      {sortMode === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button type="button" onClick={() => boardData.columnOrder[0] && handleOpenAddTaskModal(boardData.columnOrder[0])} className="h-10 rounded-xl bg-[#0f9f8f] px-4 text-white shadow-[0_9px_22px_rgba(15,159,143,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#0b8d7e] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" /> Tambah Tugas</Button>
-            </div>
-          </div>
-          {isFocusedView && <div className="relative mt-3 flex flex-wrap items-center gap-2 text-xs text-[#0f877b]"><SlidersHorizontal className="h-3.5 w-3.5" /><span>{activeFilterLabel} - {activeSortLabel} - {visibleTasks} dari {totalTasks} tugas</span><button type="button" onClick={() => { setLabelFilter('all'); setSortMode('manual'); }} className="rounded-full border border-[#bde7df] bg-white px-2 py-0.5 font-bold text-[#0f877b] transition-colors hover:bg-[#edf9f6] active:scale-95">Reset</button></div>}
+                <div className="flex flex-wrap items-center gap-2 xl:shrink-0">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type="button" variant="outline" aria-pressed={labelFilter !== 'all'} className={labelFilter !== 'all' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><Filter className="h-4 w-4" /> Filter</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
+                      {labelFilterOptions.map((option) => (
+                        <DropdownMenuItem key={option.value} onClick={() => setLabelFilter(option.value)} className="flex items-center justify-between rounded-lg text-xs font-semibold text-[#173d56]">
+                          {option.label}
+                          {labelFilter === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type="button" variant="outline" aria-pressed={sortMode !== 'manual'} className={sortMode !== 'manual' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><ArrowUpDown className="h-4 w-4" /> Urutkan</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
+                      {sortOptions.map((option) => (
+                        <DropdownMenuItem key={option.value} onClick={() => setSortMode(option.value)} className="flex items-center justify-between rounded-lg text-xs font-semibold text-[#173d56]">
+                          {option.label}
+                          {sortMode === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button type="button" onClick={() => boardData.columnOrder[0] && handleOpenAddTaskModal(boardData.columnOrder[0])} className="h-10 rounded-xl bg-[#0f9f8f] px-4 text-white shadow-[0_9px_22px_rgba(15,159,143,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#0b8d7e] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" /> Tambah Tugas</Button>
+                </div>
+              </div>
+              {isFocusedView && <div className="relative mt-3 flex flex-wrap items-center gap-2 text-xs text-[#0f877b]"><SlidersHorizontal className="h-3.5 w-3.5" /><span>{activeFilterLabel} - {activeSortLabel} - {visibleTasks} dari {totalTasks} tugas</span><button type="button" onClick={() => { setLabelFilter('all'); setSortMode('manual'); }} className="rounded-full border border-[#bde7df] bg-white px-2 py-0.5 font-bold text-[#0f877b] transition-colors hover:bg-[#edf9f6] active:scale-95">Reset</button></div>}
+            </>
+          )}
         </section>
       </ScrollReveal>
 
       <ScrollReveal direction="up" delay={0.08}>
         <section className="min-w-0 px-3 py-3 sm:px-5 sm:py-4 lg:px-7">
           {isBoardLoading ? (
-            <div className="grid min-h-[420px] place-items-center rounded-[24px] border border-[#dcebe9] bg-white text-sm font-medium text-[#6d879b] shadow-[0_16px_44px_rgba(16,42,67,.06)]">
-              Menyiapkan daftar tugas...
+            <div className="tasks-loading-panel min-h-[420px] rounded-[24px] border border-[#dcebe9] bg-white p-5 shadow-[0_16px_44px_rgba(16,42,67,.06)]">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex min-w-0 items-center gap-4">
+                  <span className="tasks-loading-orbit" aria-hidden="true">
+                    <span />
+                    <ClipboardList className="h-6 w-6" strokeWidth={1.8} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#0f877b]">Menyiapkan board</p>
+                    <h2 className="mt-1 font-headline text-lg font-extrabold tracking-[-0.03em] text-[#173d56]">Daftar tugas sedang dirapikan</h2>
+                    <p className="mt-1 max-w-xl text-sm leading-6 text-[#6d879b]">Kami menyusun kolom, label, lampiran, dan urutan tugas agar siap dipantau.</p>
+                  </div>
+                </div>
+
+                <div className="grid gap-2 text-xs font-semibold text-[#547188] sm:grid-cols-3 lg:min-w-[420px]">
+                  {['Membaca tugas', 'Menyusun kolom', 'Menyiapkan tampilan'].map((step, index) => (
+                    <div key={step} className="tasks-loading-step" style={{ animationDelay: `${index * 140}ms` }}>
+                      <span>{index + 1}</span>
+                      {step}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-[#5d7586]">
+                <span className="tasks-loading-status">
+                  <span className="tasks-loading-status-dot" />
+                  Sinkronisasi aman
+                </span>
+                <span className="tasks-loading-status">Label, lampiran, dan pemilik disiapkan</span>
+                <span className="tasks-loading-status">Tampilan board dirapikan</span>
+              </div>
+
+              <div className="tasks-loading-track mt-5" aria-hidden="true">
+                <span />
+              </div>
+
+              <div className="mt-5 grid gap-3 md:grid-cols-3 xl:grid-cols-4" aria-hidden="true">
+                {['Daftar Tugas', 'Sedang Dikerjakan', 'Selesai', 'Tambah Kolom'].map((column, columnIndex) => (
+                  <div key={column} className="tasks-loading-column" style={{ animationDelay: `${columnIndex * 110}ms` }}>
+                    <div className="flex items-center justify-between">
+                      <span className="tasks-loading-pill" />
+                      <span className="h-5 w-5 rounded-full bg-[#edf6f2]" />
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {Array.from({ length: columnIndex === 2 ? 1 : 3 }).map((_, cardIndex) => (
+                        <div key={cardIndex} className="tasks-loading-card">
+                          <span className="w-3/4" />
+                          <span className="w-full" />
+                          <span className="w-2/5" />
+                          <div className="tasks-loading-card-foot">
+                            <span className="tasks-loading-avatar" />
+                            <span className="tasks-loading-chip w-14" />
+                            <span className="tasks-loading-chip w-8" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : boardError ? (
             <div role="alert" className="grid min-h-[280px] place-items-center rounded-[24px] border border-[#f3c8c8] bg-[#fffafa] px-6 text-center text-sm text-[#a33b3b] shadow-[0_16px_44px_rgba(140,40,40,.06)]">
@@ -322,7 +403,7 @@ export default function TasksPage() {
             </div>
           ) : (
             <>
-              <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onAddTask={handleOpenAddTaskModal} onToggleFavorite={handleToggleFavorite} viewMode={viewMode} isReadOnlyView={isFocusedView} />
+              <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onToggleFavorite={handleToggleFavorite} viewMode={viewMode} isReadOnlyView={isFocusedView} />
 
               {syncError && <div role="alert" className="mt-3 rounded-xl border border-[#f1d19a] bg-[#fffaf0] px-4 py-3 text-xs font-medium text-[#8c641d]">Perubahan terakhir belum tersimpan: {syncError}</div>}
 

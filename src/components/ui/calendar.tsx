@@ -23,33 +23,33 @@ function Calendar({
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
         caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
+        caption_label: "text-sm font-semibold text-[#173d56]",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+          "h-7 w-7 rounded-full border-[#dcebe9] bg-white p-0 text-[#0d7d75] opacity-80 shadow-sm hover:border-[#a6ddd4] hover:bg-[#edf9f6] hover:text-[#0b8d81] hover:opacity-100"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-1",
         head_row: "flex",
         head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+          "w-9 rounded-md text-[0.72rem] font-medium text-[#7890a5]",
         row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        cell: "h-9 w-9 p-0 text-center text-sm",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
+          "h-8 w-8 rounded-[10px] p-0 text-[12px] font-medium text-[#36566b] transition-[background-color,color,box-shadow,transform] duration-150 ease-out hover:bg-[#e8f7d0] hover:text-[#0a776e] focus-visible:ring-[#14b8a6]/25 aria-selected:opacity-100 active:scale-95"
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
+          "bg-[linear-gradient(135deg,#9fda39,#079889)] text-white shadow-[0_7px_14px_rgba(15,159,143,0.22)] hover:bg-[linear-gradient(135deg,#95d331,#05897e)] hover:text-white focus:bg-[linear-gradient(135deg,#9fda39,#079889)] focus:text-white",
+        day_today: "bg-[#b8df42] text-[#174a35] shadow-[inset_0_0_0_1px_rgba(23,74,53,0.05)] hover:bg-[#aedd39] hover:text-[#123f31]",
         day_outside:
-          "day-outside text-muted-foreground aria-selected:bg-accent/50 aria-selected:text-muted-foreground",
+          "day-outside text-[#a1b2bf] hover:bg-[#f2fae5] aria-selected:bg-[#e4f5ce] aria-selected:text-[#0b766d]",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
+          "aria-selected:bg-[#e4f5ce] aria-selected:text-[#0b766d]",
         day_hidden: "invisible",
         ...classNames,
       }}

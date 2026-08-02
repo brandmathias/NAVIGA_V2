@@ -289,12 +289,12 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
       <DialogContent
         hideCloseButton
         overlayClassName="bg-slate-950/35 backdrop-blur-[8px]"
-        className="max-h-[min(720px,calc(100dvh-2.5rem))] w-[calc(100vw-2rem)] max-w-[960px] overflow-hidden rounded-[24px] border border-[#d9e7e4] bg-white p-0 shadow-[0_24px_80px_rgba(10,57,61,0.18)]"
+        className="max-h-[min(700px,calc(100dvh-1.5rem))] w-[calc(100vw-1.5rem)] max-w-[920px] overflow-hidden rounded-[24px] border border-[#d9e7e4] bg-white p-0 shadow-[0_24px_80px_rgba(10,57,61,0.18)]"
       >
         <DialogDescription className="sr-only">
           Isi judul, deskripsi, batas waktu, prioritas, dan lampiran untuk menambahkan tugas baru.
         </DialogDescription>
-        <div className="flex max-h-[min(720px,calc(100dvh-2.5rem))] min-h-0 flex-col overflow-hidden">
+        <div className="flex max-h-[min(700px,calc(100dvh-1.5rem))] min-h-0 flex-col overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-b border-[#edf3f2] px-5 py-3.5">
             <DialogTitle className="inline-flex items-center rounded-full border border-[#d5ece8] bg-[#f3fbf9] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#0e7a73] shadow-[0_4px_12px_rgba(11,117,110,0.07)]">
               Detail Tugas
@@ -311,8 +311,8 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
             </DialogClose>
           </div>
 
-          <div ref={scrollRef} className="grid min-h-0 flex-1 gap-3 overflow-y-auto overflow-x-hidden px-4 py-3 md:grid-cols-[64px_minmax(0,1fr)] md:overflow-visible">
-            <aside className="relative hidden rounded-[20px] border border-[#e3eeeb] bg-[linear-gradient(180deg,#f3fbf9,#ffffff)] px-2 py-2 shadow-[0_8px_20px_rgba(8,61,56,0.045)] md:grid md:grid-rows-[64px_188px_82px_82px_86px]">
+          <div ref={scrollRef} className="grid min-h-0 flex-1 gap-3 overflow-y-auto overflow-x-hidden px-4 py-3 md:grid-cols-[56px_minmax(0,1fr)] md:overflow-hidden">
+            <aside className="relative hidden rounded-[18px] border border-[#e3eeeb] bg-[linear-gradient(180deg,#f3fbf9,#ffffff)] px-2 py-2 shadow-[0_8px_20px_rgba(8,61,56,0.045)] md:grid md:grid-rows-[58px_154px_78px_78px_90px]">
               {railSections.map(({ id, icon: Icon, label }, index) => {
                 const active = activeSection === id;
                 return (
@@ -322,13 +322,13 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                       onClick={() => scrollToSection(id)}
                       aria-label={`Buka bagian ${label}`}
                       className={cn(
-                        'grid h-11 w-11 place-items-center rounded-[15px] border transition-[transform,background-color,border-color,box-shadow,color] duration-180 ease-out active:scale-95',
+                        'grid h-10 w-10 place-items-center rounded-[14px] border transition-[transform,background-color,border-color,box-shadow,color] duration-180 ease-out active:scale-95',
                         active
-                          ? 'border-transparent bg-[linear-gradient(145deg,#3dcbbb,#118f83)] text-white shadow-[0_11px_20px_rgba(17,143,131,0.2)]'
-                          : 'border-transparent bg-[#f5fbfa] text-[#0d7d75] shadow-[0_5px_12px_rgba(13,125,117,0.07)] hover:-translate-y-0.5 hover:border-[#c8e9e2] hover:bg-[#eaf8f5] hover:shadow-[0_9px_16px_rgba(13,125,117,0.1)]',
+                          ? 'border-transparent bg-[linear-gradient(145deg,#3dcbbb,#118f83)] text-white shadow-[0_10px_18px_rgba(17,143,131,0.18)]'
+                          : 'border-transparent bg-[#f5fbfa] text-[#0d7d75] shadow-[0_5px_12px_rgba(13,125,117,0.07)]',
                       )}
                     >
-                      <Icon className="h-[21px] w-[21px]" strokeWidth={1.8} />
+                      <Icon className="h-5 w-5" strokeWidth={1.8} />
                     </button>
                     {index < railSections.length - 1 && <span className="pointer-events-none absolute -bottom-0.5 h-1 w-1 rounded-full bg-[#0e7a73]/55" />}
                   </div>
@@ -336,13 +336,13 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
               })}
             </aside>
 
-            <div className="grid min-w-0 min-h-0 grid-cols-1 gap-3 pb-0 md:grid-cols-2">
+            <div className="grid min-w-0 min-h-0 grid-cols-1 gap-2.5 pb-0">
               <section
                 ref={(element) => {
                   sectionRefs.current.title = element;
                 }}
                 data-section="title"
-                className="relative col-span-1 overflow-hidden rounded-[16px] border border-[#d9e9e7] bg-[linear-gradient(90deg,#ffffff_0%,#fbfffe_70%,#f0fbf8_100%)] px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.035)] before:absolute before:inset-y-0 before:left-0 before:w-1.5 before:rounded-l-[16px] before:bg-[linear-gradient(180deg,#52d5c4,#10978b)] md:col-span-2"
+                className="relative overflow-hidden rounded-[16px] border border-[#d9e9e7] bg-[linear-gradient(90deg,#ffffff_0%,#fbfffe_70%,#f0fbf8_100%)] px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.035)] before:absolute before:inset-y-0 before:left-0 before:w-1.5 before:rounded-l-[16px] before:bg-[linear-gradient(180deg,#52d5c4,#10978b)]"
               >
                 <div className="pointer-events-none absolute right-4 top-3 grid grid-cols-8 gap-1 opacity-55">
                   {Array.from({ length: 24 }).map((_, index) => (
@@ -357,7 +357,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="Analisis data penjualan Q2"
-                  className="h-auto border-0 bg-transparent p-0 text-[19px] font-semibold tracking-[-0.02em] text-[#0f5260] shadow-none ring-0 placeholder:text-[#a8b9c3] focus-visible:ring-0"
+                  className="h-auto border-0 bg-transparent p-0 text-[18px] font-semibold tracking-[-0.02em] text-[#0f5260] shadow-none ring-0 placeholder:text-[#a8b9c3] focus-visible:ring-0"
                   autoFocus
                 />
               </section>
@@ -368,17 +368,17 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                 }}
                 data-section="description"
                 className={cn(
-                  'relative col-span-1 min-h-0 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)] md:col-span-2',
+                  'relative min-h-0 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-2.5 shadow-[0_6px_16px_rgba(8,61,56,0.03)]',
                   isEditorExpanded && 'fixed inset-4 z-[60] m-0 flex flex-col rounded-[20px] bg-white p-5 shadow-[0_24px_80px_rgba(10,57,61,0.22)]',
                 )}
               >
-                <Label className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
+                <Label className="mb-1.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
                   <span className="h-4 w-1 rounded-full bg-[linear-gradient(180deg,#50d4c2,#0fa292)]" />
                   Deskripsi
                 </Label>
 
-                <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[14px] border border-[#d7e3e0] bg-white">
-                  <div className="flex shrink-0 flex-wrap items-center gap-0 border-b border-[#e8efee] bg-[#fbfdfd] px-2 py-1 text-[#12384e]">
+                <div className="relative flex flex-col overflow-hidden rounded-[14px] border border-[#d7e3e0] bg-white">
+                  <div className="flex shrink-0 flex-wrap items-center gap-0 border-b border-[#e8efee] bg-[#fbfdfd] px-2 py-0.5 text-[#12384e]">
                     {editorTools.map(({ icon: Icon, label: itemLabel, command, action }) => (
                       <React.Fragment key={itemLabel}>
                         <button
@@ -389,7 +389,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                             else if (action === 'link') handleLinkCommand();
                             else if (command) runEditorCommand(command);
                           }}
-                          className="grid h-8 w-8 place-items-center rounded-lg text-[#344b66] transition-[transform,background-color,color] duration-160 ease-out hover:-translate-y-0.5 hover:bg-[#edf8f5] hover:text-[#0e7e75] active:scale-95"
+                          className="grid h-7 w-7 place-items-center rounded-lg text-[#344b66] transition-[transform,background-color,color] duration-160 ease-out hover:bg-[#edf8f5] hover:text-[#0e7e75] active:scale-95"
                           title={itemLabel}
                           aria-label={itemLabel}
                         >
@@ -401,7 +401,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   </div>
 
                   <div className="relative min-h-0 flex-1">
-                    {!description && <span className="pointer-events-none absolute left-3 top-3 z-10 text-[13px] text-[#a7b9c6]">Rangkum konteks tugas di sini...</span>}
+                    {!description && <span className="pointer-events-none absolute left-3 top-2.5 z-10 text-[13px] text-[#a7b9c6]">Rangkum konteks tugas di sini...</span>}
                     <div
                       ref={editorRef}
                       contentEditable={true}
@@ -410,7 +410,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                       aria-label="Deskripsi tugas"
                       aria-multiline="true"
                       onInput={syncEditorValue}
-                      className="h-full min-h-[124px] overflow-y-auto px-3 py-2.5 text-[13px] leading-6 text-[#233d5a] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#12a995]/20"
+                      className="min-h-[74px] overflow-y-auto px-3 py-2 text-[13px] leading-5 text-[#233d5a] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#12a995]/20 [&_ol]:my-1.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:my-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:my-0.5 [&_li]:pl-1"
                     />
                   </div>
                 </div>
@@ -421,7 +421,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   sectionRefs.current.deadline = element;
                 }}
                 data-section="deadline"
-                className="col-span-1 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]"
+                className="rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]"
               >
                 <Label className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
                   <span className="h-4 w-1 rounded-full bg-[linear-gradient(180deg,#50d4c2,#0fa292)]" />
@@ -432,7 +432,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   <PopoverTrigger asChild>
                     <button
                       type="button"
-                      className="flex h-[48px] w-full items-stretch overflow-hidden rounded-[12px] border border-[#cfe2de] bg-[#f8fcfb] text-left transition-[transform,border-color,box-shadow,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#99d8ce] hover:bg-[#f2fbf8] hover:shadow-[0_9px_16px_rgba(15,159,143,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#12a995]/25"
+                    className="flex h-[46px] w-full items-stretch overflow-hidden rounded-[12px] border border-[#cfe2de] bg-[#f8fcfb] text-left transition-[transform,border-color,box-shadow,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#99d8ce] hover:bg-[#f2fbf8] hover:shadow-[0_9px_16px_rgba(15,159,143,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#12a995]/25"
                     >
                       <span className="grid min-w-0 flex-1 items-center px-3">
                         <span className="truncate text-[13px] font-semibold text-[#17384a]">{deadline ? formatDeadline(deadline) : 'Pilih tanggal'}</span>
@@ -457,14 +457,14 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   sectionRefs.current.priority = element;
                 }}
                 data-section="priority"
-                className="col-span-1 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]"
+                className="rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]"
               >
                 <Label className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
                   <span className="h-4 w-1 rounded-full bg-[linear-gradient(180deg,#50d4c2,#0fa292)]" />
                   Prioritas
                 </Label>
 
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
                   {priorityOptions.map((option) => {
                     const active = option.value === priority;
                     return (
@@ -474,7 +474,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                         aria-pressed={active}
                         onClick={() => setPriority(option.value)}
                         className={cn(
-                          'group flex h-[48px] min-w-0 items-center justify-center gap-1 rounded-[11px] border px-1.5 text-[11px] font-bold transition-[transform,border-color,background-color,box-shadow,color] duration-180 ease-out active:scale-[0.98]',
+                          'group flex h-[44px] min-w-0 items-center justify-center gap-1.5 rounded-[11px] border px-2 text-[11px] font-bold transition-[transform,border-color,background-color,box-shadow,color] duration-180 ease-out active:scale-[0.98]',
                           active
                             ? option.selected
                             : `${option.tone} hover:-translate-y-0.5 hover:shadow-[0_8px_14px_rgba(0,0,0,0.05)]`,
@@ -493,7 +493,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   sectionRefs.current.attachments = element;
                 }}
                 data-section="attachments"
-                className="col-span-1 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)] md:col-span-2"
+                className="rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
@@ -525,7 +525,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                 </div>
               </section>
 
-              {error && <p role="alert" className="col-span-1 rounded-[10px] border border-[#f3c1c1] bg-[#fff4f4] px-3 py-2 text-xs text-[#c14c54] md:col-span-2">{error}</p>}
+              {error && <p role="alert" className="rounded-[10px] border border-[#f3c1c1] bg-[#fff4f4] px-3 py-2 text-xs text-[#c14c54]">{error}</p>}
             </div>
           </div>
 

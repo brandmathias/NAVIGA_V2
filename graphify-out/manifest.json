@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/tasks/page.tsx": {
-    "mtime": 1785636569.0540838,
-    "ast_hash": "611ae33a03add7183739b16413c90ac0",
+    "mtime": 1785663824.2204833,
+    "ast_hash": "50d28c9575ef2092693f8d6d72c4cede",
     "semantic_hash": ""
   },
   "src/app/(main)/xlsx-broadcast/page.tsx": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "src/components/AddTaskDialog.tsx": {
-    "mtime": 1785660598.3914645,
-    "ast_hash": "57305ff9ec16340506534086d32ef71b",
+    "mtime": 1785663638.140924,
+    "ast_hash": "019a50a17f9325801fb6080fe547086f",
     "semantic_hash": ""
   },
   "src/components/KanbanBoard.tsx": {
@@ -85,13 +85,13 @@
     "semantic_hash": ""
   },
   "src/components/TaskDetailsDialog.tsx": {
-    "mtime": 1785660284.803625,
-    "ast_hash": "579cc74c83df2baa9826ddbfa2d8fc84",
+    "mtime": 1785662751.6237292,
+    "ast_hash": "6cd5a8075d8bbb20a7ceeb45083964ab",
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
-    "mtime": 1785660284.8000255,
-    "ast_hash": "a77a30113c91ce20ce77eabf07ea6d6f",
+    "mtime": 1785664002.6694832,
+    "ast_hash": "8fdf3cf4d76fc2a7716227bed5bc5408",
     "semantic_hash": ""
   },
   "src/components/VoicenotePreviewDialog.tsx": {
@@ -125,13 +125,13 @@
     "semantic_hash": ""
   },
   "src/components/ui/button.tsx": {
-    "mtime": 1785227498.501316,
-    "ast_hash": "bc332c68a1dfe674d184b5d36506904b",
+    "mtime": 1785663503.8978755,
+    "ast_hash": "30ddec3b4688e68f6bc8f0caef64a438",
     "semantic_hash": ""
   },
   "src/components/ui/calendar.tsx": {
-    "mtime": 1785227498.5185635,
-    "ast_hash": "8ac9efb2b5d134009a2ca4b99586910d",
+    "mtime": 1785663583.3020968,
+    "ast_hash": "1302128c4f2db6c06b455bae76e4d770",
     "semantic_hash": ""
   },
   "src/components/ui/card.tsx": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "tests/tasks-page-layout.test.mjs": {
-    "mtime": 1785660209.9454029,
-    "ast_hash": "1ba6fc28c87c47a42f1045e3cf1f0583",
+    "mtime": 1785663879.4258225,
+    "ast_hash": "90f6d700449742d83fc2badcbf04ba21",
     "semantic_hash": ""
   },
   "tests/task-column-icons.test.mjs": {
@@ -945,8 +945,8 @@
     "semantic_hash": ""
   },
   "tests/add-task-dialog-modal.test.mjs": {
-    "mtime": 1785659859.7069707,
-    "ast_hash": "56d731c075b26a66105c5f61adb7cee5",
+    "mtime": 1785663904.3344274,
+    "ast_hash": "9f1fd765e2246c13d64739b148adbd0c",
     "semantic_hash": ""
   },
   "src/lib/task-description.ts": {
