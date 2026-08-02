@@ -8,15 +8,42 @@ const addTaskSource = await readFile(new URL('../src/components/AddTaskDialog.ts
 const dialogConfigSource = await readFile(new URL('../src/components/task-dialog-config.ts', import.meta.url), 'utf8').catch(() => '');
 const descriptionHelper = await readFile(new URL('../src/lib/task-description.ts', import.meta.url), 'utf8').catch(() => '');
 
-test('task board uses a responsive grid instead of a horizontal scroller', () => {
+test('task board keeps columns in one horizontally scrollable row', () => {
   assert.match(boardSource, /grid/);
   assert.match(boardSource, /min-w-0/);
-  assert.doesNotMatch(boardSource, /overflow-x-auto/);
+  assert.match(boardSource, /grid-flow-col/);
+  assert.match(boardSource, /overflow-x-auto/);
+  assert.match(boardSource, /auto-cols-\[minmax\(280px,1fr\)\]/);
+  assert.doesNotMatch(boardSource, /2xl:grid-cols-4/);
 });
 
-test('add-column card stays in the desktop kanban row', () => {
-  assert.match(boardSource, /2xl:grid-cols-4/);
+test('add-column card submits from its visible plus button', () => {
   assert.match(boardSource, /Tambah kolom/);
+  assert.match(boardSource, /aria-label="Tambah kolom"/);
+  assert.match(boardSource, /onClick=\{submitNewColumn\}/);
+  assert.match(boardSource, /onSubmit=\{handleAddColumn\}/);
+  assert.match(boardSource, /document\.getElementById\('new-column-title'\)\?\.focus\(\)/);
+});
+
+test('task header keeps column creation inside the add-column card', async () => {
+  const tasksPageSource = await readFile(new URL('../src/app/(main)/tasks/page.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(tasksPageSource, /Tambah Kolom<\/Button>/);
+  assert.match(tasksPageSource, /onAddColumn=\{handleAddColumn\}/);
+  assert.match(boardSource, /id="new-column-title"/);
+  assert.match(boardSource, /onSubmit=\{handleAddColumn\}/);
+});
+
+test('column cards expose a safe delete action in their footer', async () => {
+  const tasksPageSource = await readFile(new URL('../src/app/(main)/tasks/page.tsx', import.meta.url), 'utf8');
+  assert.match(boardSource, /onDeleteColumn: \(columnId: string\) => void/);
+  assert.match(boardSource, /Trash2/);
+  assert.match(boardSource, /Hapus kolom/);
+  assert.match(boardSource, /canDeleteColumn/);
+  assert.match(boardSource, /onDeleteColumn\(column\.id\)/);
+  assert.match(tasksPageSource, /onDeleteColumn=\{handleDeleteColumn\}/);
+  assert.match(tasksPageSource, /column\.taskIds\.length > 0/);
+  assert.match(tasksPageSource, /previous\.columnOrder\.length <= 1/);
+  assert.match(tasksPageSource, /columnOrder: previous\.columnOrder\.filter/);
 });
 
 test('favorite star does not open the task detail card', () => {

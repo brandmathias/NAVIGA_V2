@@ -215,6 +215,21 @@ export default function TasksPage() {
     setNewColumnTitle('');
   };
 
+  const handleDeleteColumn = (columnId: string) => {
+    setBoardData((previous) => {
+      const column = previous.columns[columnId];
+      if (!column || column.taskIds.length > 0 || previous.columnOrder.length <= 1) return previous;
+
+      const nextColumns = { ...previous.columns };
+      delete nextColumns[columnId];
+      return {
+        ...previous,
+        columns: nextColumns,
+        columnOrder: previous.columnOrder.filter((id) => id !== columnId),
+      };
+    });
+  };
+
   const handleDeleteTask = (taskId: string) => {
     const attachmentId = boardData.tasks[taskId]?.attachment?.id;
     if (attachmentId) void deleteTaskAttachment(attachmentId).catch((error) => console.error('Failed to delete task attachment', error));
@@ -296,8 +311,7 @@ export default function TasksPage() {
                       ))}
                     </DropdownMenuContent>
                       </DropdownMenu>
-                      <Button type="button" variant="outline" onClick={() => { if (!newColumnTitle.trim()) { document.getElementById('new-column-title')?.focus(); return; } handleAddColumn(newColumnTitle); }} className="h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-[transform,background-color,border-color] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" aria-hidden="true" /> Tambah Kolom</Button>
-                      <Button type="button" onClick={() => boardData.columnOrder[0] && handleOpenAddTaskModal(boardData.columnOrder[0])} className="h-10 rounded-xl bg-[#0f9f8f] px-4 text-white shadow-[0_9px_22px_rgba(15,159,143,0.2)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#0b8d7e] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" /> Tambah Tugas</Button>
+                          <Button type="button" onClick={() => boardData.columnOrder[0] && handleOpenAddTaskModal(boardData.columnOrder[0])} className="h-10 rounded-xl bg-[#0f9f8f] px-4 text-white shadow-[0_9px_22px_rgba(15,159,143,0.2)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#0b8d7e] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" /> Tambah Tugas</Button>
                 </div>
               </div>
               {isFocusedView && <div className="relative mt-3 flex flex-wrap items-center gap-2 text-xs text-[#0f877b]"><SlidersHorizontal className="h-3.5 w-3.5" /><span>{activeFilterLabel} - {activeSortLabel} - {visibleTasks} dari {totalTasks} tugas</span><button type="button" onClick={() => { setPriorityFilter('all'); setSortMode('oldest'); }} className="rounded-full border border-[#bde7df] bg-white px-2 py-0.5 font-bold text-[#0f877b] transition-colors hover:bg-[#edf9f6] active:scale-95">Reset</button></div>}
@@ -381,7 +395,7 @@ export default function TasksPage() {
             </div>
           ) : (
             <>
-              <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onToggleFlagged={handleToggleFlagged} onAddColumn={handleAddColumn} newColumnTitle={newColumnTitle} onNewColumnTitleChange={setNewColumnTitle} viewMode={viewMode} isReadOnlyView={isFocusedView} />
+              <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onToggleFlagged={handleToggleFlagged} onAddColumn={handleAddColumn} onDeleteColumn={handleDeleteColumn} newColumnTitle={newColumnTitle} onNewColumnTitleChange={setNewColumnTitle} viewMode={viewMode} isReadOnlyView={isFocusedView} />
 
               {syncError && <div role="alert" className="mt-3 rounded-xl border border-[#f1d19a] bg-[#fffaf0] px-4 py-3 text-xs font-medium text-[#8c641d]">Perubahan terakhir belum tersimpan: {syncError}</div>}
 

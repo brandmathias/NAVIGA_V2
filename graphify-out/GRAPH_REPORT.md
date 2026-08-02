@@ -1,7 +1,7 @@
 # Graph Report - NAVIGA  (2026-08-03)
 
 ## Corpus Check
-- 190 files · ~229,295 words
+- 190 files · ~229,524 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `deb220e3`
+- Built from commit: `7281874b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

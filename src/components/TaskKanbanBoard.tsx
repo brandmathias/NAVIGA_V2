@@ -27,6 +27,7 @@ import {
   Plus,
   Flag,
   Star,
+  Trash2,
 } from 'lucide-react';
 
 type ViewMode = 'board' | 'list';
@@ -37,6 +38,7 @@ interface TaskKanbanBoardProps {
   onTaskClick: (task: Task) => void;
   onToggleFlagged: (taskId: string) => void;
   onAddColumn: (title: string) => void;
+  onDeleteColumn: (columnId: string) => void;
   newColumnTitle: string;
   onNewColumnTitleChange: (value: string) => void;
   viewMode: ViewMode;
@@ -327,16 +329,24 @@ export default function TaskKanbanBoard({
   onTaskClick,
   onToggleFlagged,
   onAddColumn,
+  onDeleteColumn,
   newColumnTitle,
   onNewColumnTitleChange,
   viewMode,
   isReadOnlyView = false,
 }: TaskKanbanBoardProps) {
+  const submitNewColumn = () => {
+    const title = newColumnTitle.trim();
+    if (!title) {
+      document.getElementById('new-column-title')?.focus();
+      return;
+    }
+    onAddColumn(title);
+  };
+
   const handleAddColumn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const title = newColumnTitle.trim();
-    if (!title) return;
-    onAddColumn(title);
+    submitNewColumn();
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -388,7 +398,7 @@ export default function TaskKanbanBoard({
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="grid min-w-0 grid-cols-1 items-stretch gap-3 rounded-[24px] border border-[#e0eeec] bg-[linear-gradient(145deg,#fbfefd,#f4faf9)] p-3 shadow-[0_16px_42px_rgba(27,90,92,0.055)] sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+              className="grid min-w-full auto-cols-[minmax(280px,1fr)] grid-flow-col items-stretch gap-3 overflow-x-auto rounded-[24px] border border-[#e0eeec] bg-[linear-gradient(145deg,#fbfefd,#f4faf9)] p-3 shadow-[0_16px_42px_rgba(27,90,92,0.055)]"
             >
               {boardData.columnOrder.map((columnId, index) => {
                 const column = boardData.columns[columnId];
@@ -396,6 +406,7 @@ export default function TaskKanbanBoard({
                 const tasks = column.taskIds.map((taskId) => boardData.tasks[taskId]).filter(Boolean) as Task[];
                 const tone = getTone(index);
                 const ColumnIcon = columnIcons[index] ?? Layers3;
+                const canDeleteColumn = !isReadOnlyView && tasks.length === 0 && boardData.columnOrder.length > 1;
 
                 return (
                   <Draggable key={column.id} draggableId={column.id} index={index} isDragDisabled={isReadOnlyView}>
@@ -444,6 +455,21 @@ export default function TaskKanbanBoard({
                               </div>
                             )}
                           </Droppable>
+                          <div className="border-t border-[#eef3f2] px-2.5 py-2">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              aria-label={`Hapus kolom ${column.title}`}
+                              title={canDeleteColumn ? `Hapus kolom ${column.title}` : 'Kosongkan kolom terlebih dahulu'}
+                              disabled={!canDeleteColumn}
+                              onClick={() => onDeleteColumn(column.id)}
+                              className="h-8 w-full justify-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-[#bd858a] transition-[background-color,color,transform] duration-180 hover:bg-[#fff1f1] hover:text-[#d25c63] active:scale-95 disabled:cursor-not-allowed disabled:text-[#b6c4c8] disabled:hover:bg-transparent disabled:active:scale-100"
+                            >
+                              <Trash2 aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
+                              Hapus kolom
+                            </Button>
+                          </div>
                         </Card>
                       </div>
                     )}
@@ -454,7 +480,14 @@ export default function TaskKanbanBoard({
 
               <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="min-w-0">
                 <div className="flex min-h-[448px] min-w-0 flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-[#a9e4db] bg-[radial-gradient(circle_at_50%_26%,rgba(202,244,235,0.55),transparent_42%),rgba(251,255,254,0.7)] p-5 text-center transition-[border-color,background-color] duration-200 ease-out hover:border-[#0f9f8f] hover:bg-[#f0fbf8]">
-                  <div aria-hidden="true" className="mb-4 grid h-14 w-14 place-items-center rounded-2xl border border-[#d2eeea] bg-white text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)]"><Plus className="h-7 w-7" strokeWidth={1.8} /></div>
+                  <button
+                    type="button"
+                    aria-label="Tambah kolom"
+                    onClick={submitNewColumn}
+                    className="group mb-4 grid h-14 w-14 place-items-center rounded-2xl border border-[#d2eeea] bg-white text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)] transition-[background-color,border-color,box-shadow,transform] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#0f9f8f] hover:bg-[#effaf8] hover:shadow-[0_12px_24px_rgba(15,159,143,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f9f8f]/35 focus-visible:ring-offset-2 active:scale-95"
+                  >
+                    <Plus className="h-7 w-7 transition-transform duration-180 ease-out group-hover:rotate-90" strokeWidth={1.8} />
+                  </button>
                   <p className="text-sm font-bold text-[#173d56]">Tambah kolom</p>
                   <p className="mt-1 max-w-[210px] text-xs leading-5 text-[#8197a9]">Buat tahap baru untuk menata alur kerja.</p>
                   <form onSubmit={handleAddColumn} className="mt-4 w-full max-w-[250px] text-left">
