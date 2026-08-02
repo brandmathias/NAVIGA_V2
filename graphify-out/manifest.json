@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "src/components/AddTaskDialog.tsx": {
-    "mtime": 1785687912.2718582,
-    "ast_hash": "d3962bc634dd38cc9c003f094efeaf0f",
+    "mtime": 1785692027.7910514,
+    "ast_hash": "e09aa39e67f5e7d1d2c5f71821fc086d",
     "semantic_hash": ""
   },
   "src/components/KanbanBoard.tsx": {
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "src/components/TaskDetailsDialog.tsx": {
-    "mtime": 1785688146.9429264,
-    "ast_hash": "a0fb5948f244c4075ba2f4ab44ed8953",
+    "mtime": 1785691715.3820574,
+    "ast_hash": "2d4d2ec0e058f9c6fae90d522cdeb2bb",
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
@@ -977,6 +977,16 @@
   "src/components/task-dialog-config.ts": {
     "mtime": 1785687912.265726,
     "ast_hash": "763e133497269622eb8aa11ad59f0295",
+    "semantic_hash": ""
+  },
+  "src/components/TaskAttachmentPreview.tsx": {
+    "mtime": 1785692027.7899685,
+    "ast_hash": "c95f3e91258b479d70000d18c3d53d4d",
+    "semantic_hash": ""
+  },
+  "tests/task-attachment-preview.test.mjs": {
+    "mtime": 1785691994.156093,
+    "ast_hash": "49fbb54d9227ac1e3cc883ade6fe1577",
     "semantic_hash": ""
   }
 }

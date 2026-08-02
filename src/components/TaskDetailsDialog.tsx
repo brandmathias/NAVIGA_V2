@@ -21,6 +21,7 @@ import { downloadTaskAttachment, previewTaskAttachment } from '@/lib/task-attach
 import { plainTaskDescription } from '@/lib/task-description';
 import { cn } from '@/lib/utils';
 import { TASK_PRIORITY_OPTIONS } from './task-dialog-config';
+import TaskAttachmentPreview from './TaskAttachmentPreview';
 
 interface TaskDetailsDialogProps {
   isOpen: boolean;
@@ -76,6 +77,11 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
 
   const primaryAttachment = currentTask.attachments?.[0] ?? currentTask.attachment;
   const attachmentCount = currentTask.attachments?.length ?? (currentTask.attachment ? 1 : 0);
+  const attachments = currentTask.attachments?.length
+    ? currentTask.attachments
+    : primaryAttachment
+      ? [primaryAttachment]
+      : [];
 
   const handleUpdate = (field: keyof Task, value: any) => {
     const updatedTask = { ...currentTask, [field]: value };
@@ -280,6 +286,13 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
               <Paperclip className="h-3.5 w-3.5 shrink-0 text-[#0e8d80]" />
               <span className="truncate">{primaryAttachment ? 'Lampiran siap diunduh' : 'Belum ada file yang dilampirkan'}</span>
             </div>
+            {attachments.length > 0 && (
+              <div className={cn('mt-3 grid gap-2', attachments.length > 1 ? 'sm:grid-cols-2' : 'grid-cols-1')}>
+                {attachments.map((attachment) => (
+                  <TaskAttachmentPreview key={attachment.id} attachment={attachment} compact={attachments.length > 1} />
+                ))}
+              </div>
+            )}
           </section>
         </div>
 

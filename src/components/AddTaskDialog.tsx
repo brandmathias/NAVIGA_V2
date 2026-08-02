@@ -18,6 +18,7 @@ import type { Task, TaskAttachment, TaskPriority } from '@/types';
 import { deleteTaskAttachment, saveTaskAttachment, validateTaskAttachment } from '@/lib/task-attachments.mjs';
 import { cn } from '@/lib/utils';
 import { TASK_PRIORITY_OPTIONS } from './task-dialog-config';
+import TaskAttachmentPreview from './TaskAttachmentPreview';
 import {
   AlignLeft,
   Bold,
@@ -485,14 +486,35 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   <input ref={fileInputRef} id="task-attachment" type="file" multiple className="sr-only" onChange={handleFileChange} />
                 </div>
 
-                <div className="mt-2 max-h-9 space-y-1 overflow-y-auto">
-                  {files.length > 0 ? files.map((file, index) => (
-                    <div key={duplicateSignature(file)} className="flex min-h-8 items-center gap-2 rounded-[10px] border border-[#e1ece9] bg-[#fbfdfd] px-2.5 py-1.5 text-left">
-                      <Paperclip className="h-3.5 w-3.5 shrink-0 text-[#0e8d80]" />
-                      <p className="min-w-0 flex-1 truncate text-[11px] font-semibold text-[#17384a]">{file.name} <span className="font-normal text-[#8a9cac]">· {formatFileSize(file.size)}</span></p>
-                      <button type="button" className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[#7790a0] transition-[transform,background-color,color] duration-160 hover:bg-[#eef8f6] hover:text-[#0e8d80] active:scale-95" onClick={() => handleRemoveFile(index)} aria-label={`Hapus ${file.name}`}><Trash2 aria-hidden="true" className="h-3 w-3" /></button>
+                <div className="mt-3 max-h-48 overflow-y-auto pr-0.5">
+                  {files.length > 0 ? (
+                    <div className="space-y-2">
+                      {files.map((file, index) => {
+                        const localAttachment: TaskAttachment = {
+                          id: `local-${duplicateSignature(file)}`,
+                          name: file.name,
+                          type: file.type,
+                          size: file.size,
+                        };
+
+                        return (
+                          <div key={duplicateSignature(file)} className="relative min-w-0">
+                            <TaskAttachmentPreview attachment={localAttachment} file={file} compact />
+                            <button
+                              type="button"
+                              className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full border border-[#dcebe8] bg-white/95 text-[#7790a0] shadow-[0_4px_10px_rgba(8,61,56,0.1)] transition-[transform,background-color,color,border-color] duration-160 hover:border-[#b8ddd7] hover:bg-[#eef8f6] hover:text-[#0e8d80] active:scale-95"
+                              onClick={() => handleRemoveFile(index)}
+                              aria-label={`Hapus ${file.name}`}
+                            >
+                              <Trash2 aria-hidden="true" className="h-3 w-3" />
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
-                  )) : <div className="min-h-8 rounded-[10px] border border-dashed border-[#d8e8e5] bg-[#f8fcfb] px-2.5 py-1.5 text-[11px] text-[#7b8ea0]">Belum ada file yang dilampirkan</div>}
+                  ) : (
+                    <div className="min-h-8 rounded-[10px] border border-dashed border-[#d8e8e5] bg-[#f8fcfb] px-2.5 py-1.5 text-[11px] text-[#7b8ea0]">Belum ada file yang dilampirkan</div>
+                  )}
                 </div>
               </section>
 
