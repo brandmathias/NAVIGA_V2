@@ -240,8 +240,15 @@ export default function TasksPage() {
   };
 
   const handleDeleteTask = (taskId: string) => {
-    const attachmentId = boardData.tasks[taskId]?.attachment?.id;
-    if (attachmentId) void deleteTaskAttachment(attachmentId).catch((error) => console.error('Failed to delete task attachment', error));
+    const task = boardData.tasks[taskId];
+    const attachmentIds = [
+      ...(task?.attachments ?? []),
+      ...(task?.attachment ? [task.attachment] : []),
+    ].map((attachment) => attachment.id);
+    if (attachmentIds.length) {
+      void Promise.all([...new Set(attachmentIds)].map((attachmentId) => deleteTaskAttachment(attachmentId)))
+        .catch((error) => console.error('Failed to delete task attachments', error));
+    }
 
     setBoardData((previous) => {
       const newTasks = { ...previous.tasks };

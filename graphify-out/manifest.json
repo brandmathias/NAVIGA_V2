@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/tasks/page.tsx": {
-    "mtime": 1785690473.5395727,
-    "ast_hash": "5301befea738202312fffb66af456a47",
+    "mtime": 1785702335.8130195,
+    "ast_hash": "d28dcd2eef83b5341e5e5aa598b42382",
     "semantic_hash": ""
   },
   "src/app/(main)/xlsx-broadcast/page.tsx": {
@@ -765,8 +765,8 @@
     "semantic_hash": ""
   },
   "src/lib/task-attachments.mjs": {
-    "mtime": 1785685392.7877326,
-    "ast_hash": "652c9d0fe378b7f5c09cfd3497a66061",
+    "mtime": 1785702289.7297595,
+    "ast_hash": "7a61d0b983a7d7ad1b7253ef26396ff1",
     "semantic_hash": ""
   },
   "tests/task-attachments.test.mjs": {
@@ -987,6 +987,31 @@
   "tests/task-attachment-preview.test.mjs": {
     "mtime": 1785691994.156093,
     "ast_hash": "49fbb54d9227ac1e3cc883ade6fe1577",
+    "semantic_hash": ""
+  },
+  "db/migrations/002_create_naviga_task_attachments.sql": {
+    "mtime": 1785702289.7175505,
+    "ast_hash": "bdc6c2e3e78095ba10e2b5147beb75fc",
+    "semantic_hash": ""
+  },
+  "src/app/api/tasks/attachments/[attachmentId]/route.ts": {
+    "mtime": 1785703962.3375032,
+    "ast_hash": "2862db5389f25ab21671efb122bb11ee",
+    "semantic_hash": ""
+  },
+  "src/app/api/tasks/attachments/route.ts": {
+    "mtime": 1785702289.7242577,
+    "ast_hash": "e0bdc4cedf264aff8ad90de6d23dfc7e",
+    "semantic_hash": ""
+  },
+  "src/lib/task-attachment-repository.ts": {
+    "mtime": 1785702289.718457,
+    "ast_hash": "466a405e0c141845372c426074c241fb",
+    "semantic_hash": ""
+  },
+  "tests/task-attachment-persistence.test.mjs": {
+    "mtime": 1785702007.3464901,
+    "ast_hash": "871c2e0808a9e449770c3f3ba81bd56b",
     "semantic_hash": ""
   }
 }

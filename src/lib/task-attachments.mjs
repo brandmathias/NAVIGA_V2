@@ -1,8 +1,6 @@
 export const MAX_TASK_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024;
 
-const DATABASE_NAME = 'naviga-task-attachments';
-const DATABASE_VERSION = 1;
-const STORE_NAME = 'files';
+const ATTACHMENT_API_PATH = '/api/tasks/attachments';
 
 export function validateTaskAttachment(file) {
   if (!file || typeof file.size !== 'number' || file.size <= 0) {
@@ -16,86 +14,54 @@ export function validateTaskAttachment(file) {
   return { valid: true };
 }
 
-function openDatabase() {
-  if (typeof indexedDB === 'undefined') {
-    return Promise.reject(new Error('Penyimpanan lampiran tidak tersedia di browser ini.'));
+async function responseMessage(response, fallback) {
+  try {
+    const payload = await response.json();
+    if (typeof payload?.error === 'string' && payload.error.trim()) return payload.error;
+  } catch {
+    // Keep the local fallback when the API response is not JSON.
   }
-
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
-
-    request.onupgradeneeded = () => {
-      if (!request.result.objectStoreNames.contains(STORE_NAME)) {
-        request.result.createObjectStore(STORE_NAME, { keyPath: 'id' });
-      }
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error ?? new Error('Gagal membuka penyimpanan lampiran.'));
-  });
+  return fallback;
 }
 
-function createAttachmentId() {
-  return globalThis.crypto?.randomUUID?.() ?? `attachment-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+function attachmentUrl(id, options = '') {
+  return `${ATTACHMENT_API_PATH}/${encodeURIComponent(id)}${options}`;
 }
 
 export async function saveTaskAttachment(file) {
   const validation = validateTaskAttachment(file);
-  if (!validation.valid) {
-    throw new Error(validation.message);
-  }
+  if (!validation.valid) throw new Error(validation.message);
 
-  const id = createAttachmentId();
-  const database = await openDatabase();
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await fetch(ATTACHMENT_API_PATH, { method: 'POST', body: formData });
+  if (!response.ok) throw new Error(await responseMessage(response, 'Lampiran belum dapat disimpan.'));
 
-  await new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_NAME, 'readwrite');
-    transaction.objectStore(STORE_NAME).put({ id, file });
-    transaction.oncomplete = resolve;
-    transaction.onerror = () => reject(transaction.error ?? new Error('Gagal menyimpan lampiran.'));
-  });
-
-  database.close();
-
-  return {
-    id,
-    name: file.name || 'Lampiran tugas',
-    type: file.type || 'application/octet-stream',
-    size: file.size,
-  };
+  const payload = await response.json();
+  if (!payload?.attachment?.id) throw new Error('Respons penyimpanan lampiran tidak valid.');
+  return payload.attachment;
 }
 
 export async function getTaskAttachment(id) {
   if (!id) return null;
 
-  const database = await openDatabase();
-  const file = await new Promise((resolve, reject) => {
-    const request = database.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(id);
-    request.onsuccess = () => resolve(request.result?.file ?? null);
-    request.onerror = () => reject(request.error ?? new Error('Gagal membaca lampiran.'));
-  });
-
-  database.close();
-  return file;
+  const response = await fetch(attachmentUrl(id), { cache: 'no-store' });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(await responseMessage(response, 'Gagal membaca lampiran.'));
+  return response.blob();
 }
 
 export async function deleteTaskAttachment(id) {
-  if (!id || typeof indexedDB === 'undefined') return;
+  if (!id) return;
 
-  const database = await openDatabase();
-  await new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_NAME, 'readwrite');
-    transaction.objectStore(STORE_NAME).delete(id);
-    transaction.oncomplete = resolve;
-    transaction.onerror = () => reject(transaction.error ?? new Error('Gagal menghapus lampiran.'));
-  });
-  database.close();
+  const response = await fetch(attachmentUrl(id), { method: 'DELETE' });
+  if (response.status === 404) return;
+  if (!response.ok) throw new Error(await responseMessage(response, 'Gagal menghapus lampiran.'));
 }
 
 export async function downloadTaskAttachment(attachment) {
   const file = await getTaskAttachment(attachment?.id);
-  if (!file) {
-    throw new Error('Lampiran tidak ditemukan di penyimpanan browser.');
-  }
+  if (!file) throw new Error('Lampiran tidak ditemukan di database.');
 
   const url = URL.createObjectURL(file);
   const link = document.createElement('a');
@@ -112,14 +78,15 @@ export async function previewTaskAttachment(attachment) {
   }
   previewWindow.opener = null;
 
-  const file = await getTaskAttachment(attachment?.id);
-  if (!file) {
+  try {
+    const file = await getTaskAttachment(attachment?.id);
+    if (!file) throw new Error('Lampiran tidak ditemukan di database.');
+
+    const url = URL.createObjectURL(file);
+    previewWindow.location.href = url;
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  } catch (error) {
     previewWindow.close();
-    throw new Error('Lampiran tidak ditemukan di penyimpanan browser.');
+    throw error;
   }
-
-  const url = URL.createObjectURL(file);
-  previewWindow.location.href = url;
-
-  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
