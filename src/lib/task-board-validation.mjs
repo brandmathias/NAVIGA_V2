@@ -4,9 +4,8 @@ const MAX_COLUMNS = 20;
 const MAX_TASKS = 500;
 const MAX_TITLE_LENGTH = 200;
 const MAX_DESCRIPTION_LENGTH = 5000;
-const MAX_LABELS = 20;
-const MAX_LABEL_LENGTH = 80;
 const MAX_ATTACHMENTS = 20;
+const TASK_PRIORITIES = new Set(['tinggi', 'sedang', 'rendah']);
 
 function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -65,32 +64,21 @@ export function validateTaskBoardData(value) {
     if (!isRecord(task) || task.id !== taskId || !validString(task.title, { min: 1, max: MAX_TITLE_LENGTH })) {
       return invalid('Data tugas tidak valid.');
     }
+    if (!TASK_PRIORITIES.has(task.priority)) return invalid('Prioritas tugas tidak valid.');
+    if (!validString(task.createdAt, { min: 1, max: 80 })) return invalid('Waktu pembuatan tugas tidak valid.');
+    if (!validString(task.createdByUserId, { min: 1, max: 120 })) return invalid('ID pembuat tugas tidak valid.');
+    if (!validString(task.createdByName, { min: 1, max: 120 })) return invalid('Nama pembuat tugas tidak valid.');
     if (task.description !== undefined && !validString(task.description, { max: MAX_DESCRIPTION_LENGTH })) {
       return invalid('Deskripsi tugas terlalu panjang atau tidak valid.');
-    }
-    if (task.createdByUserId !== undefined && !validString(task.createdByUserId, { min: 1, max: 120 })) {
-      return invalid('ID pembuat tugas tidak valid.');
-    }
-    if (task.createdByName !== undefined && !validString(task.createdByName, { min: 1, max: 120 })) {
-      return invalid('Nama pembuat tugas tidak valid.');
     }
     if (task.createdBy !== undefined && !validString(task.createdBy, { min: 1, max: 120 })) {
       return invalid('Pembuat tugas tidak valid.');
     }
-    if (task.isFavorite !== undefined && typeof task.isFavorite !== 'boolean') {
-      return invalid('Status bintang tugas tidak valid.');
+    if (task.isFlagged !== undefined && typeof task.isFlagged !== 'boolean') {
+      return invalid('Status penandaan tugas tidak valid.');
     }
     if (task.dueDate !== undefined && !validString(task.dueDate, { max: 80 })) return invalid('Tanggal tugas tidak valid.');
-    if (task.labels !== undefined) {
-      if (!Array.isArray(task.labels) || task.labels.length > MAX_LABELS || task.labels.some((label) => !validString(label, { min: 1, max: MAX_LABEL_LENGTH }))) {
-        return invalid('Label tugas tidak valid.');
-      }
-    }
-    if (task.assignee !== undefined) {
-      if (!isRecord(task.assignee) || !validString(task.assignee.name, { min: 1, max: 120 }) || (task.assignee.avatar !== undefined && !validString(task.assignee.avatar, { max: 500 }))) {
-        return invalid('Penanggung jawab tugas tidak valid.');
-      }
-    }
+    if (Object.hasOwn(task, 'labels') || Object.hasOwn(task, 'assignee') || Object.hasOwn(task, 'isFavorite')) return invalid('Board tugas masih memakai field lama.');
     if (task.attachment !== undefined && !validateAttachment(task.attachment)) {
       return invalid('Lampiran tugas tidak valid atau melebihi batas 10 MB.');
     }

@@ -11,9 +11,9 @@ test('add task modal exposes the reference fields and upload flow', () => {
   assert.match(addTaskDialog, /DialogDescription/);
   assert.match(addTaskDialog, /Batas Waktu/);
   assert.match(addTaskDialog, /Prioritas/);
-  assert.match(addTaskDialog, /Penting/);
-  assert.match(addTaskDialog, /Sedang/);
-  assert.match(addTaskDialog, /Rendah/);
+  assert.match(addTaskDialog, /Prioritas tinggi/);
+  assert.match(addTaskDialog, /Prioritas sedang/);
+  assert.match(addTaskDialog, /Prioritas rendah/);
   assert.match(addTaskDialog, /Upload File/);
   assert.match(addTaskDialog, /maksimal 10 MB per file/i);
   assert.match(addTaskDialog, /multiple/);

@@ -110,7 +110,7 @@ export default function MainShell({ children, user }: { children: React.ReactNod
 
   return (
     <SessionContext.Provider value={user}>
-      <SidebarProvider className="naviga-shell" style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
+      <SidebarProvider className={cn('naviga-shell', styles.navigaShell)} style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
         <Sidebar variant="floating" className={cn('naviga-sidebar', styles.navigaSidebar)}>
           <SidebarHeader className="naviga-sidebar-brand relative h-20 shrink-0 overflow-hidden border-b border-[#d5ece9] p-0">
             <svg aria-hidden="true" className="pointer-events-none absolute -right-3 top-0 h-20 w-32 text-white/75" viewBox="0 0 220 170" fill="none">

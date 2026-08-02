@@ -104,3 +104,22 @@ export async function downloadTaskAttachment(attachment) {
   link.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+export async function previewTaskAttachment(attachment) {
+  const previewWindow = window.open('about:blank', '_blank');
+  if (!previewWindow) {
+    throw new Error('Pratinjau lampiran diblokir browser. Izinkan pop-up untuk melihat file.');
+  }
+  previewWindow.opener = null;
+
+  const file = await getTaskAttachment(attachment?.id);
+  if (!file) {
+    previewWindow.close();
+    throw new Error('Lampiran tidak ditemukan di penyimpanan browser.');
+  }
+
+  const url = URL.createObjectURL(file);
+  previewWindow.location.href = url;
+
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}

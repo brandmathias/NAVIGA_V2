@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -14,7 +14,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import type { Task, TaskAttachment } from '@/types';
+import type { Task, TaskAttachment, TaskPriority } from '@/types';
 import { deleteTaskAttachment, saveTaskAttachment, validateTaskAttachment } from '@/lib/task-attachments.mjs';
 import { cn } from '@/lib/utils';
 import {
@@ -39,11 +39,11 @@ import {
 interface AddTaskDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTask: (task: Omit<Task, 'id'>, columnId: string) => Promise<void> | void;
+  onAddTask: (task: Pick<Task, 'title' | 'description' | 'priority' | 'dueDate' | 'attachment' | 'attachments'>, columnId: string) => Promise<void> | void;
   columnId: string;
 }
 
-type Priority = 'important' | 'medium' | 'low';
+type Priority = TaskPriority;
 type RailSection = 'title' | 'description' | 'deadline' | 'priority' | 'attachments';
 type EditorCommand = 'justifyLeft' | 'insertOrderedList' | 'bold' | 'italic' | 'createLink';
 
@@ -54,20 +54,20 @@ const priorityOptions: Array<{
   selected: string;
 }> = [
   {
-    value: 'important',
-    label: 'Penting',
+    value: 'tinggi',
+    label: 'Prioritas tinggi',
     tone: 'border-[#ffb4b0] bg-[#fff4f4] text-[#ff4f44]',
     selected: 'border-[#ff7a72] bg-[#ffe8e7] text-[#ff4038] shadow-[0_10px_22px_rgba(255,82,74,0.14)]',
   },
   {
-    value: 'medium',
-    label: 'Sedang',
+    value: 'sedang',
+    label: 'Prioritas sedang',
     tone: 'border-[#ffd39b] bg-[#fff8ef] text-[#f08b00]',
     selected: 'border-[#ffb34f] bg-[#fff1d9] text-[#f08b00] shadow-[0_10px_22px_rgba(240,139,0,0.12)]',
   },
   {
-    value: 'low',
-    label: 'Rendah',
+    value: 'rendah',
+    label: 'Prioritas rendah',
     tone: 'border-[#f5e0a6] bg-[#fffdf0] text-[#d79e00]',
     selected: 'border-[#f0c65a] bg-[#fff5d8] text-[#d79e00] shadow-[0_10px_22px_rgba(215,158,0,0.12)]',
   },
@@ -123,10 +123,6 @@ function getDaysLeftLabel(dateValue: string) {
   return `Terlambat ${Math.abs(diffDays)} hari`;
 }
 
-function getPriorityMeta(priority: Priority) {
-  return priorityOptions.find((option) => option.value === priority) ?? priorityOptions[0];
-}
-
 function duplicateSignature(file: File) {
   return `${file.name}|${file.size}|${file.type}|${file.lastModified}`;
 }
@@ -135,7 +131,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
-  const [priority, setPriority] = useState<Priority>('important');
+  const [priority, setPriority] = useState<Priority>('tinggi');
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,13 +142,11 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
   const sectionRefs = useRef<Partial<Record<RailSection, HTMLElement | null>>>({});
   const [activeSection, setActiveSection] = useState<RailSection>('title');
 
-  const selectedPriority = useMemo(() => getPriorityMeta(priority), [priority]);
-
   const resetForm = () => {
     setTitle('');
     setDescription('');
     setDeadline('');
-    setPriority('important');
+    setPriority('tinggi');
     setFiles([]);
     setError('');
     setIsEditorExpanded(false);
@@ -217,7 +211,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
           title: title.trim(),
           description: description.trim(),
           dueDate: deadline || undefined,
-          labels: [selectedPriority.label],
+          priority,
           attachment,
           attachments: savedAttachments.length ? savedAttachments : undefined,
         },
@@ -356,7 +350,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                   id="task-title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Analisis data penjualan Q2"
+                  placeholder="Analisis data penjualan Q2…"
                   className="h-auto border-0 bg-transparent p-0 text-[18px] font-semibold tracking-[-0.02em] text-[#0f5260] shadow-none ring-0 placeholder:text-[#a8b9c3] focus-visible:ring-0"
                   autoFocus
                 />
@@ -480,7 +474,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                             : `${option.tone} hover:-translate-y-0.5 hover:shadow-[0_8px_14px_rgba(0,0,0,0.05)]`,
                         )}
                       >
-                        <Flag className="h-3.5 w-3.5 shrink-0 transition-transform duration-160 group-hover:-translate-y-0.5" />
+                        <Flag aria-hidden="true" className="h-3.5 w-3.5 shrink-0 transition-transform duration-160 group-hover:-translate-y-0.5" />
                         <span className="truncate">{option.label}</span>
                       </button>
                     );
@@ -519,7 +513,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
                     <div key={duplicateSignature(file)} className="flex min-h-8 items-center gap-2 rounded-[10px] border border-[#e1ece9] bg-[#fbfdfd] px-2.5 py-1.5 text-left">
                       <Paperclip className="h-3.5 w-3.5 shrink-0 text-[#0e8d80]" />
                       <p className="min-w-0 flex-1 truncate text-[11px] font-semibold text-[#17384a]">{file.name} <span className="font-normal text-[#8a9cac]">· {formatFileSize(file.size)}</span></p>
-                      <button type="button" className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[#7790a0] transition-[transform,background-color,color] duration-160 hover:bg-[#eef8f6] hover:text-[#0e8d80] active:scale-95" onClick={() => handleRemoveFile(index)} aria-label={`Hapus ${file.name}`}><Trash2 className="h-3 w-3" /></button>
+                      <button type="button" className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[#7790a0] transition-[transform,background-color,color] duration-160 hover:bg-[#eef8f6] hover:text-[#0e8d80] active:scale-95" onClick={() => handleRemoveFile(index)} aria-label={`Hapus ${file.name}`}><Trash2 aria-hidden="true" className="h-3 w-3" /></button>
                     </div>
                   )) : <div className="min-h-8 rounded-[10px] border border-dashed border-[#d8e8e5] bg-[#f8fcfb] px-2.5 py-1.5 text-[11px] text-[#7b8ea0]">Belum ada file yang dilampirkan</div>}
                 </div>

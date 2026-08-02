@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import type { Task, Column, TaskBoardData } from '@/types';
+import type { Task, TaskBoardData } from '@/types';
 import { cn } from '@/lib/utils';
 import { downloadTaskAttachment } from '@/lib/task-attachments.mjs';
 import { plainTaskDescription } from '@/lib/task-description';
@@ -15,7 +15,7 @@ import { Input } from './ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import {
   CalendarDays,
-  Check,
+  CheckCircle2,
   CircleCheckBig,
   Download,
   EllipsisVertical,
@@ -25,6 +25,7 @@ import {
   LoaderCircle,
   Paperclip,
   Plus,
+  Flag,
   Star,
 } from 'lucide-react';
 
@@ -34,7 +35,10 @@ interface TaskKanbanBoardProps {
   boardData: TaskBoardData;
   setBoardData: React.Dispatch<React.SetStateAction<TaskBoardData>>;
   onTaskClick: (task: Task) => void;
-  onToggleFavorite: (taskId: string) => void;
+  onToggleFlagged: (taskId: string) => void;
+  onAddColumn: (title: string) => void;
+  newColumnTitle: string;
+  onNewColumnTitleChange: (value: string) => void;
   viewMode: ViewMode;
   isReadOnlyView?: boolean;
 }
@@ -61,6 +65,17 @@ const columnTones = [
 ];
 
 const columnIcons = [ListTodo, LoaderCircle, CircleCheckBig, Layers3];
+const emptyStateDots = Array.from({ length: 8 });
+const emptyStateDotPositions = [
+  [14, 16],
+  [50, 2],
+  [82, 18],
+  [92, 48],
+  [78, 80],
+  [48, 94],
+  [12, 78],
+  [4, 46],
+] as const;
 
 function getTone(index: number) {
   return columnTones[index] ?? {
@@ -82,12 +97,12 @@ function getInitials(name?: string) {
 }
 
 function getCreatorName(task: Task) {
-  return task.createdByName?.trim() || task.createdBy?.trim() || task.assignee?.name || 'NAVIGA';
+  return task.createdByName.trim() || task.createdBy?.trim() || 'Akun saat ini';
 }
 
 function getCreatorPhotoSrc(task: Task) {
   if (task.createdByUserId?.trim()) return `/api/users/${encodeURIComponent(task.createdByUserId.trim())}/photo`;
-  return task.assignee?.avatar?.trim() || '';
+  return '';
 }
 
 function formatDueDate(value?: string) {
@@ -101,12 +116,22 @@ function formatFileSize(size: number) {
   return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function getLabelTone(label: string) {
-  const normalized = label.toLowerCase();
-  if (normalized.includes('penting') || normalized.includes('urgent') || normalized.includes('tinggi')) return 'bg-[#fff0ef] text-[#e85656]';
-  if (normalized.includes('review') || normalized.includes('laporan') || normalized.includes('sedang')) return 'bg-[#edf4ff] text-[#2d6df6]';
-  if (normalized.includes('rendah') || normalized.includes('rapat')) return 'bg-[#e9f8ef] text-[#168447]';
-  return 'bg-[#e6f8f5] text-[#118c80]';
+function getPriorityMeta(priority: Task['priority']) {
+  if (priority === 'tinggi') return { label: 'Prioritas tinggi', className: 'bg-[#fff4f4] text-[#ff4f44]' };
+  if (priority === 'rendah') return { label: 'Prioritas rendah', className: 'bg-[#fffdf0] text-[#d79e00]' };
+  return { label: 'Prioritas sedang', className: 'bg-[#fff8ef] text-[#f08b00]' };
+}
+
+function renderColumnTitle(title: string) {
+  const progressTitle = title.match(/^(.*?)(\s*\(In Progress\))$/i);
+  if (!progressTitle) return title;
+
+  return (
+    <>
+      <span className="block">{progressTitle[1]}</span>
+      <span className="block">{progressTitle[2].trim()}</span>
+    </>
+  );
 }
 
 function TaskCard({
@@ -115,19 +140,20 @@ function TaskCard({
   columnAccent,
   isReadOnlyView,
   onTaskClick,
-  onToggleFavorite,
+  onToggleFlagged,
 }: {
   task: Task;
   index: number;
   columnAccent: string;
   isReadOnlyView?: boolean;
   onTaskClick: (task: Task) => void;
-  onToggleFavorite: (taskId: string) => void;
+  onToggleFlagged: (taskId: string) => void;
 }) {
   const [isDownloading, setIsDownloading] = React.useState(false);
   const shouldReduceMotion = useReducedMotion();
-  const isFavorite = Boolean(task.isFavorite);
+  const isFlagged = Boolean(task.isFlagged);
   const creatorName = getCreatorName(task);
+  const priority = getPriorityMeta(task.priority);
   const primaryAttachment = task.attachments?.[0] ?? task.attachment;
   const attachmentCount = task.attachments?.length ?? (task.attachment ? 1 : 0);
 
@@ -147,10 +173,11 @@ function TaskCard({
   const handleFavoriteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    onToggleFavorite(task.id);
+    onToggleFlagged(task.id);
   };
 
   const handleKeyboardOpen = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.target instanceof Element && event.target.closest('button')) return;
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
     onTaskClick(task);
@@ -166,7 +193,10 @@ function TaskCard({
           role="button"
           tabIndex={0}
           aria-label={`Buka tugas ${task.title}, dibuat oleh ${creatorName}`}
-          onClick={() => onTaskClick(task)}
+          onClick={(event) => {
+            if (event.target instanceof Element && event.target.closest('button')) return;
+            onTaskClick(task);
+          }}
           onKeyDown={handleKeyboardOpen}
           className="min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-offset-2"
         >
@@ -184,37 +214,35 @@ function TaskCard({
           >
             <span className="absolute inset-y-3 left-0 w-[3px] rounded-r-full" style={{ backgroundColor: columnAccent }} title={`Pembuat: ${creatorName}`} />
             <div className="relative flex items-start justify-between gap-2">
-              <h4 className="min-w-0 flex-1 text-[14px] font-bold leading-[1.25] text-[#173d56]">{task.title}</h4>
+              <h4 className="line-clamp-2 h-[2.5rem] min-w-0 flex-1 text-[14px] font-bold leading-[1.25] text-[#173d56]">{task.title}</h4>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    aria-label={isFavorite ? `Hapus bintang ${task.title}` : `Beri bintang ${task.title}`}
-                    aria-pressed={isFavorite}
+                    aria-label={isFlagged ? `Hapus penanda ${task.title}` : `Tandai ${task.title}`}
+                    aria-pressed={isFlagged}
                     onClick={handleFavoriteClick}
+                    onPointerDown={(event) => event.stopPropagation()}
                     onMouseDown={(event) => event.stopPropagation()}
+                    onKeyDown={(event) => event.stopPropagation()}
                     className={cn(
-                      'grid h-5 w-5 shrink-0 place-items-center rounded-full border border-transparent text-[#6e88a1] transition-[background-color,border-color,color,transform] duration-200 hover:scale-105 hover:bg-[#fff7dc] hover:text-[#e6a800] active:scale-95',
-                      isFavorite && 'bg-[#fff4cb] text-[#df9d00]',
+                      'grid h-6 w-6 shrink-0 place-items-center rounded-full border border-transparent text-[#6e88a1] transition-[background-color,border-color,color,transform] duration-180 ease-out hover:scale-105 hover:bg-[#fff7dc] hover:text-[#e0a400] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0b429]/40 focus-visible:ring-offset-1 active:scale-95',
+                      isFlagged && 'bg-[#fff4cb] text-[#df9d00]',
                     )}
                   >
-                    <Star className={cn('h-4 w-4 transition-[fill,transform] duration-200', isFavorite && 'fill-current')} strokeWidth={1.8} />
+                    <Star className={cn('h-4 w-4 transition-[fill,transform] duration-180', isFlagged && 'fill-current')} strokeWidth={1.8} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right" align="center" sideOffset={8} collisionPadding={12} className="z-[120] whitespace-nowrap border-[#d8ece9] bg-[#12324a] text-xs font-semibold text-white shadow-[0_10px_22px_rgba(18,50,74,0.24)]">
-                  {isFavorite ? 'Hapus dari tugas penting' : 'Tandai sebagai tugas penting'}
+                  {isFlagged ? 'Hapus penanda' : 'Tandai tugas ini'}
                 </TooltipContent>
               </Tooltip>
             </div>
 
-            {task.description && <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.45] text-[#7189a1]">{plainTaskDescription(task.description)}</p>}
+            <p className="mt-1 line-clamp-3 text-[12px] leading-[1.45] text-[#7189a1]">{plainTaskDescription(task.description) || 'Deskripsi belum tersedia.'}</p>
 
-            <div className="mt-2.5 flex min-h-5 flex-wrap gap-1.5">
-              {task.labels?.map((label) => (
-                <Badge key={label} variant="secondary" className={cn('rounded-full border-0 px-2 py-0.5 text-[10px] font-bold', getLabelTone(label))}>
-                  {label}
-                </Badge>
-              ))}
+            <div className="mt-1.5 flex min-h-5 flex-wrap gap-1.5">
+              <Badge variant="secondary" className={cn('inline-flex items-center gap-1 rounded-full border-0 px-2 py-0.5 text-[10px] font-bold', priority.className)}><Flag aria-hidden="true" className="h-3 w-3" strokeWidth={2} />{priority.label}</Badge>
             </div>
 
             <div className="mt-2.5 border-t border-[#eef3f2] pt-2.5">
@@ -236,12 +264,12 @@ function TaskCard({
                       aria-label={`Unduh lampiran ${primaryAttachment.name}`}
                       disabled={isDownloading}
                     >
-                      {isDownloading ? <Download className="h-3 w-3 animate-pulse" /> : <Paperclip className="h-3 w-3" />}
+                      {isDownloading ? <Download aria-hidden="true" className="h-3 w-3 animate-pulse" /> : <Paperclip aria-hidden="true" className="h-3 w-3" />}
                       <span>{attachmentCount}</span>
                     </Button>
                   ) : (
                     <span className="inline-flex h-6 items-center gap-1 rounded-full bg-[#f3f6f6] px-2 text-[10px] font-bold text-[#91a5b2]" title="Belum ada lampiran">
-                      <Paperclip className="h-3 w-3" />
+                      <Paperclip aria-hidden="true" className="h-3 w-3" />
                       0
                     </span>
                   )}
@@ -308,12 +336,21 @@ export default function TaskKanbanBoard({
   boardData,
   setBoardData,
   onTaskClick,
-  onToggleFavorite,
+  onToggleFlagged,
+  onAddColumn,
+  newColumnTitle,
+  onNewColumnTitleChange,
   viewMode,
   isReadOnlyView = false,
 }: TaskKanbanBoardProps) {
-  const [newColumnTitle, setNewColumnTitle] = React.useState('');
   const shouldReduceMotion = useReducedMotion();
+
+  const handleAddColumn = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const title = newColumnTitle.trim();
+    if (!title) return;
+    onAddColumn(title);
+  };
 
   const onDragEnd = (result: DropResult) => {
     if (isReadOnlyView) return;
@@ -354,18 +391,6 @@ export default function TaskKanbanBoard({
     });
   };
 
-  const handleAddColumn = () => {
-    if (!newColumnTitle.trim()) return;
-    const newColumnId = `column-${Date.now()}`;
-    const newColumn: Column = { id: newColumnId, title: newColumnTitle.trim(), taskIds: [] };
-    setBoardData((previous) => ({
-      ...previous,
-      columns: { ...previous.columns, [newColumnId]: newColumn },
-      columnOrder: [...previous.columnOrder, newColumnId],
-    }));
-    setNewColumnTitle('');
-  };
-
   if (viewMode === 'list') return <TaskListView boardData={boardData} onTaskClick={onTaskClick} />;
 
   return (
@@ -390,10 +415,10 @@ export default function TaskKanbanBoard({
                     {(providedColumn, snapshot) => (
                       <div ref={providedColumn.innerRef} {...providedColumn.draggableProps} className="min-w-0">
                         <Card className={cn('flex min-h-[452px] min-w-0 flex-col overflow-hidden rounded-[14px] border bg-white/95 shadow-[0_8px_24px_rgba(18,62,75,0.045)] transition-shadow duration-200', snapshot.isDragging && 'shadow-[0_20px_44px_rgba(15,159,143,0.16)]')} style={{ borderColor: tone.border }}>
-                          <div {...providedColumn.dragHandleProps} className="relative border-b border-[#eef3f2] px-3.5 pb-3.5 pt-3.5">
-                            <div className="flex items-center gap-2.5">
-                              <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', tone.icon)}><ColumnIcon className="h-4 w-4" strokeWidth={1.8} /></span>
-                              <h3 className="min-w-0 flex-1 truncate text-[14px] font-bold text-[#173d56]">{column.title}</h3>
+                              <div {...providedColumn.dragHandleProps} className="relative min-h-[72px] border-b border-[#eef3f2] px-3.5 py-3.5">
+                                <div className="flex items-center gap-2.5">
+                                  <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl', tone.icon)}><ColumnIcon className="h-4 w-4" strokeWidth={1.8} /></span>
+                                  <h3 className="line-clamp-2 min-w-0 flex-1 whitespace-normal text-[14px] font-bold leading-5 text-[#173d56]">{renderColumnTitle(column.title)}</h3>
                               <span className="grid h-6 min-w-6 place-items-center rounded-full px-1.5 text-[11px] font-extrabold" style={{ backgroundColor: tone.soft, color: tone.accent }}>{tasks.length}</span>
                             </div>
                           </div>
@@ -409,11 +434,27 @@ export default function TaskKanbanBoard({
                                     columnAccent={tone.accent}
                                     isReadOnlyView={isReadOnlyView}
                                     onTaskClick={onTaskClick}
-                                    onToggleFavorite={onToggleFavorite}
+                                    onToggleFlagged={onToggleFlagged}
                                   />
                                 )) : (
                                   <div className="flex min-h-[250px] flex-1 flex-col items-center justify-center rounded-[14px] border border-dashed border-[#dbeae7] bg-[radial-gradient(circle_at_50%_35%,#f0fbf7,transparent_55%)] px-5 text-center">
-                                    <motion.div animate={shouldReduceMotion ? undefined : { y: [0, -5, 0], rotate: [0, 1, 0] }} transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }} className="relative mb-3 grid h-16 w-16 place-items-center rounded-full border border-[#b8e7d7] bg-[#f1fbf7] text-[#1bb35c] shadow-[0_12px_24px_rgba(27,179,92,0.12)]"><span className="absolute inset-1 rounded-full border border-dashed border-[#b8e7d7]" /><Check className="relative h-7 w-7" strokeWidth={2.5} /></motion.div>
+                                    <motion.div animate={shouldReduceMotion ? undefined : { y: [0, -5, 0], rotate: [0, 1, 0] }} transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }} className="relative mb-3 grid h-[72px] w-[72px] place-items-center">
+                                      <div className="task-empty-state-dots pointer-events-none absolute inset-[-10px]" aria-hidden="true">
+                                        {emptyStateDots.map((_, dotIndex) => (
+                                          <span
+                                            key={dotIndex}
+                                            className={cn('absolute h-1.5 w-1.5 rounded-full bg-[#77d9bc]', dotIndex % 2 === 0 ? 'opacity-90' : 'opacity-45')}
+                                            style={{
+                                              left: `${emptyStateDotPositions[dotIndex][0]}%`,
+                                              top: `${emptyStateDotPositions[dotIndex][1]}%`,
+                                            }}
+                                          />
+                                        ))}
+                                      </div>
+                                      <div className="relative grid h-16 w-16 place-items-center rounded-full bg-[#f1fbf7] text-[#1bb35c] shadow-[0_12px_24px_rgba(27,179,92,0.12)]">
+                                        <CheckCircle2 aria-hidden="true" className="relative h-9 w-9" strokeWidth={1.8} />
+                                      </div>
+                                    </motion.div>
                                     <p className="text-sm font-bold text-[#173d56]">{index === 2 ? 'Belum ada tugas selesai' : 'Belum ada tugas'}</p>
                                     <p className="mt-1 max-w-[190px] text-xs leading-5 text-[#8197a9]">Tugas yang masuk ke kolom ini akan muncul di sini.</p>
                                   </div>
@@ -431,14 +472,22 @@ export default function TaskKanbanBoard({
               {provided.placeholder}
 
               <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }} className="min-w-0">
-                <div className="flex min-h-[448px] min-w-0 flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-[#a9e4db] bg-[radial-gradient(circle_at_50%_26%,rgba(202,244,235,0.55),transparent_42%),rgba(251,255,254,0.7)] p-5 text-center transition-all duration-300 hover:border-[#0f9f8f] hover:bg-[#f0fbf8]">
-                  <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl border border-[#d2eeea] bg-white text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)] transition-transform duration-300 hover:scale-110 hover:rotate-3"><Plus className="h-7 w-7" strokeWidth={1.8} /></div>
+                <div className="flex min-h-[448px] min-w-0 flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-[#a9e4db] bg-[radial-gradient(circle_at_50%_26%,rgba(202,244,235,0.55),transparent_42%),rgba(251,255,254,0.7)] p-5 text-center transition-[border-color,background-color] duration-200 ease-out hover:border-[#0f9f8f] hover:bg-[#f0fbf8]">
+                  <div aria-hidden="true" className="mb-4 grid h-14 w-14 place-items-center rounded-2xl border border-[#d2eeea] bg-white text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)]"><Plus className="h-7 w-7" strokeWidth={1.8} /></div>
                   <p className="text-sm font-bold text-[#173d56]">Tambah kolom</p>
-                  <p className="mt-1 max-w-[190px] text-xs leading-5 text-[#8197a9]">Buat kolom baru sesuai kebutuhan alur kerja.</p>
-                  <div className="mt-5 flex w-full max-w-[210px] gap-2">
-                    <Input value={newColumnTitle} onChange={(event) => setNewColumnTitle(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && handleAddColumn()} placeholder="Nama kolom" className="h-9 min-w-0 rounded-lg border-[#cfe8e4] bg-white text-xs" />
-                    <Button type="button" onClick={handleAddColumn} size="icon" className="h-9 w-9 shrink-0 rounded-lg bg-[#0f9f8f] shadow-sm hover:bg-[#0b8c7e] active:scale-95"><Plus className="h-4 w-4" /></Button>
-                  </div>
+                  <p className="mt-1 max-w-[210px] text-xs leading-5 text-[#8197a9]">Buat tahap baru untuk menata alur kerja.</p>
+                  <form onSubmit={handleAddColumn} className="mt-4 w-full max-w-[250px] text-left">
+                    <label htmlFor="new-column-title" className="sr-only">Nama kolom baru</label>
+                    <Input
+                      id="new-column-title"
+                      name="new-column-title"
+                      value={newColumnTitle}
+                      onChange={(event) => onNewColumnTitleChange(event.target.value)}
+                      placeholder="Nama kolom…"
+                      autoComplete="off"
+                      className="h-10 w-full rounded-xl border-[#cfe8e4] bg-white text-sm text-[#173d56] shadow-none focus-visible:border-[#0f9f8f] focus-visible:ring-[#0f9f8f]/20"
+                    />
+                  </form>
                 </div>
               </motion.div>
             </div>

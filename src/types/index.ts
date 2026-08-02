@@ -53,19 +53,18 @@ export interface TaskAttachment {
   size: number;
 }
 
+export type TaskPriority = 'tinggi' | 'sedang' | 'rendah';
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
-  createdByUserId?: string;
-  createdByName?: string;
+  priority: TaskPriority;
+  createdAt: string;
+  createdByUserId: string;
+  createdByName: string;
   createdBy?: string;
-  isFavorite?: boolean;
-  assignee?: {
-    name: string;
-    avatar?: string;
-  };
-  labels?: string[];
+  isFlagged?: boolean;
   dueDate?: string;
   attachment?: TaskAttachment;
   attachments?: TaskAttachment[];

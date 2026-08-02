@@ -13,13 +13,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import type { Task } from '@/types';
-import { Badge } from './ui/badge';
-import { Calendar as CalendarIcon, Download, FileText, Loader2, Paperclip, Tag, Trash2 } from 'lucide-react';
+import type { Task, TaskPriority } from '@/types';
+import { Calendar as CalendarIcon, Download, Eye, FileText, Flag, Loader2, Paperclip, Trash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
-import { downloadTaskAttachment } from '@/lib/task-attachments.mjs';
+import { downloadTaskAttachment, previewTaskAttachment } from '@/lib/task-attachments.mjs';
 import { plainTaskDescription } from '@/lib/task-description';
 
 interface TaskDetailsDialogProps {
@@ -30,6 +29,12 @@ interface TaskDetailsDialogProps {
   onDeleteTask: (taskId: string) => void;
 }
 
+const priorityOptions: Array<{ value: TaskPriority; label: string; className: string }> = [
+  { value: 'tinggi', label: 'Prioritas tinggi', className: 'border-[#ffb4b0] bg-[#fff4f4] text-[#ff4f44]' },
+  { value: 'sedang', label: 'Prioritas sedang', className: 'border-[#ffd39b] bg-[#fff8ef] text-[#f08b00]' },
+  { value: 'rendah', label: 'Prioritas rendah', className: 'border-[#f5e0a6] bg-[#fffdf0] text-[#d79e00]' },
+];
+
 function formatFileSize(size: number) {
   if (size < 1024 * 1024) return `${Math.max(1, Math.round(size / 1024))} KB`;
   return `${(size / (1024 * 1024)).toFixed(1)} MB`;
@@ -37,13 +42,14 @@ function formatFileSize(size: number) {
 
 export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask, onDeleteTask }: TaskDetailsDialogProps) {
   const [currentTask, setCurrentTask] = useState<Task | null>(task);
-  const [newLabel, setNewLabel] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
   const [downloadError, setDownloadError] = useState('');
 
   useEffect(() => {
-    setCurrentTask(task);
-    setDownloadError('');
+        setCurrentTask(task);
+        setDownloadError('');
+        setIsPreviewing(false);
   }, [task]);
 
   if (!currentTask) return null;
@@ -55,17 +61,6 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
     const updatedTask = { ...currentTask, [field]: value };
     setCurrentTask(updatedTask);
     onUpdateTask(updatedTask);
-  };
-
-  const handleAddLabel = () => {
-    const label = newLabel.trim();
-    if (!label || currentTask.labels?.includes(label)) return;
-    handleUpdate('labels', [...(currentTask.labels || []), label]);
-    setNewLabel('');
-  };
-
-  const handleRemoveLabel = (labelToRemove: string) => {
-    handleUpdate('labels', (currentTask.labels || []).filter((label) => label !== labelToRemove));
   };
 
   const handleDownload = async () => {
@@ -81,6 +76,19 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
     }
   };
 
+  const handlePreview = async () => {
+    if (!primaryAttachment || isPreviewing) return;
+    setIsPreviewing(true);
+    setDownloadError('');
+    try {
+      await previewTaskAttachment(primaryAttachment);
+    } catch (error) {
+      setDownloadError(error instanceof Error ? error.message : 'Pratinjau lampiran tidak dapat dibuka.');
+    } finally {
+      setIsPreviewing(false);
+    }
+  };
+
   const handleDelete = () => {
     onDeleteTask(currentTask.id);
     onClose();
@@ -93,7 +101,7 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
           <DialogTitle className="inline-flex items-center rounded-full border border-[#d5ece8] bg-[#f3fbf9] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#0e7a73] shadow-[0_4px_12px_rgba(11,117,110,0.07)]">
             Detail Tugas
           </DialogTitle>
-          <DialogDescription className="sr-only">Lihat dan perbarui ringkasan tugas, tenggat, label, dan lampiran.</DialogDescription>
+          <DialogDescription className="sr-only">Lihat dan perbarui ringkasan tugas, tenggat, prioritas, dan lampiran.</DialogDescription>
         </DialogHeader>
 
         <div className="grid max-h-[min(700px,calc(100dvh-1.5rem))] gap-2.5 overflow-y-auto px-4 py-3">
@@ -123,7 +131,7 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
               id="detail-description"
               value={plainTaskDescription(currentTask.description)}
               onChange={(event) => handleUpdate('description', event.target.value)}
-              placeholder="Tambahkan deskripsi lebih detail..."
+              placeholder="Tambahkan deskripsi lebih detail…"
               className="min-h-[108px] resize-none rounded-[14px] border-[#d7e3e0] bg-white px-3 py-2.5 text-[13px] leading-6 text-[#233d5a] shadow-none focus-visible:border-[#12a995] focus-visible:ring-[#12a995]/20"
             />
           </section>
@@ -149,20 +157,21 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
           <section className="grid gap-2 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]">
             <Label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
               <span className="h-4 w-1 rounded-full bg-[linear-gradient(180deg,#50d4c2,#0fa292)]" />
-              Label
+              Prioritas
             </Label>
-            <div className="flex min-h-7 flex-wrap gap-1.5">
-              {(currentTask.labels || []).map((label) => (
-                <Badge key={label} variant="secondary" className="cursor-pointer rounded-full border-0 bg-[#e7f8f4] px-2.5 py-1 text-[10px] font-bold text-[#118c80] transition-colors hover:bg-[#d2f2eb]" onClick={() => handleRemoveLabel(label)}>
-                  {label}
-                  <span className="ml-1.5 opacity-60">×</span>
-                </Badge>
+            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
+              {priorityOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={currentTask.priority === option.value}
+                  onClick={() => handleUpdate('priority', option.value)}
+                  className={`flex h-10 items-center justify-center gap-1.5 rounded-xl border px-2 text-[11px] font-bold transition-[transform,box-shadow] duration-180 ease-out hover:-translate-y-0.5 active:scale-[0.98] ${option.className} ${currentTask.priority === option.value ? 'shadow-[0_8px_18px_rgba(15,159,143,0.12)] ring-1 ring-[#0f9f8f]/30' : ''}`}
+                >
+                  <Flag aria-hidden="true" className="h-3.5 w-3.5" />
+                  {option.label}
+                </button>
               ))}
-              {!currentTask.labels?.length && <span className="text-xs text-[#95a8b5]">Belum ada label</span>}
-            </div>
-            <div className="flex items-center gap-2">
-              <Input value={newLabel} onChange={(event) => setNewLabel(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && handleAddLabel()} placeholder="Tambah label baru..." className="h-9 rounded-xl border-[#dcebe9] bg-[#fafdfe] text-sm" />
-              <Button type="button" onClick={handleAddLabel} size="sm" className="h-9 rounded-xl bg-[#e5f7f3] px-3 text-[#0b8779] hover:bg-[#d2f2eb] active:scale-95">Tambah</Button>
             </div>
           </section>
 
@@ -176,10 +185,16 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
                 <p className="truncate text-[11px] text-[#6d8294]">{primaryAttachment ? `${primaryAttachment.name} · ${formatFileSize(primaryAttachment.size)}${attachmentCount > 1 ? ` · ${attachmentCount} file` : ''}` : 'Belum ada file yang dilampirkan'}</p>
               </div>
               {primaryAttachment && (
-                <Button type="button" variant="outline" onClick={handleDownload} disabled={isDownloading} className="h-9 shrink-0 gap-2 rounded-xl border-[#bde7df] bg-white px-3 text-xs font-bold text-[#0b8779] hover:bg-[#eaf9f5] active:scale-95">
-                  {isDownloading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-                  Unduh
-                </Button>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <Button type="button" variant="outline" onClick={handlePreview} disabled={isPreviewing} className="h-9 gap-2 rounded-xl border-[#bde7df] bg-white px-3 text-xs font-bold text-[#0b8779] hover:bg-[#eaf9f5] active:scale-95">
+                    {isPreviewing ? <Loader2 aria-hidden="true" className="h-3.5 w-3.5 animate-spin" /> : <Eye aria-hidden="true" className="h-3.5 w-3.5" />}
+                    Pratinjau
+                  </Button>
+                  <Button type="button" variant="outline" onClick={handleDownload} disabled={isDownloading} className="h-9 gap-2 rounded-xl border-[#bde7df] bg-white px-3 text-xs font-bold text-[#0b8779] hover:bg-[#eaf9f5] active:scale-95">
+                    {isDownloading ? <Loader2 aria-hidden="true" className="h-3.5 w-3.5 animate-spin" /> : <Download aria-hidden="true" className="h-3.5 w-3.5" />}
+                    Unduh
+                  </Button>
+                </div>
               )}
             </div>
             {downloadError && <p role="alert" className="mt-3 rounded-lg bg-[#fff4f4] px-3 py-2 text-xs text-[#c54c55]">{downloadError}</p>}
@@ -191,11 +206,11 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
         </div>
 
         <DialogFooter className="flex-col-reverse gap-2 border-t border-[#edf3f2] bg-[#fbfdfd] px-5 py-3 sm:flex-row sm:justify-between">
-          <Button variant="destructive" onClick={handleDelete} className="w-full gap-2 rounded-xl bg-[#f05d65] shadow-[0_8px_18px_rgba(240,93,101,0.14)] transition-all hover:-translate-y-0.5 hover:bg-[#e04f59] active:translate-y-0 sm:w-auto">
+          <Button variant="destructive" onClick={handleDelete} className="w-full gap-2 rounded-xl bg-[#f05d65] shadow-[0_8px_18px_rgba(240,93,101,0.14)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#e04f59] active:translate-y-0 sm:w-auto">
             <Trash2 className="h-4 w-4" />
             Hapus Tugas
           </Button>
-          <Button onClick={onClose} className="w-full rounded-xl bg-[#0f9f8f] px-6 shadow-[0_8px_18px_rgba(15,159,143,0.16)] transition-all hover:-translate-y-0.5 hover:bg-[#0b8c7e] active:translate-y-0 sm:w-auto">
+          <Button onClick={onClose} className="w-full rounded-xl bg-[#0f9f8f] px-6 shadow-[0_8px_18px_rgba(15,159,143,0.16)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#0b8c7e] active:translate-y-0 sm:w-auto">
             Simpan & Tutup
           </Button>
         </DialogFooter>

@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/tasks/page.tsx": {
-    "mtime": 1785671858.0853205,
-    "ast_hash": "96c5a980223584262ce23e90667038f8",
+    "mtime": 1785686586.953469,
+    "ast_hash": "bd9e1cf8da8db5a2709882a439ae5f51",
     "semantic_hash": ""
   },
   "src/app/(main)/xlsx-broadcast/page.tsx": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "src/components/AddTaskDialog.tsx": {
-    "mtime": 1785663638.140924,
-    "ast_hash": "019a50a17f9325801fb6080fe547086f",
+    "mtime": 1785685548.6308074,
+    "ast_hash": "bebde9bec6cbc7d40f6c3e9a6dae3c66",
     "semantic_hash": ""
   },
   "src/components/KanbanBoard.tsx": {
@@ -85,13 +85,13 @@
     "semantic_hash": ""
   },
   "src/components/TaskDetailsDialog.tsx": {
-    "mtime": 1785662751.6237292,
-    "ast_hash": "6cd5a8075d8bbb20a7ceeb45083964ab",
+    "mtime": 1785685539.5487373,
+    "ast_hash": "77d4d0a7413977a6bbac1c15209b2b40",
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
-    "mtime": 1785664002.6694832,
-    "ast_hash": "8fdf3cf4d76fc2a7716227bed5bc5408",
+    "mtime": 1785686603.7144997,
+    "ast_hash": "6b1dff4cf1c49c9fa08f58cf26c2384f",
     "semantic_hash": ""
   },
   "src/components/VoicenotePreviewDialog.tsx": {
@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "src/components/ui/sidebar.tsx": {
-    "mtime": 1785635424.6390214,
-    "ast_hash": "8670046722f3d09f4894430e86b5fc83",
+    "mtime": 1785680184.850353,
+    "ast_hash": "7505e3c6f18cffeea7491469cbf710e6",
     "semantic_hash": ""
   },
   "src/components/ui/skeleton.tsx": {
@@ -290,8 +290,8 @@
     "semantic_hash": ""
   },
   "src/types/index.ts": {
-    "mtime": 1785636157.7409737,
-    "ast_hash": "a34d2cd9e10de1fb56ac10fc4af4df8e",
+    "mtime": 1785683331.1041212,
+    "ast_hash": "ffc23bc3466dcca2195469bde90199c2",
     "semantic_hash": ""
   },
   "tailwind.config.ts": {
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "src/components/main-shell.tsx": {
-    "mtime": 1785635424.6223283,
-    "ast_hash": "ea9552f569b3860615f7832fb03fabfa",
+    "mtime": 1785680184.8483512,
+    "ast_hash": "1142fa352068dfbd02b6bf36e905d6de",
     "semantic_hash": ""
   },
   "src/lib/gadai-ocr-parser.js": {
@@ -765,8 +765,8 @@
     "semantic_hash": ""
   },
   "src/lib/task-attachments.mjs": {
-    "mtime": 1785635424.668275,
-    "ast_hash": "9062d4afb217dd878b87804c63785afc",
+    "mtime": 1785685392.7877326,
+    "ast_hash": "652c9d0fe378b7f5c09cfd3497a66061",
     "semantic_hash": ""
   },
   "tests/task-attachments.test.mjs": {
@@ -790,8 +790,8 @@
     "semantic_hash": ""
   },
   "src/app/api/tasks/route.ts": {
-    "mtime": 1785635424.603838,
-    "ast_hash": "eaa1d464fbb54d8fa7f80fd8a463a69c",
+    "mtime": 1785683585.145059,
+    "ast_hash": "116cfbf87c12d35798d4cae808e12473",
     "semantic_hash": ""
   },
   "src/lib/postgres.ts": {
@@ -800,18 +800,18 @@
     "semantic_hash": ""
   },
   "src/lib/task-board-defaults.ts": {
-    "mtime": 1785635424.668275,
-    "ast_hash": "d8012a7e858708524228e6688e2b4be5",
+    "mtime": 1785683359.4614515,
+    "ast_hash": "4d5be48ce8a9017ac650955b885ca762",
     "semantic_hash": ""
   },
   "src/lib/task-board-repository.ts": {
-    "mtime": 1785635424.6692889,
-    "ast_hash": "06c9b501a9e5f0bf912389b7081061c5",
+    "mtime": 1785684002.9559982,
+    "ast_hash": "697bb046eed67dbff7735d4c9e5c98fd",
     "semantic_hash": ""
   },
   "src/lib/task-board-validation.mjs": {
-    "mtime": 1785636313.4987075,
-    "ast_hash": "f120a2500a72f5c03132e577f1cea3e5",
+    "mtime": 1785683437.1055965,
+    "ast_hash": "9026f91cbc1188d4a7dfd00332221916",
     "semantic_hash": ""
   },
   "tests/task-api-contract.test.mjs": {
@@ -820,8 +820,8 @@
     "semantic_hash": ""
   },
   "tests/task-board-validation.test.mjs": {
-    "mtime": 1785635424.7000923,
-    "ast_hash": "1ed7b81c1b18485a0aa0a9f2806ccd46",
+    "mtime": 1785684120.5137217,
+    "ast_hash": "c6c60f7394eabd7883973d2c78f44d24",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-08-01-postgresql-task-persistence.md": {
@@ -945,13 +945,33 @@
     "semantic_hash": ""
   },
   "tests/add-task-dialog-modal.test.mjs": {
-    "mtime": 1785674392.9870937,
-    "ast_hash": "8a7b04362928f4b5a0ff5d8a8ee4139b",
+    "mtime": 1785684120.512721,
+    "ast_hash": "eba5f451b503efac9ab069e43e96c3e1",
     "semantic_hash": ""
   },
   "src/lib/task-description.ts": {
     "mtime": 1785660254.6013322,
     "ast_hash": "3f3cc1010ed913e37155fdf695748c02",
+    "semantic_hash": ""
+  },
+  "tests/sidebar-full-page-layout.test.mjs": {
+    "mtime": 1785681838.0449314,
+    "ast_hash": "8aea1cd373976109148e35eba081932c",
+    "semantic_hash": ""
+  },
+  "src/lib/task-board-contract.mjs": {
+    "mtime": 1785684257.9978018,
+    "ast_hash": "8b9b7043a889367916ea67e99ff192b7",
+    "semantic_hash": ""
+  },
+  "src/lib/task-board-view.mjs": {
+    "mtime": 1785684374.7005734,
+    "ast_hash": "acadffe6536353fc422e490b62d5937d",
+    "semantic_hash": ""
+  },
+  "tests/task-board-workflow-contract.test.mjs": {
+    "mtime": 1785686586.9585073,
+    "ast_hash": "f452e6b5b29d0fc387dbd25699c38767",
     "semantic_hash": ""
   }
 }

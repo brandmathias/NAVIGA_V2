@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ArrowUpDown, Check, ClipboardList, Filter, LayoutGrid, List, Plus, SlidersHorizontal } from 'lucide-react';
+import { ArrowUpDown, Check, ClipboardList, Filter, Layers3, LayoutGrid, List, Plus, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,56 +17,19 @@ import { useLocalSession } from '@/components/main-shell';
 import { ScrollReveal } from '@/components/motion';
 import { deleteTaskAttachment } from '@/lib/task-attachments.mjs';
 import { createDefaultTaskBoardData } from '@/lib/task-board-defaults';
+import { sortTaskIds, taskMatchesFilter, TASK_FILTER_OPTIONS, TASK_SORT_OPTIONS } from '@/lib/task-board-view.mjs';
 
-type LabelFilter = 'all' | 'important' | 'medium' | 'low' | 'favorite' | 'attachment';
-type SortMode = 'manual' | 'dueDate' | 'favorite';
+type TaskFilter = 'all' | 'high' | 'medium' | 'low' | 'flagged' | 'attachment';
+type SortMode = 'oldest' | 'newest' | 'nearest';
 
-const labelFilterOptions: Array<{ value: LabelFilter; label: string }> = [
-  { value: 'all', label: 'Semua label' },
-  { value: 'important', label: 'Penting' },
-  { value: 'medium', label: 'Sedang' },
-  { value: 'low', label: 'Rendah' },
-  { value: 'favorite', label: 'Berbintang' },
-  { value: 'attachment', label: 'Ada lampiran' },
-];
+const priorityFilterOptions = TASK_FILTER_OPTIONS as Array<{ value: TaskFilter; label: string }>;
+const sortOptions = TASK_SORT_OPTIONS as Array<{ value: SortMode; label: string }>;
 
-const sortOptions: Array<{ value: SortMode; label: string }> = [
-  { value: 'manual', label: 'Urutan board' },
-  { value: 'dueDate', label: 'Tenggat terdekat' },
-  { value: 'favorite', label: 'Berbintang dulu' },
-];
-
-function hasLabel(task: Task, labels: string[]) {
-  const normalized = (task.labels || []).map((label) => label.toLowerCase());
-  return labels.some((label) => normalized.some((candidate) => candidate.includes(label)));
-}
-
-function taskMatchesFilter(task: Task, filter: LabelFilter) {
-  if (filter === 'all') return true;
-  if (filter === 'important') return Boolean(task.isFavorite) || hasLabel(task, ['penting', 'urgent', 'tinggi']);
-  if (filter === 'medium') return hasLabel(task, ['sedang', 'review', 'laporan']);
-  if (filter === 'low') return hasLabel(task, ['rendah', 'rapat']);
-  if (filter === 'favorite') return Boolean(task.isFavorite);
-  return Boolean(task.attachment || task.attachments?.length);
-}
-
-function dueTime(task: Task) {
-  if (!task.dueDate) return Number.POSITIVE_INFINITY;
-  const time = new Date(task.dueDate).getTime();
-  return Number.isFinite(time) ? time : Number.POSITIVE_INFINITY;
-}
-
-function createVisibleBoardData(boardData: TaskBoardData, filter: LabelFilter, sort: SortMode): TaskBoardData {
+function createVisibleBoardData(boardData: TaskBoardData, filter: TaskFilter, sort: SortMode): TaskBoardData {
   const visibleTaskIds = new Set(Object.values(boardData.tasks).filter((task) => taskMatchesFilter(task, filter)).map((task) => task.id));
   const tasks = Object.fromEntries(Object.entries(boardData.tasks).filter(([taskId]) => visibleTaskIds.has(taskId))) as TaskBoardData['tasks'];
   const columns = Object.fromEntries(Object.entries(boardData.columns).map(([columnId, column]) => {
-    const taskIds = column.taskIds
-      .filter((taskId) => visibleTaskIds.has(taskId))
-      .sort((leftId, rightId) => {
-        if (sort === 'dueDate') return dueTime(boardData.tasks[leftId]) - dueTime(boardData.tasks[rightId]);
-        if (sort === 'favorite') return Number(Boolean(boardData.tasks[rightId]?.isFavorite)) - Number(Boolean(boardData.tasks[leftId]?.isFavorite));
-        return 0;
-      });
+    const taskIds = sortTaskIds(column.taskIds.filter((taskId) => visibleTaskIds.has(taskId)), boardData.tasks, sort);
 
     return [columnId, { ...column, taskIds }];
   })) as TaskBoardData['columns'];
@@ -98,8 +61,9 @@ export default function TasksPage() {
   const [selectedTask, setSelectedTask] = React.useState<Task | null>(null);
   const [isDetailsModalOpen, setDetailsModalOpen] = React.useState(false);
   const [viewMode, setViewMode] = React.useState<'board' | 'list'>('board');
-  const [labelFilter, setLabelFilter] = React.useState<LabelFilter>('all');
-  const [sortMode, setSortMode] = React.useState<SortMode>('manual');
+  const [priorityFilter, setPriorityFilter] = React.useState<TaskFilter>('all');
+  const [sortMode, setSortMode] = React.useState<SortMode>('oldest');
+  const [newColumnTitle, setNewColumnTitle] = React.useState('');
   const [isBoardLoading, setBoardLoading] = React.useState(true);
   const [boardError, setBoardError] = React.useState<string | null>(null);
   const [syncError, setSyncError] = React.useState<string | null>(null);
@@ -197,14 +161,15 @@ export default function TasksPage() {
     setAddTaskModalOpen(true);
   };
 
-  const handleAddTask = (task: Omit<Task, 'id'>, columnId: string) => {
+  const handleAddTask = (task: Pick<Task, 'title' | 'description' | 'priority' | 'dueDate' | 'attachment' | 'attachments'>, columnId: string) => {
     const newTaskId = `task-${Date.now()}`;
     const newTask: Task = {
       id: newTaskId,
       ...task,
+      createdAt: new Date().toISOString(),
       createdByUserId: userId,
       createdByName: userName,
-      createdBy: task.createdBy || userName,
+      createdBy: userName,
     };
 
     setBoardData((previous) => {
@@ -228,14 +193,26 @@ export default function TasksPage() {
     setSelectedTask(updatedTask);
   };
 
-  const handleToggleFavorite = (taskId: string) => {
+  const handleToggleFlagged = (taskId: string) => {
     setBoardData((previous) => {
       const task = previous.tasks[taskId];
       if (!task) return previous;
-      const updatedTask = { ...task, isFavorite: !task.isFavorite };
+      const updatedTask = { ...task, isFlagged: !task.isFlagged };
       return { ...previous, tasks: { ...previous.tasks, [taskId]: updatedTask } };
     });
-    setSelectedTask((task) => (task?.id === taskId ? { ...task, isFavorite: !task.isFavorite } : task));
+    setSelectedTask((task) => (task?.id === taskId ? { ...task, isFlagged: !task.isFlagged } : task));
+  };
+
+  const handleAddColumn = (title: string) => {
+    const normalizedTitle = title.trim();
+    if (!normalizedTitle) return;
+    const newColumnId = `column-${Date.now()}`;
+    setBoardData((previous) => ({
+      ...previous,
+      columns: { ...previous.columns, [newColumnId]: { id: newColumnId, title: normalizedTitle, taskIds: [] } },
+      columnOrder: [...previous.columnOrder, newColumnId],
+    }));
+    setNewColumnTitle('');
   };
 
   const handleDeleteTask = (taskId: string) => {
@@ -251,11 +228,11 @@ export default function TasksPage() {
   };
 
   const totalTasks = Object.keys(boardData.tasks).length;
-  const visibleBoardData = React.useMemo(() => createVisibleBoardData(boardData, labelFilter, sortMode), [boardData, labelFilter, sortMode]);
+  const visibleBoardData = React.useMemo(() => createVisibleBoardData(boardData, priorityFilter, sortMode), [boardData, priorityFilter, sortMode]);
   const visibleTasks = Object.keys(visibleBoardData.tasks).length;
-  const activeFilterLabel = labelFilterOptions.find((option) => option.value === labelFilter)?.label ?? 'Semua label';
-  const activeSortLabel = sortOptions.find((option) => option.value === sortMode)?.label ?? 'Urutan board';
-  const isFocusedView = labelFilter !== 'all' || sortMode !== 'manual';
+  const activeFilterLabel = priorityFilterOptions.find((option) => option.value === priorityFilter)?.label ?? 'Semua prioritas';
+  const activeSortLabel = sortOptions.find((option) => option.value === sortMode)?.label ?? 'Terlama';
+  const isFocusedView = priorityFilter !== 'all' || sortMode !== 'oldest';
 
   return (
     <main className="min-w-0 flex-1 bg-[#f8fcfb]">
@@ -285,7 +262,7 @@ export default function TasksPage() {
             <>
               <div className="relative flex min-w-0 flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#e2f7f2] text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)]"><ClipboardList className="h-6 w-6" strokeWidth={1.8} /></span>
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#e2f7f2] text-[#0f9f8f] shadow-[0_8px_18px_rgba(15,159,143,0.1)]"><Layers3 className="h-6 w-6" strokeWidth={1.8} /></span>
                   <div className="min-w-0">
                     <h1 className="truncate font-headline text-xl font-extrabold tracking-[-0.03em] text-[#12324a] sm:text-2xl">Lacak Tugas &amp; Alur Kerja</h1>
                     <p className="mt-1 truncate text-xs text-[#6d879b] sm:text-sm">Pantau seluruh progres pekerjaan secara real-time dan kolaboratif.</p>
@@ -295,20 +272,20 @@ export default function TasksPage() {
                 <div className="flex flex-wrap items-center gap-2 xl:shrink-0">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button type="button" variant="outline" aria-pressed={labelFilter !== 'all'} className={labelFilter !== 'all' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><Filter className="h-4 w-4" /> Filter</Button>
+                      <Button type="button" variant="outline" aria-pressed={priorityFilter !== 'all'} className={priorityFilter !== 'all' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-[transform,background-color,border-color] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><Filter className="h-4 w-4" /> Filter</Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-44 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
-                      {labelFilterOptions.map((option) => (
-                        <DropdownMenuItem key={option.value} onClick={() => setLabelFilter(option.value)} className={labelFilter === option.value ? 'flex items-center justify-between rounded-[10px] border border-[#b9e7e3] bg-[#dff3f2] text-xs font-semibold text-[#0f5f67] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]' : 'flex items-center justify-between rounded-[10px] text-xs font-semibold text-[#173d56]'}>
+                      {priorityFilterOptions.map((option) => (
+                        <DropdownMenuItem key={option.value} onClick={() => setPriorityFilter(option.value)} className={priorityFilter === option.value ? 'flex items-center justify-between rounded-[10px] border border-[#b9e7e3] bg-[#dff3f2] text-xs font-semibold text-[#0f5f67] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]' : 'flex items-center justify-between rounded-[10px] text-xs font-semibold text-[#173d56]'}>
                           {option.label}
-                          {labelFilter === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
+                          {priorityFilter === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button type="button" variant="outline" aria-pressed={sortMode !== 'manual'} className={sortMode !== 'manual' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><ArrowUpDown className="h-4 w-4" /> Urutkan</Button>
+                      <Button type="button" variant="outline" aria-pressed={sortMode !== 'oldest'} className={sortMode !== 'oldest' ? 'h-10 rounded-xl border-[#9edfd5] bg-[#eaf8f5] px-4 text-[#0d877b] shadow-sm active:scale-95' : 'h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-[transform,background-color,border-color] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95'}><ArrowUpDown className="h-4 w-4" /> Urutkan</Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
                       {sortOptions.map((option) => (
@@ -318,11 +295,12 @@ export default function TasksPage() {
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button type="button" onClick={() => boardData.columnOrder[0] && handleOpenAddTaskModal(boardData.columnOrder[0])} className="h-10 rounded-xl bg-[#0f9f8f] px-4 text-white shadow-[0_9px_22px_rgba(15,159,143,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#0b8d7e] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" /> Tambah Tugas</Button>
+                      </DropdownMenu>
+                      <Button type="button" variant="outline" onClick={() => { if (!newColumnTitle.trim()) { document.getElementById('new-column-title')?.focus(); return; } handleAddColumn(newColumnTitle); }} className="h-10 rounded-xl border-[#dcebe9] bg-white px-4 text-[#49667d] shadow-sm transition-[transform,background-color,border-color] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#b5ded8] hover:bg-[#f5fbfa] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" aria-hidden="true" /> Tambah Kolom</Button>
+                      <Button type="button" onClick={() => boardData.columnOrder[0] && handleOpenAddTaskModal(boardData.columnOrder[0])} className="h-10 rounded-xl bg-[#0f9f8f] px-4 text-white shadow-[0_9px_22px_rgba(15,159,143,0.2)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#0b8d7e] active:translate-y-0 active:scale-95"><Plus className="h-4 w-4" /> Tambah Tugas</Button>
                 </div>
               </div>
-              {isFocusedView && <div className="relative mt-3 flex flex-wrap items-center gap-2 text-xs text-[#0f877b]"><SlidersHorizontal className="h-3.5 w-3.5" /><span>{activeFilterLabel} - {activeSortLabel} - {visibleTasks} dari {totalTasks} tugas</span><button type="button" onClick={() => { setLabelFilter('all'); setSortMode('manual'); }} className="rounded-full border border-[#bde7df] bg-white px-2 py-0.5 font-bold text-[#0f877b] transition-colors hover:bg-[#edf9f6] active:scale-95">Reset</button></div>}
+              {isFocusedView && <div className="relative mt-3 flex flex-wrap items-center gap-2 text-xs text-[#0f877b]"><SlidersHorizontal className="h-3.5 w-3.5" /><span>{activeFilterLabel} - {activeSortLabel} - {visibleTasks} dari {totalTasks} tugas</span><button type="button" onClick={() => { setPriorityFilter('all'); setSortMode('oldest'); }} className="rounded-full border border-[#bde7df] bg-white px-2 py-0.5 font-bold text-[#0f877b] transition-colors hover:bg-[#edf9f6] active:scale-95">Reset</button></div>}
             </>
           )}
         </section>
@@ -341,7 +319,7 @@ export default function TasksPage() {
                   <div className="min-w-0">
                     <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#0f877b]">Menyiapkan board</p>
                     <h2 className="mt-1 font-headline text-lg font-extrabold tracking-[-0.03em] text-[#173d56]">Daftar tugas sedang dirapikan</h2>
-                    <p className="mt-1 max-w-xl text-sm leading-6 text-[#6d879b]">Kami menyusun kolom, label, lampiran, dan urutan tugas agar siap dipantau.</p>
+                    <p className="mt-1 max-w-xl text-sm leading-6 text-[#6d879b]">Kami menyusun kolom, prioritas, lampiran, dan urutan tugas agar siap dipantau.</p>
                   </div>
                 </div>
 
@@ -360,7 +338,7 @@ export default function TasksPage() {
                   <span className="tasks-loading-status-dot" />
                   Sinkronisasi aman
                 </span>
-                <span className="tasks-loading-status">Label, lampiran, dan pemilik disiapkan</span>
+                  <span className="tasks-loading-status">Prioritas, lampiran, dan pembuat tugas disiapkan</span>
                 <span className="tasks-loading-status">Tampilan board dirapikan</span>
               </div>
 
@@ -403,7 +381,7 @@ export default function TasksPage() {
             </div>
           ) : (
             <>
-              <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onToggleFavorite={handleToggleFavorite} viewMode={viewMode} isReadOnlyView={isFocusedView} />
+              <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onToggleFlagged={handleToggleFlagged} onAddColumn={handleAddColumn} newColumnTitle={newColumnTitle} onNewColumnTitleChange={setNewColumnTitle} viewMode={viewMode} isReadOnlyView={isFocusedView} />
 
               {syncError && <div role="alert" className="mt-3 rounded-xl border border-[#f1d19a] bg-[#fffaf0] px-4 py-3 text-xs font-medium text-[#8c641d]">Perubahan terakhir belum tersimpan: {syncError}</div>}
 
