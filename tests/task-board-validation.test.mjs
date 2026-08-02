@@ -8,6 +8,8 @@ const validBoard = {
       id: 'task-1',
       title: 'Analisis data penjualan Q2',
       description: 'Ringkasan eksekutif.',
+      createdByUserId: 'admin-unit-1',
+      createdByName: 'Admin Unit 1',
       labels: ['Penting'],
       attachment: { id: 'attachment-1', name: 'laporan.pdf', type: 'application/pdf', size: 1024 },
     },
@@ -41,4 +43,14 @@ test('rejects attachments larger than 10 MB', () => {
 
   assert.equal(result.valid, false);
   assert.match(result.message, /10 MB/i);
+});
+
+test('rejects invalid task creator metadata', () => {
+  const board = structuredClone(validBoard);
+  board.tasks['task-1'].createdByUserId = '';
+
+  const result = validateTaskBoardData(board);
+
+  assert.equal(result.valid, false);
+  assert.match(result.message, /ID pembuat/i);
 });

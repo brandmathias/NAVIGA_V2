@@ -57,6 +57,10 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
+  createdByUserId?: string;
+  createdByName?: string;
+  createdBy?: string;
+  isFavorite?: boolean;
   assignee?: {
     name: string;
     avatar?: string;

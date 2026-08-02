@@ -57,6 +57,18 @@ export function validateTaskBoardData(value) {
     if (task.description !== undefined && !validString(task.description, { max: MAX_DESCRIPTION_LENGTH })) {
       return invalid('Deskripsi tugas terlalu panjang atau tidak valid.');
     }
+    if (task.createdByUserId !== undefined && !validString(task.createdByUserId, { min: 1, max: 120 })) {
+      return invalid('ID pembuat tugas tidak valid.');
+    }
+    if (task.createdByName !== undefined && !validString(task.createdByName, { min: 1, max: 120 })) {
+      return invalid('Nama pembuat tugas tidak valid.');
+    }
+    if (task.createdBy !== undefined && !validString(task.createdBy, { min: 1, max: 120 })) {
+      return invalid('Pembuat tugas tidak valid.');
+    }
+    if (task.isFavorite !== undefined && typeof task.isFavorite !== 'boolean') {
+      return invalid('Status bintang tugas tidak valid.');
+    }
     if (task.dueDate !== undefined && !validString(task.dueDate, { max: 80 })) return invalid('Tanggal tugas tidak valid.');
     if (task.labels !== undefined) {
       if (!Array.isArray(task.labels) || task.labels.length > MAX_LABELS || task.labels.some((label) => !validString(label, { min: 1, max: MAX_LABEL_LENGTH }))) {

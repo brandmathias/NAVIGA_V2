@@ -146,7 +146,7 @@ export default function PdfBroadcastPage() {
     setIsLoading(true);
     setExtractedData([]);
     setSelectedCustomers(new Set());
-    toast({ title: 'Memproses file lokal...', description: isPdf ? 'Mengekstrak PDF di komputer ini.' : 'OCR membaca foto tabel di komputer ini.', tone: 'processing' });
+    toast({ title: 'Membaca file...', description: isPdf ? 'Menyiapkan isi PDF.' : 'Membaca foto tabel.', tone: 'processing' });
 
     const formData = new FormData();
     formData.append(isPdf ? 'pdf-file' : 'gadai-image', file);
@@ -173,7 +173,7 @@ export default function PdfBroadcastPage() {
     } catch (error: any) {
         toast({
             title: 'Gagal Memproses File',
-            description: error.message || 'Terjadi kesalahan saat memproses file.',
+            description: 'Periksa file lalu coba lagi.',
             variant: 'destructive',
         });
         console.error('File processing error:', error);
@@ -280,7 +280,7 @@ Terima Kasih`;
     if (!formattedPhoneNumber) {
       toast({
         title: 'Nomor WhatsApp Tidak Valid',
-        description: 'Periksa nomor HP hasil OCR sebelum membuka WhatsApp.',
+        description: 'Periksa nomor HP hasil pembacaan file sebelum membuka WhatsApp.',
         variant: 'destructive',
       });
       return;
@@ -299,7 +299,7 @@ Terima Kasih`;
     if (!formattedPhoneNumber) {
       toast({
         title: 'Nomor WhatsApp Tidak Valid',
-        description: 'Periksa nomor HP hasil OCR sebelum membuat pesan suara.',
+        description: 'Periksa nomor HP hasil pembacaan file sebelum membuat pesan suara.',
         variant: 'destructive',
       });
       return;
@@ -307,7 +307,7 @@ Terima Kasih`;
     setIsGeneratingVoicenote(true);
     toast({
         title: 'Membuat Pesan Suara...',
-        description: `Piper sedang membuat pesan suara untuk ${customer.name}.`,
+        description: `Sedang menyiapkan pesan suara untuk ${customer.name}.`,
         tone: 'processing',
     });
     try {
@@ -445,7 +445,7 @@ Terima Kasih`;
                        <TableRow>
                           <TableCell colSpan={7} className="h-24 text-center">
                               <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                              <p className="mt-2 text-muted-foreground">Data sedang diekstraksi secara lokal...</p>
+                              <p className="mt-2 text-muted-foreground">Sedang membaca isi file...</p>
                           </TableCell>
                       </TableRow>
                   ) : extractedData.length === 0 ? (

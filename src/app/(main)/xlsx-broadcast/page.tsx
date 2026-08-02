@@ -109,7 +109,7 @@ export default function XlsxBroadcastPage() {
 
     setIsLoading(true);
     setImportedData([]);
-    toast({ title: 'Memproses file lokal...', description: isXlsx ? 'Membaca data XLSX.' : 'OCR membaca foto tabel angsuran.', tone: 'processing' });
+    toast({ title: 'Membaca file...', description: isXlsx ? 'Menyiapkan data.' : 'Membaca foto tabel angsuran.', tone: 'processing' });
 
     try {
       const formData = new FormData();
@@ -125,7 +125,7 @@ export default function XlsxBroadcastPage() {
       console.error('File parsing error:', error);
       toast({
         title: 'Gagal Memproses File',
-        description: error instanceof Error ? error.message : 'Terjadi kesalahan saat membaca file. Pastikan formatnya benar.',
+        description: 'Periksa file lalu coba lagi. Pastikan formatnya benar.',
         variant: 'destructive',
       });
     } finally {
@@ -208,7 +208,7 @@ Terima Kasih`;
     setIsGeneratingVoicenote(true);
     toast({
         title: 'Membuat Pesan Suara...',
-        description: `Piper sedang membuat pesan suara untuk ${customer.nasabah.split('\n')[0]}.`,
+        description: `Sedang menyiapkan pesan suara untuk ${customer.nasabah.split('\n')[0]}.`,
         tone: 'processing',
     });
     try {
@@ -282,7 +282,7 @@ Terima Kasih`;
             <div className="px-4 pb-4 pt-3 md:px-4">
              {importedData.length > 0 && (
                 <div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-700">
-                 <strong>Perhatian:</strong> Data Excel angsuran tidak memuat nomor WhatsApp. Fitur yang tersedia adalah salin template dan pembuatan pesan suara Piper secara lokal.
+                 <strong>Perhatian:</strong> Data Excel angsuran tidak memuat nomor WhatsApp. Fitur yang tersedia adalah salin template dan pembuatan pesan suara.
                 </div>
               )}
               <div className="rounded-lg border border-border/80 bg-card">
@@ -300,7 +300,7 @@ Terima Kasih`;
                       <TableRow>
                           <TableCell colSpan={4} className="h-24 text-center">
                               <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                              <p className="mt-2 text-muted-foreground">Memproses file XLSX...</p>
+                              <p className="mt-2 text-muted-foreground">Sedang membaca isi file...</p>
                           </TableCell>
                       </TableRow>
                   ) : importedData.length === 0 ? (

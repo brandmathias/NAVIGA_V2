@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/sidebar';
 import { LogOut, LayoutDashboard, ClipboardList, ChevronDown, CalendarClock, Scale, Banknote, History, ShieldCheck, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -221,6 +221,7 @@ export default function MainShell({ children, user }: { children: React.ReactNod
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="naviga-sidebar-profile h-[82px] w-full justify-start gap-3 rounded-[18px] border border-[#e4edef] bg-white/90 px-3 py-3 shadow-[0_10px_28px_rgba(16,42,67,.07)] transition-[transform,border-color,box-shadow,background-color] duration-200 focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-offset-2 active:scale-[.98]">
                   <Avatar className="h-11 w-11 shrink-0 border-[3px] border-white shadow-[0_0_0_3px_#bde9e4]">
+                    <AvatarImage src={`/api/users/${encodeURIComponent(user.userId)}/photo`} alt={`Foto profil ${user.name}`} />
                     <AvatarFallback className="bg-white text-lg font-semibold text-[#087f76] shadow-[inset_0_1px_1px_rgba(255,255,255,.95)]">{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1 text-left">

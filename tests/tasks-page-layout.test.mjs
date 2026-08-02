@@ -9,3 +9,42 @@ test('task board uses a responsive grid instead of a horizontal scroller', () =>
   assert.match(boardSource, /min-w-0/);
   assert.doesNotMatch(boardSource, /overflow-x-auto/);
 });
+
+test('add-column card stays in the desktop kanban row', () => {
+  assert.match(boardSource, /2xl:grid-cols-4/);
+  assert.match(boardSource, /Tambah kolom/);
+});
+
+test('favorite star does not open the task detail card', () => {
+  assert.match(boardSource, /handleFavoriteClick/);
+  assert.match(boardSource, /event\.stopPropagation\(\)/);
+  assert.match(boardSource, /TooltipContent side="right"/);
+});
+
+test('task cards keep creator metadata compact under the date and attachment row', () => {
+  assert.match(boardSource, /getCreatorName/);
+  assert.match(boardSource, /getCreatorPhotoSrc/);
+  assert.match(boardSource, /createdByName/);
+  assert.match(boardSource, /\/api\/users\/\$\{encodeURIComponent/);
+  assert.match(boardSource, /Pembuat: \$\{creatorName\}/);
+  assert.doesNotMatch(boardSource, /AvatarImage src=\{task\.assignee\?\.avatar\}/);
+});
+
+test('kanban cards keep complete Indonesian month names and compact creator row', () => {
+  assert.match(boardSource, /month: 'long'/);
+  assert.match(boardSource, /whitespace-nowrap/);
+  assert.match(boardSource, /className="mt-2 flex min-w-0 items-center gap-2/);
+});
+
+test('only the To Do column exposes the add-task shortcut and column progress bars are removed', () => {
+  assert.match(boardSource, /index === 0/);
+  assert.doesNotMatch(boardSource, /progress:/);
+  assert.doesNotMatch(boardSource, /animate=\{\{ width:/);
+});
+
+test('task loading copy stays understandable for end users', async () => {
+  const tasksPageSource = await readFile(new URL('../src/app/(main)/tasks/page.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(tasksPageSource, /PostgreSQL|DATABASE_URL|OCR|Piper|Genkit|Gemini/);
+  assert.match(tasksPageSource, /Tugas belum dapat dimuat/);
+  assert.match(tasksPageSource, /Perubahan tugas belum tersimpan/);
+});

@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth.mjs';
 import { getUnitById } from '@/lib/naviga-directory.mjs';
 
 export type LocalSession = {
+  userId: string;
   name: string;
   email: string;
   role: 'superadmin' | 'unit';
@@ -41,6 +42,7 @@ export async function getSession(): Promise<LocalSession | null> {
   if (role === 'unit' && (!unit || !unit.active)) return null;
 
   return {
+    userId: String(user.id),
     name: user.name,
     email: user.email,
     role,

@@ -49,7 +49,7 @@ export default function LoginPage() {
       toast({ title: 'Login Berhasil', description: `Selamat datang, ${result.data.user.name}.`, tone: 'success' });
       router.replace('/dashboard');
     } catch {
-      toast({ title: 'Login Gagal', description: 'Server autentikasi tidak dapat dihubungi.', variant: 'destructive', tone: 'error' });
+      toast({ title: 'Login Gagal', description: 'Layanan masuk tidak dapat dihubungi.', variant: 'destructive', tone: 'error' });
     } finally {
       setIsLoading(false);
     }

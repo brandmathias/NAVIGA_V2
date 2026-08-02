@@ -48,7 +48,7 @@ async function ensureSchema(pool: Pool) {
 }
 
 export function scopeForSession(session: LocalSession): string {
-  if (session.role === 'superadmin') return 'global:superadmin';
+  if (session.role === 'superadmin') return `superadmin:${session.userId}`;
   return `unit:${session.unitId ?? session.unitPrefix ?? session.upc}`;
 }
 
