@@ -11,5 +11,8 @@ test('unit and account directory persists in PostgreSQL and provisions Better Au
   assert.match(source, /auth\.api\.createUser/);
   assert.match(source, /auth\.api\.setUserPassword/);
   assert.match(source, /bootstrapDirectory/);
+  assert.match(source, /deleteUnitAdmin/);
+  assert.match(source, /SET banned = true/);
+  assert.match(source, /u\.banned IS NOT TRUE/);
   assert.doesNotMatch(source, /writeFile\(|rename\(/);
 });

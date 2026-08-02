@@ -34,8 +34,9 @@ test('add task modal stays compact and toolbar edits the description', () => {
 });
 
 test('calendar selected and hover colors use the NAVIGA logo tone', () => {
-  assert.match(calendar, /#9fda39/);
-  assert.match(calendar, /#079889/);
-  assert.match(calendar, /#e8f7d0/);
+  assert.match(calendar, /#00a99c/);
+  assert.match(calendar, /#007b73/);
+  assert.match(calendar, /#e7f7f3/);
+  assert.doesNotMatch(calendar, /#9fda39|#b8df42|#e8f7d0/);
   assert.doesNotMatch(calendar, /day_selected:\s*"bg-primary/);
 });

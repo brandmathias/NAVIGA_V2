@@ -105,3 +105,15 @@ export async function updateUnitAdminAction(formData: FormData) {
   revalidatePath('/dashboard');
   return admin;
 }
+
+export async function deleteUnitAdminAction(input: { id: string; unitId?: string }) {
+  await requireSuperadmin();
+
+  const { deleteUnitAdmin } = await import('@/lib/naviga-directory.mjs');
+  const result = await deleteUnitAdmin(input?.id);
+
+  revalidatePath('/unit-management');
+  if (input?.unitId) revalidatePath(`/unit-management/${input.unitId}`);
+  revalidatePath('/dashboard');
+  return result;
+}

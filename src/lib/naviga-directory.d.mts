@@ -39,4 +39,5 @@ export function registerUnit(input: Record<string, unknown>, headers: Headers): 
 export function registerUnitAdmin(input: Record<string, unknown>, headers: Headers): Promise<DirectoryAdmin>;
 export function updateUnit(input: Record<string, unknown>, headers: Headers): Promise<DirectoryUnit>;
 export function updateUnitAdmin(input: Record<string, unknown>, headers: Headers): Promise<DirectoryAdmin>;
+export function deleteUnitAdmin(id: string): Promise<DirectoryAdmin>;
 export function bootstrapDirectory(): Promise<{ created: boolean; units: number; users: number }>;

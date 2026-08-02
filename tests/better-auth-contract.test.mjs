@@ -14,7 +14,18 @@ test('Better Auth owns PostgreSQL-backed email/password authentication', async (
   assert.match(source, /emailAndPassword/);
   assert.match(source, /disableSignUp:\s*true/);
   assert.match(source, /admin\(/);
+  assert.match(source, /adminAc, userAc/);
+  assert.match(source, /roles:\s*\{\s*superadmin:\s*adminAc,\s*unit:\s*userAc\s*\}/s);
   assert.doesNotMatch(source, /NAVIGA_SESSION_SECRET/);
+});
+
+test('custom Better Auth roles preserve the admin permission boundary', async () => {
+  const { adminAc, userAc } = await import('better-auth/plugins/admin/access');
+
+  assert.equal(adminAc.authorize({ user: ['update'] }).success, true);
+  assert.equal(adminAc.authorize({ user: ['set-password'] }).success, true);
+  assert.equal(userAc.authorize({ user: ['update'] }).success, false);
+  assert.equal(userAc.authorize({ user: ['set-password'] }).success, false);
 });
 
 test('Next routes authentication through Better Auth and login uses its client', async () => {

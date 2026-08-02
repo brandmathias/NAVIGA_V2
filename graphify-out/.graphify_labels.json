@@ -131,5 +131,9 @@
   "129": "user-facing-copy.test.mjs",
   "130": "tooltip-portal.test.mjs",
   "131": "sheet.tsx",
-  "132": "alert.tsx"
+  "132": "alert.tsx",
+  "133": "react",
+  "134": "theme-switch.tsx",
+  "135": "button.tsx",
+  "136": "tabs.tsx"
 }

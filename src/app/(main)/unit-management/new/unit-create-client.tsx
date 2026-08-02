@@ -3,18 +3,20 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BadgeCheck, Building2, ChevronLeft, Eye, EyeOff, Loader2, MoreVertical, Plus, Save, ShieldPlus, UserCheck, UsersRound } from 'lucide-react';
+import { BadgeCheck, Building2, ChevronLeft, Eye, EyeOff, Loader2, Plus, Save, ShieldPlus, Trash2, UserCheck, UsersRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { INDONESIAN_PROVINCES, formatUnitCodePreview } from '@/lib/unit-code-client';
-import { registerUnitAction, registerUnitAdminAction, updateUnitAction } from '../actions';
+import { deleteUnitAdminAction, registerUnitAction, registerUnitAdminAction, updateUnitAction } from '../actions';
 
 type Person = { name: string; nip: string; phone: string };
 type Admin = { name: string; email: string; phone: string; password: string };
 type RelatedAdmin = { id: string; name: string; email: string; phone: string };
+type DisplayedAdmin = ({ saved: true } & RelatedAdmin) | ({ saved: false } & Admin);
 type Unit = { id: string; name: string; prefix: string; unitCode: string; domicile: string; province: string; phone: string; address: string; mapUrl: string; managers: Person[]; appraisers: Person[] };
 type DraftPerson = Person;
 type DraftAdmin = Admin;
@@ -25,6 +27,10 @@ function Field({ id, label, children, ...props }: React.ComponentProps<typeof In
 
 function EmptyRows({ colSpan, message }: { colSpan: number; message: string }) {
   return <tr><td colSpan={colSpan} className="unit-reference-empty">{message}</td></tr>;
+}
+
+function DeleteIconButton({ label, onClick, disabled = false }: { label: string; onClick: () => void; disabled?: boolean }) {
+  return <Tooltip><TooltipTrigger asChild><button type="button" className="unit-reference-delete" onClick={onClick} aria-label={label} disabled={disabled}><Trash2 /></button></TooltipTrigger><TooltipContent side="top" sideOffset={8} className="unit-reference-tooltip">{label}</TooltipContent></Tooltip>;
 }
 
 function PersonCard({ title, Icon, actionLabel, draft, setDraft, people, setPeople, saving }: {
@@ -43,7 +49,7 @@ function PersonCard({ title, Icon, actionLabel, draft, setDraft, people, setPeop
       <Field id={`${title}-nip`} label="NIP" placeholder="Masukkan NIP" value={draft.nip} onChange={(event) => setDraft((current) => ({ ...current, nip: event.target.value }))} required={false} disabled={saving} />
       <Field id={`${title}-phone`} label="Nomor telepon" placeholder="Masukkan nomor telepon" value={draft.phone} onChange={(event) => setDraft((current) => ({ ...current, phone: event.target.value }))} required={false} disabled={saving} />
     </div>
-    <div className="unit-reference-table-wrap"><table className="unit-reference-table"><thead><tr><th>Nama lengkap</th><th>NIP</th><th>Nomor telepon</th><th aria-label="Aksi">Aksi</th></tr></thead><tbody>{people.length ? people.map((person) => <tr key={`${person.nip}-${person.name}`}><td>{person.name}</td><td>{person.nip}</td><td>{person.phone}</td><td><button type="button" className="unit-reference-more" onClick={() => setPeople((current) => current.filter((candidate) => candidate !== person))} aria-label={`Hapus ${person.name}`} title={`Hapus ${person.name}`}><MoreVertical /></button></td></tr>) : <EmptyRows colSpan={4} message={`Belum ada ${title.toLowerCase()}.`} />}</tbody></table></div>
+    <div className="unit-reference-table-wrap"><table className="unit-reference-table"><thead><tr><th>Nama lengkap</th><th>NIP</th><th>Nomor telepon</th><th aria-label="Aksi">Aksi</th></tr></thead><tbody>{people.length ? people.map((person) => <tr key={`${person.nip}-${person.name}`}><td>{person.name}</td><td>{person.nip}</td><td>{person.phone}</td><td><DeleteIconButton label={`Hapus ${person.name}`} onClick={() => setPeople((current) => current.filter((candidate) => candidate !== person))} disabled={saving} /></td></tr>) : <EmptyRows colSpan={4} message={`Belum ada ${title.toLowerCase()}.`} />}</tbody></table></div>
   </section>;
 }
 
@@ -56,9 +62,11 @@ function UnitCreateForm({ unit, relatedAdmins = [], saving, error, setError, sub
   const [managers, setManagers] = React.useState<Person[]>(unit?.managers ?? []);
   const [appraisers, setAppraisers] = React.useState<Person[]>(unit?.appraisers ?? []);
   const [admins, setAdmins] = React.useState<Admin[]>([]);
+  const [savedAdmins, setSavedAdmins] = React.useState<RelatedAdmin[]>(relatedAdmins);
+  const [deletingAdminId, setDeletingAdminId] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
   const unitCode = formatUnitCodePreview(province, prefix);
-  const displayedAdmins = [...relatedAdmins.map((admin) => ({ ...admin, saved: true })), ...admins.map((admin) => ({ ...admin, saved: false }))];
+  const displayedAdmins: DisplayedAdmin[] = [...savedAdmins.map((admin) => ({ ...admin, saved: true as const })), ...admins.map((admin) => ({ ...admin, saved: false as const }))];
 
   function addAdmin() {
     if (!adminDraft.name.trim() || !adminDraft.email.trim() || !adminDraft.phone.trim() || adminDraft.password.length < 8) {
@@ -74,6 +82,22 @@ function UnitCreateForm({ unit, relatedAdmins = [], saving, error, setError, sub
     setError('');
   }
 
+  async function removeSavedAdmin(admin: RelatedAdmin) {
+    if (!unit?.id || deletingAdminId || !window.confirm(`Hapus akun admin ${admin.name} dari unit ini?`)) return;
+    setDeletingAdminId(admin.id);
+    setError('');
+    try {
+      await deleteUnitAdminAction({ id: admin.id, unitId: unit.id });
+      setSavedAdmins((current) => current.filter((candidate) => candidate.id !== admin.id));
+    }
+    catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Akun admin unit belum bisa dihapus.');
+    }
+    finally {
+      setDeletingAdminId('');
+    }
+  }
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     if (!unit && !admins.length) {
       event.preventDefault();
@@ -83,7 +107,7 @@ function UnitCreateForm({ unit, relatedAdmins = [], saving, error, setError, sub
     await submit(event);
   }
 
-  return <form onSubmit={onSubmit} className="unit-reference-form">
+  return <TooltipProvider delayDuration={120}><form onSubmit={onSubmit} className="unit-reference-form">
     <p aria-live="polite" className="unit-reference-error">{error}</p>
     <section className="unit-reference-card unit-reference-unit-card naviga-entry">
       <div className="unit-reference-title"><Building2 /><h2>Informasi Unit</h2></div>
@@ -111,11 +135,11 @@ function UnitCreateForm({ unit, relatedAdmins = [], saving, error, setError, sub
         <Field id="admin-phone" label="Nomor telepon" placeholder="Masukkan nomor telepon" value={adminDraft.phone} onChange={(event) => setAdminDraft((current) => ({ ...current, phone: event.target.value }))} required={false} disabled={saving} />
         <Field id="admin-password" label="Password awal" type={showPassword ? 'text' : 'password'} placeholder="Masukkan password" value={adminDraft.password} onChange={(event) => setAdminDraft((current) => ({ ...current, password: event.target.value }))} required={false} disabled={saving}>{<button type="button" className="unit-admin-password-toggle" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>{showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}</button>}</Field>
       </div>
-      <div className="unit-reference-table-wrap"><table className="unit-reference-table unit-reference-admin-table"><thead><tr><th>Nama admin unit</th><th>Email akun</th><th>Nomor telepon</th><th>Terakhir diperbarui</th><th aria-label="Aksi">Aksi</th></tr></thead><tbody>{displayedAdmins.length ? displayedAdmins.map((admin) => <tr key={`${admin.saved ? 'saved' : 'draft'}-${admin.email}`}><td>{admin.name}</td><td>{admin.email}</td><td>{admin.phone || '—'}</td><td>{admin.saved ? 'Sudah tersimpan' : 'Belum disimpan'}</td><td>{admin.saved ? '—' : <button type="button" className="unit-reference-more" onClick={() => setAdmins((current) => current.filter((candidate) => candidate.email !== admin.email))} aria-label={`Hapus ${admin.name}`} title={`Hapus ${admin.name}`}><MoreVertical /></button>}</td></tr>) : <EmptyRows colSpan={5} message="Belum ada akun admin unit." />}</tbody></table></div>
+      <div className="unit-reference-table-wrap"><table className="unit-reference-table unit-reference-admin-table"><thead><tr><th>Nama admin unit</th><th>Email akun</th><th>Nomor telepon</th><th>Informasi akun</th><th aria-label="Aksi">Aksi</th></tr></thead><tbody>{displayedAdmins.length ? displayedAdmins.map((admin) => <tr key={`${admin.saved ? 'saved' : 'draft'}-${admin.email}`}><td>{admin.name}</td><td>{admin.email}</td><td>{admin.phone || '—'}</td><td>{admin.saved ? 'Sudah aktif dan bisa masuk ke sistem.' : 'Siap disimpan saat perubahan dikirim.'}</td><td><DeleteIconButton label={admin.saved ? `Hapus akun admin ${admin.name}` : `Batalkan akun admin ${admin.name}`} onClick={() => admin.saved ? void removeSavedAdmin(admin) : setAdmins((current) => current.filter((candidate) => candidate.email !== admin.email))} disabled={saving || (admin.saved && deletingAdminId === admin.id)} /></td></tr>) : <EmptyRows colSpan={5} message="Belum ada akun admin unit." />}</tbody></table></div>
     </section>
     {unit && <input type="hidden" name="id" value={unit.id} />}<input type="hidden" name="domicile" value={province} /><input type="hidden" name="managers" value={JSON.stringify(managers)} /><input type="hidden" name="appraisers" value={JSON.stringify(appraisers)} /><input type="hidden" name="admins" value={JSON.stringify(admins)} />
     <footer className="unit-reference-footer"><Button type="submit" className="unit-reference-save" disabled={saving}>{saving ? <Loader2 className="animate-spin" /> : <Save />}{saving ? 'Menyimpan...' : unit ? 'Simpan perubahan' : 'Simpan unit'}</Button><Button asChild type="button" variant="outline" className="unit-reference-cancel" aria-disabled={saving}><Link href="/unit-management">Batal</Link></Button></footer>
-  </form>;
+  </form></TooltipProvider>;
 }
 
 function AdminOnlyForm({ units, saving, submit }: { units: Unit[]; saving: boolean; submit: (event: React.FormEvent<HTMLFormElement>) => Promise<void> }) {

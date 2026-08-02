@@ -108,7 +108,7 @@ export async function listUnits() {
   await ensureSchema();
   const [units, users] = await Promise.all([
     authPool.query('SELECT * FROM naviga_units ORDER BY name'),
-    authPool.query('SELECT name, email, "unitId", phone FROM "user" WHERE role = $1 AND banned = false', ['unit']),
+    authPool.query('SELECT name, email, "unitId", phone FROM "user" WHERE role = $1 AND banned IS NOT TRUE', ['unit']),
   ]);
   const primary = new Map();
   for (const account of users.rows) if (!primary.has(account.unitId)) primary.set(account.unitId, account);
@@ -120,7 +120,7 @@ export async function listUnitAdmins() {
   const result = await authPool.query(`
     SELECT u.id, u.name, u.email, u.phone, u."unitId", u.banned, n.name AS unit_name, n.prefix, n.unit_code, n.domicile, n.address
     FROM "user" u JOIN naviga_units n ON n.id = u."unitId"
-    WHERE u.role = 'unit' ORDER BY u.name
+    WHERE u.role = 'unit' AND u.banned IS NOT TRUE ORDER BY u.name
   `);
   return result.rows.map((row) => ({
     id: row.id, name: row.name, email: row.email, active: !row.banned,
@@ -206,6 +206,38 @@ export async function updateUnitAdmin(input, headers) {
   await auth.api.adminUpdateUser({ body: { userId: id, data: { name, email: accountEmail, unitId, phone } }, headers });
   if (password) await auth.api.setUserPassword({ body: { userId: id, newPassword: validatePassword(password) }, headers });
   return { id, name, email: accountEmail, active: true, unitId, unitName: unit.name, unitPrefix: unit.prefix, unitCode: unit.unitCode, domicile: unit.domicile, phone, address: unit.address };
+}
+
+export async function deleteUnitAdmin(id) {
+  await ensureSchema();
+  const accountId = text(id);
+  if (!accountId) throw new Error('Akun admin unit tidak valid.');
+
+  const existing = await authPool.query(
+    `SELECT u.id, u.name, u.email, u.phone, u."unitId", n.name AS unit_name, n.prefix, n.unit_code, n.domicile, n.address
+     FROM "user" u
+     JOIN naviga_units n ON n.id = u."unitId"
+     WHERE u.id = $1 AND u.role = 'unit' AND u.banned IS NOT TRUE`,
+    [accountId],
+  );
+  if (!existing.rowCount) throw new Error('Akun admin unit aktif tidak ditemukan.');
+
+  await authPool.query('UPDATE "user" SET banned = true WHERE id = $1', [accountId]);
+
+  const row = existing.rows[0];
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    active: false,
+    unitId: row.unitId,
+    unitName: row.unit_name,
+    unitPrefix: row.prefix,
+    unitCode: row.unit_code,
+    domicile: row.domicile,
+    phone: row.phone ?? '',
+    address: row.address ?? '',
+  };
 }
 
 function bootstrapPassword(account) {

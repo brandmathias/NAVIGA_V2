@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { admin } from 'better-auth/plugins';
+import { adminAc, userAc } from 'better-auth/plugins/admin/access';
 import { Pool } from 'pg';
 
 const databaseUrl = process.env.DATABASE_URL?.trim();
@@ -255,5 +256,12 @@ export const auth = betterAuth({
       phone: { type: 'string', required: false, input: false },
     },
   },
-  plugins: [admin({ defaultRole: 'unit', adminRoles: ['superadmin'] })],
+  plugins: [admin({
+    defaultRole: 'unit',
+    adminRoles: ['superadmin'],
+    // Better Auth falls back to the built-in `admin`/`user` role map when
+    // custom roles are not registered. Our persisted roles are `superadmin`
+    // and `unit`, so explicitly map them to the intended permission sets.
+    roles: { superadmin: adminAc, unit: userAc },
+  })],
 });

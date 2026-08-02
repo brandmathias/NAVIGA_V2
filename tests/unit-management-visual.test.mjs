@@ -56,7 +56,13 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.doesNotMatch(createPage, /Pencil/);
   assert.match(createPage, /Simpan perubahan/);
   assert.match(createPage, /relatedAdmins/);
-  assert.match(createPage, /Sudah tersimpan/);
+  assert.match(createPage, /deleteUnitAdminAction/);
+  assert.match(createPage, /TooltipProvider delayDuration=\{120\}/);
+  assert.match(createPage, /Trash2/);
+  assert.match(createPage, /Sudah aktif dan bisa masuk ke sistem\./);
+  assert.match(createPage, /Siap disimpan saat perubahan dikirim\./);
+  assert.match(createPage, /Hapus akun admin/);
+  assert.match(createPage, /Batalkan akun admin/);
   assert.match(createPage, /required=\{false\}/);
   assert.match(detailPage, /listUnitAdmins/);
   assert.match(detailPage, /filter\(\(admin\) => admin\.unitId === unit\.id\)/);
@@ -83,6 +89,8 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(styles, /\.unit-admin-select-trigger\[data-state="open"\]/);
   assert.match(styles, /\.unit-admin-select-content\s*\{/);
   assert.match(styles, /\.unit-admin-select-item\[data-highlighted\]/);
+  assert.match(styles, /\.unit-admin-select-item\[data-highlighted\][\s\S]*#e7f7f3/);
+  assert.match(styles, /\.unit-admin-select-item\[data-highlighted\]\[data-state="checked"\]/);
   assert.match(styles, /\.unit-reference-page\s*\{[\s\S]*?83\.5rem/);
   assert.match(styles, /\.unit-reference-select\s*\{[\s\S]*?font-family:\s*'Plus Jakarta Sans', sans-serif/);
   assert.match(styles, /\.unit-reference-select\s*\{[\s\S]*?font-size:\s*\.78rem[\s\S]*?font-weight:\s*650/);
