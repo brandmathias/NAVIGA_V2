@@ -464,7 +464,7 @@ export default function TaskKanbanBoard({
                               title={canDeleteColumn ? `Hapus kolom ${column.title}` : 'Kosongkan kolom terlebih dahulu'}
                               disabled={!canDeleteColumn}
                               onClick={() => onDeleteColumn(column.id)}
-                              className="h-8 w-full justify-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-[#bd858a] transition-[background-color,color,transform] duration-180 hover:bg-[#fff1f1] hover:text-[#d25c63] active:scale-95 disabled:cursor-not-allowed disabled:text-[#b6c4c8] disabled:hover:bg-transparent disabled:active:scale-100"
+                              className="h-8 w-full justify-center gap-1.5 rounded-lg border border-[#f2d6d8] bg-[#fff8f8] px-2 text-[10px] font-bold text-[#c66f76] transition-[background-color,border-color,color,transform] duration-180 hover:border-[#efb9bd] hover:bg-[#fff0f1] hover:text-[#d15b64] active:scale-95 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-100 disabled:border-[#f2d6d8] disabled:bg-[#fff8f8] disabled:text-[#c66f76] disabled:hover:border-[#f2d6d8] disabled:hover:bg-[#fff8f8] disabled:hover:text-[#c66f76] disabled:active:scale-100"
                             >
                               <Trash2 aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
                               Hapus kolom

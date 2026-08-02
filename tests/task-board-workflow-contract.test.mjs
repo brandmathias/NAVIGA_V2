@@ -131,6 +131,10 @@ test('task board UI keeps the star action, aligned priority visuals, and compact
   assert.match(board, /onDeleteColumn/);
   assert.match(board, /Hapus kolom/);
   assert.match(board, /disabled=\{!canDeleteColumn\}/);
+  assert.match(board, /border-\[#f2d6d8\]/);
+  assert.match(board, /bg-\[#fff8f8\]/);
+  assert.match(board, /disabled:opacity-100/);
+  assert.match(board, /disabled:text-\[#c66f76\]/);
   assert.match(board, /In Progress/);
   assert.match(board, /grid-flow-col/);
   assert.match(board, /overflow-x-auto/);

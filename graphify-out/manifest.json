@@ -90,8 +90,8 @@
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
-    "mtime": 1785689699.2593129,
-    "ast_hash": "fef2ece04be9df3f04b7afc2cbbb87a7",
+    "mtime": 1785690001.939543,
+    "ast_hash": "bb7d776a91c2191e561ef879a715e57c",
     "semantic_hash": ""
   },
   "src/components/VoicenotePreviewDialog.tsx": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "tests/tasks-page-layout.test.mjs": {
-    "mtime": 1785689721.2841945,
-    "ast_hash": "a121ee75824c6b4f81ac0a726af242c5",
+    "mtime": 1785689981.37357,
+    "ast_hash": "fdb5e9b601def395d40432448cb48f1f",
     "semantic_hash": ""
   },
   "tests/task-column-icons.test.mjs": {
@@ -970,8 +970,8 @@
     "semantic_hash": ""
   },
   "tests/task-board-workflow-contract.test.mjs": {
-    "mtime": 1785689430.4065156,
-    "ast_hash": "08d379b5059c06102b84123b9e6a79d5",
+    "mtime": 1785689981.3725684,
+    "ast_hash": "78da5c3710a28f8610dbf8a5fb359259",
     "semantic_hash": ""
   },
   "src/components/task-dialog-config.ts": {

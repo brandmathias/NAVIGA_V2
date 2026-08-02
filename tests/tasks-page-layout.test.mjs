@@ -40,6 +40,7 @@ test('column cards expose a safe delete action in their footer', async () => {
   assert.match(boardSource, /Hapus kolom/);
   assert.match(boardSource, /canDeleteColumn/);
   assert.match(boardSource, /onDeleteColumn\(column\.id\)/);
+  assert.match(boardSource, /disabled:opacity-100/);
   assert.match(tasksPageSource, /onDeleteColumn=\{handleDeleteColumn\}/);
   assert.match(tasksPageSource, /column\.taskIds\.length > 0/);
   assert.match(tasksPageSource, /previous\.columnOrder\.length <= 1/);
