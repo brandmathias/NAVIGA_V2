@@ -20,6 +20,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { downloadTaskAttachment } from '@/lib/task-attachments.mjs';
+import { plainTaskDescription } from '@/lib/task-description';
 
 interface TaskDetailsDialogProps {
   isOpen: boolean;
@@ -109,7 +110,7 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
         <div className="grid gap-5 px-6 py-6">
           <div className="grid gap-2">
             <Label htmlFor="task-description" className="text-xs font-bold uppercase tracking-[0.12em] text-[#648099]">Deskripsi</Label>
-            <Textarea id="task-description" value={currentTask.description || ''} onChange={(event) => handleUpdate('description', event.target.value)} placeholder="Tambahkan deskripsi lebih detail..." className="min-h-[110px] resize-none rounded-2xl border-[#d9e9e7] bg-white px-4 py-3 text-[#12324a] shadow-sm focus-visible:border-[#12a995] focus-visible:ring-[#12a995]/20" />
+            <Textarea id="task-description" value={plainTaskDescription(currentTask.description)} onChange={(event) => handleUpdate('description', event.target.value)} placeholder="Tambahkan deskripsi lebih detail..." className="min-h-[110px] resize-none rounded-2xl border-[#d9e9e7] bg-white px-4 py-3 text-[#12324a] shadow-sm focus-visible:border-[#12a995] focus-visible:ring-[#12a995]/20" />
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">

@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "src/components/AddTaskDialog.tsx": {
-    "mtime": 1785636785.4291165,
-    "ast_hash": "5b3ec7e8cb3683272e3ab7e0197c3687",
+    "mtime": 1785660598.3914645,
+    "ast_hash": "57305ff9ec16340506534086d32ef71b",
     "semantic_hash": ""
   },
   "src/components/KanbanBoard.tsx": {
@@ -85,13 +85,13 @@
     "semantic_hash": ""
   },
   "src/components/TaskDetailsDialog.tsx": {
-    "mtime": 1785636736.0788476,
-    "ast_hash": "b4018fcb833ae1169fa64af29d927599",
+    "mtime": 1785660284.803625,
+    "ast_hash": "579cc74c83df2baa9826ddbfa2d8fc84",
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
-    "mtime": 1785636197.7338736,
-    "ast_hash": "4d0712ac3cb6920caefd1aae759de0d2",
+    "mtime": 1785660284.8000255,
+    "ast_hash": "a77a30113c91ce20ce77eabf07ea6d6f",
     "semantic_hash": ""
   },
   "src/components/VoicenotePreviewDialog.tsx": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "tests/tasks-page-layout.test.mjs": {
-    "mtime": 1785635424.7020948,
-    "ast_hash": "d004f687cdbc036778b2af953437b564",
+    "mtime": 1785660209.9454029,
+    "ast_hash": "1ba6fc28c87c47a42f1045e3cf1f0583",
     "semantic_hash": ""
   },
   "tests/task-column-icons.test.mjs": {
@@ -945,8 +945,13 @@
     "semantic_hash": ""
   },
   "tests/add-task-dialog-modal.test.mjs": {
-    "mtime": 1785636006.6821587,
-    "ast_hash": "413d8b0f74ec9752f8e8ed77f9876d21",
+    "mtime": 1785659859.7069707,
+    "ast_hash": "56d731c075b26a66105c5f61adb7cee5",
+    "semantic_hash": ""
+  },
+  "src/lib/task-description.ts": {
+    "mtime": 1785660254.6013322,
+    "ast_hash": "3f3cc1010ed913e37155fdf695748c02",
     "semantic_hash": ""
   }
 }

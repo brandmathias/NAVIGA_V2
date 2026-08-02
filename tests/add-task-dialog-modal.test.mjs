@@ -6,6 +6,8 @@ const addTaskDialog = readFileSync(new URL('../src/components/AddTaskDialog.tsx'
 const taskTypes = readFileSync(new URL('../src/types/index.ts', import.meta.url), 'utf8');
 
 test('add task modal exposes the reference fields and upload flow', () => {
+  assert.match(addTaskDialog, /DialogTitle/);
+  assert.match(addTaskDialog, /DialogDescription/);
   assert.match(addTaskDialog, /Batas Waktu/);
   assert.match(addTaskDialog, /Prioritas/);
   assert.match(addTaskDialog, /Penting/);
@@ -18,4 +20,13 @@ test('add task modal exposes the reference fields and upload flow', () => {
 
 test('task type can persist multiple attachments', () => {
   assert.match(taskTypes, /attachments\?\s*:\s*TaskAttachment\[\]/);
+});
+
+test('add task modal stays compact and toolbar edits the description', () => {
+  assert.match(addTaskDialog, /max-w-\[960px\]/);
+  assert.match(addTaskDialog, /md:grid-cols-2/);
+  assert.match(addTaskDialog, /contentEditable=\{true\}/);
+  assert.match(addTaskDialog, /document\.execCommand/);
+  assert.match(addTaskDialog, /onMouseDown=\{\(event\) => event\.preventDefault\(\)\}/);
+  assert.match(addTaskDialog, /runEditorCommand\(command\)/);
 });

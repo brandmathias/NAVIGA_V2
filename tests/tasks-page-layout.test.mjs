@@ -3,6 +3,8 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const boardSource = await readFile(new URL('../src/components/TaskKanbanBoard.tsx', import.meta.url), 'utf8');
+const detailsSource = await readFile(new URL('../src/components/TaskDetailsDialog.tsx', import.meta.url), 'utf8');
+const descriptionHelper = await readFile(new URL('../src/lib/task-description.ts', import.meta.url), 'utf8').catch(() => '');
 
 test('task board uses a responsive grid instead of a horizontal scroller', () => {
   assert.match(boardSource, /grid/);
@@ -47,4 +49,10 @@ test('task loading copy stays understandable for end users', async () => {
   assert.doesNotMatch(tasksPageSource, /PostgreSQL|DATABASE_URL|OCR|Piper|Genkit|Gemini/);
   assert.match(tasksPageSource, /Tugas belum dapat dimuat/);
   assert.match(tasksPageSource, /Perubahan tugas belum tersimpan/);
+});
+
+test('rich text descriptions stay readable outside the editor', () => {
+  assert.match(descriptionHelper, /export function plainTaskDescription/);
+  assert.match(boardSource, /plainTaskDescription\(task\.description\)/);
+  assert.match(detailsSource, /plainTaskDescription\(currentTask\.description\)/);
 });

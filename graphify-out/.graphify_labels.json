@@ -125,7 +125,6 @@
   "123": "bootstrap-better-auth.mjs",
   "124": "migrate-better-auth.mjs",
   "125": "verify-auth-bootstrap.mjs",
-  "126": "theme-switch.tsx",
   "127": "Global Constraints",
   "128": "tabs.tsx",
   "129": "user-facing-copy.test.mjs",

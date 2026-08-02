@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Task, Column, TaskBoardData } from '@/types';
 import { cn } from '@/lib/utils';
 import { downloadTaskAttachment } from '@/lib/task-attachments.mjs';
+import { plainTaskDescription } from '@/lib/task-description';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
@@ -207,7 +208,7 @@ function TaskCard({
               </Tooltip>
             </div>
 
-            {task.description && <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.45] text-[#7189a1]">{task.description}</p>}
+            {task.description && <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.45] text-[#7189a1]">{plainTaskDescription(task.description)}</p>}
 
             <div className="mt-2.5 flex min-h-5 flex-wrap gap-1.5">
               {task.labels?.map((label) => (
@@ -290,7 +291,7 @@ function TaskListView({ boardData, onTaskClick }: { boardData: TaskBoardData; on
               >
                 <span className="flex min-w-0 items-center gap-3">
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl" style={{ backgroundColor: tone.soft, color: tone.accent }}><FileText className="h-4 w-4" /></span>
-                  <span className="min-w-0"><span className="block truncate text-sm font-bold text-[#173d56]">{task.title}</span><span className="mt-0.5 block truncate text-xs text-[#8195a8]">{task.description || 'Tanpa deskripsi'}</span></span>
+                  <span className="min-w-0"><span className="block truncate text-sm font-bold text-[#173d56]">{task.title}</span><span className="mt-0.5 block truncate text-xs text-[#8195a8]">{plainTaskDescription(task.description) || 'Tanpa deskripsi'}</span></span>
                 </span>
                 <span className="ml-12 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-bold md:ml-0" style={{ backgroundColor: tone.soft, color: tone.accent }}>{column.title}</span>
                 <span className="ml-12 flex items-center gap-1.5 whitespace-nowrap text-xs text-[#7089a1] md:ml-0"><CalendarDays className="h-3.5 w-3.5" />{formatDueDate(task.dueDate)}</span>
