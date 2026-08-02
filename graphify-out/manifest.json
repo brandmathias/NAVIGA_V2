@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "src/components/AddTaskDialog.tsx": {
-    "mtime": 1785692027.7910514,
-    "ast_hash": "e09aa39e67f5e7d1d2c5f71821fc086d",
+    "mtime": 1785692402.42236,
+    "ast_hash": "6f4a3b55ab4e16bd45ca868cc9837cea",
     "semantic_hash": ""
   },
   "src/components/KanbanBoard.tsx": {
@@ -945,8 +945,8 @@
     "semantic_hash": ""
   },
   "tests/add-task-dialog-modal.test.mjs": {
-    "mtime": 1785688045.8491342,
-    "ast_hash": "14114a2e1346f0e394efbf076d570503",
+    "mtime": 1785692326.8988018,
+    "ast_hash": "9de868e9e4c60cad9af9903b5c0a0af8",
     "semantic_hash": ""
   },
   "src/lib/task-description.ts": {

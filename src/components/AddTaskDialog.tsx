@@ -283,8 +283,9 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
             </DialogClose>
           </div>
 
-          <div ref={scrollRef} className="grid min-h-0 flex-1 gap-3 overflow-y-auto overflow-x-hidden px-4 py-3 md:grid-cols-[56px_minmax(0,1fr)] md:overflow-hidden">
-            <aside className="relative hidden rounded-[18px] border border-[#e3eeeb] bg-[linear-gradient(180deg,#f3fbf9,#ffffff)] px-2 py-2 shadow-[0_8px_20px_rgba(8,61,56,0.045)] md:grid md:grid-rows-[58px_154px_78px_78px_90px]">
+          <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 min-w-0">
+            <div className="grid items-start gap-3 md:grid-cols-[56px_minmax(0,1fr)]">
+            <aside className="relative hidden rounded-[18px] border border-[#e3eeeb] bg-[linear-gradient(180deg,#f3fbf9,#ffffff)] px-2 py-2 shadow-[0_8px_20px_rgba(8,61,56,0.045)] md:sticky md:top-3 md:self-start md:grid md:grid-rows-[58px_154px_78px_78px_90px]">
               {railSections.map(({ id, icon: Icon, label }, index) => {
                 const active = activeSection === id;
                 return (
@@ -308,7 +309,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
               })}
             </aside>
 
-            <div className="grid min-w-0 min-h-0 grid-cols-1 gap-2.5 pb-0">
+            <div className="grid min-w-0 grid-cols-1 gap-2.5 pb-0">
               <section
                 ref={(element) => {
                   sectionRefs.current.title = element;
@@ -519,6 +520,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
               </section>
 
               {error && <p role="alert" className="rounded-[10px] border border-[#f3c1c1] bg-[#fff4f4] px-3 py-2 text-xs text-[#c14c54]">{error}</p>}
+            </div>
             </div>
           </div>
 

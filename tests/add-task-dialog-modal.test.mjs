@@ -35,6 +35,12 @@ test('add task modal stays compact and toolbar edits the description', () => {
   assert.match(addTaskDialog, /\[\&_ol\]:list-decimal/);
 });
 
+test('add task modal keeps one stable vertical scroll viewport', () => {
+  assert.match(addTaskDialog, /min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3/);
+  assert.match(addTaskDialog, /md:sticky md:top-3 md:self-start/);
+  assert.doesNotMatch(addTaskDialog, /md:overflow-hidden/);
+});
+
 test('calendar selected and hover colors use the NAVIGA logo tone', () => {
   assert.match(calendar, /#00a99c/);
   assert.match(calendar, /#007b73/);

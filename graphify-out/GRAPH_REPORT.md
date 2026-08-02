@@ -1,7 +1,7 @@
 # Graph Report - NAVIGA  (2026-08-03)
 
 ## Corpus Check
-- 192 files · ~230,593 words
+- 192 files · ~230,661 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c3b1fa70`
+- Built from commit: `ddb5ea2a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -220,7 +220,7 @@ Nodes (42): errorMessage(), errorStatus(), GET(), getAuthorizedSession(), PUT(),
 
 ### Community 18 - "@genkit-ai/firebase"
 Cohesion: 0.18
-Nodes (11): better-auth, class-variance-authority, date-fns, lucide-react, dependencies, better-auth, class-variance-authority, date-fns (+3 more)
+Nodes (11): class-variance-authority, clsx, date-fns, lucide-react, dependencies, class-variance-authority, clsx, date-fns (+3 more)
 
 ### Community 20 - "@genkit-ai/next"
 Cohesion: 0.06
