@@ -128,16 +128,17 @@ function TaskCard({
   const shouldReduceMotion = useReducedMotion();
   const isFavorite = Boolean(task.isFavorite);
   const creatorName = getCreatorName(task);
-  const attachmentCount = task.attachment ? 1 : 0;
+  const primaryAttachment = task.attachments?.[0] ?? task.attachment;
+  const attachmentCount = task.attachments?.length ?? (task.attachment ? 1 : 0);
 
   const handleDownload = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    if (!task.attachment || isDownloading) return;
+    if (!primaryAttachment || isDownloading) return;
 
     setIsDownloading(true);
     try {
-      await downloadTaskAttachment(task.attachment);
+      await downloadTaskAttachment(primaryAttachment);
     } finally {
       setIsDownloading(false);
     }
@@ -223,7 +224,7 @@ function TaskCard({
                   <span>{formatDueDate(task.dueDate)}</span>
                 </span>
                 <div className="flex shrink-0 items-center gap-1.5">
-                  {task.attachment ? (
+                  {primaryAttachment ? (
                     <Button
                       type="button"
                       variant="ghost"
@@ -231,8 +232,8 @@ function TaskCard({
                       className="h-6 gap-1 rounded-full bg-[#f0faf8] px-2 text-[10px] font-bold text-[#118c80] hover:bg-[#dff5ef] hover:text-[#087b70] active:scale-95"
                       onClick={handleDownload}
                       onMouseDown={(event) => event.stopPropagation()}
-                      title={`Unduh ${task.attachment.name} (${formatFileSize(task.attachment.size)})`}
-                      aria-label={`Unduh lampiran ${task.attachment.name}`}
+                      title={`Unduh ${primaryAttachment.name} (${formatFileSize(primaryAttachment.size)})`}
+                      aria-label={`Unduh lampiran ${primaryAttachment.name}`}
                       disabled={isDownloading}
                     >
                       {isDownloading ? <Download className="h-3 w-3 animate-pulse" /> : <Paperclip className="h-3 w-3" />}

@@ -1,16 +1,16 @@
 # Graph Report - NAVIGA  (2026-08-02)
 
 ## Corpus Check
-- 183 files · ~224,837 words
+- 184 files · ~226,151 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1079 nodes · 1960 edges · 131 communities (87 shown, 44 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 44 edges (avg confidence: 0.54)
+- 1091 nodes · 1982 edges · 131 communities (86 shown, 45 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 45 edges (avg confidence: 0.54)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2e3d6995`
+- Built from commit: `4542fcea`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -115,7 +115,7 @@
 - user-facing-copy.test.mjs
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 61 edges
+1. `cn()` - 63 edges
 2. `react` - 25 edges
 3. `useToast()` - 19 edges
 4. `Button` - 16 edges
@@ -127,29 +127,29 @@
 10. `registerUnit()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `AdminOnlyForm()` --references--> `react`  [EXTRACTED]
+  src/app/(main)/unit-management/new/unit-create-client.tsx → package.json
 - `useCarousel()` --references--> `react`  [EXTRACTED]
   src/components/ui/carousel.tsx → package.json
 - `useChart()` --references--> `react`  [EXTRACTED]
   src/components/ui/chart.tsx → package.json
 - `useFormField()` --references--> `react`  [EXTRACTED]
   src/components/ui/form.tsx → package.json
-- `DashboardPage()` --references--> `react`  [EXTRACTED]
-  src/app/(main)/dashboard/page.tsx → package.json
-- `HistoryPage()` --references--> `react`  [EXTRACTED]
-  src/app/(main)/history/page.tsx → package.json
+- `TasksPage()` --references--> `react`  [EXTRACTED]
+  src/app/(main)/tasks/page.tsx → package.json
 
 ## Import Cycles
 - None detected.
 
-## Communities (131 total, 44 thin omitted)
+## Communities (131 total, 45 thin omitted)
 
 ### Community 0 - "cn"
 Cohesion: 0.22
 Nodes (8): Administration UI, Error Handling, Goal, Initial Credentials, Local Persistence, Multi-Unit Local Authentication Design, Roles, Scope Enforcement
 
 ### Community 1 - "pdf-broadcast/page.tsx"
-Cohesion: 0.14
-Nodes (25): MotionCardProps, PageTransition(), PageTransitionProps, directionVariants, motionElements, RevealDirection, ScrollRevealProps, StaggerContainer() (+17 more)
+Cohesion: 0.17
+Nodes (20): MotionCardProps, PageTransition(), PageTransitionProps, directionVariants, motionElements, RevealDirection, ScrollRevealProps, cardItemVariants (+12 more)
 
 ### Community 2 - "extract-from-pdf-flow.ts"
 Cohesion: 0.20
@@ -157,7 +157,7 @@ Nodes (12): { authenticateAccount }, { createHmac, timingSafeEqual }, createSess
 
 ### Community 3 - "sidebar.tsx"
 Cohesion: 0.05
-Nodes (44): SessionContext, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut(), DropdownMenuSubContent, DropdownMenuSubTrigger (+36 more)
+Nodes (47): createVisibleBoardData(), dueTime(), hasLabel(), LabelFilter, labelFilterOptions, responseError(), SortMode, sortOptions (+39 more)
 
 ### Community 4 - "login/page.tsx"
 Cohesion: 0.09
@@ -168,8 +168,8 @@ Cohesion: 0.06
 Nodes (32): devDependencies, postcss, tailwindcss, @types/node, @types/papaparse, @types/pg, @types/react, @types/react-dom (+24 more)
 
 ### Community 6 - "use-toast.ts"
-Cohesion: 0.12
-Nodes (28): generateCustomerVoicenote(), formatCurrency(), formatDate(), XlsxBroadcastPage(), LOCAL_HOSTS, optionalLocalHttpUrl(), requireLocalHttpUrl(), isWav() (+20 more)
+Cohesion: 0.14
+Nodes (25): generateCustomerVoicenote(), LOCAL_HOSTS, optionalLocalHttpUrl(), requireLocalHttpUrl(), isWav(), piperError(), piperSynthesizeUrl(), { requireLocalHttpUrl } (+17 more)
 
 ### Community 7 - "compilerOptions"
 Cohesion: 0.07
@@ -181,11 +181,11 @@ Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 mor
 
 ### Community 9 - "menubar.tsx"
 Cohesion: 0.12
-Nodes (11): Menubar, MenubarCheckboxItem, MenubarContent, MenubarItem, MenubarLabel, MenubarRadioItem, MenubarSeparator, MenubarShortcut() (+3 more)
+Nodes (10): Menubar, MenubarCheckboxItem, MenubarContent, MenubarItem, MenubarLabel, MenubarRadioItem, MenubarSeparator, MenubarSubContent (+2 more)
 
 ### Community 10 - "carousel.tsx"
-Cohesion: 0.09
-Nodes (20): AccordionContent, AccordionItem, AccordionTrigger, Alert, AlertDescription, AlertTitle, alertVariants, Checkbox (+12 more)
+Cohesion: 0.12
+Nodes (14): AccordionContent, AccordionItem, AccordionTrigger, Checkbox, MenubarShortcut(), Progress, RadioGroup, RadioGroupItem (+6 more)
 
 ### Community 11 - "dependencies"
 Cohesion: 0.29
@@ -196,8 +196,8 @@ Cohesion: 0.50
 Nodes (3): **App Name**: GadaiAlert, Core Features:, Style Guidelines:
 
 ### Community 13 - "date-fns"
-Cohesion: 0.16
-Nodes (14): LoginFormValues, loginSchema, FormControl, FormDescription, FormField(), FormFieldContext, FormFieldContextValue, FormItem (+6 more)
+Cohesion: 0.05
+Nodes (57): LoginFormValues, loginSchema, LoginHistoryItem, Unit, UnitAdmin, AddTaskDialog(), AddTaskDialogProps, duplicateSignature() (+49 more)
 
 ### Community 14 - "dotenv"
 Cohesion: 0.29
@@ -209,15 +209,15 @@ Nodes (12): createUnitRegistry(), AuthenticatedRegistryUser, LocalRole, Register
 
 ### Community 16 - "firebase"
 Cohesion: 0.14
-Nodes (23): errorMessage(), errorStatus(), GET(), getAuthorizedScope(), PUT(), LocalSession, DatabaseConfigurationError, getPostgresPool() (+15 more)
+Nodes (23): errorMessage(), errorStatus(), GET(), getAuthorizedScope(), PUT(), DatabaseConfigurationError, getPostgresPool(), NavigaGlobal (+15 more)
 
 ### Community 18 - "@genkit-ai/firebase"
 Cohesion: 0.18
 Nodes (11): better-auth, class-variance-authority, date-fns, lucide-react, dependencies, better-auth, class-variance-authority, date-fns (+3 more)
 
 ### Community 20 - "@genkit-ai/next"
-Cohesion: 0.17
-Nodes (11): AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader(), AlertDialogOverlay, AlertDialogTitle (+3 more)
+Cohesion: 0.22
+Nodes (8): AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader(), AlertDialogOverlay, AlertDialogTitle
 
 ### Community 21 - "@hello-pangea/dnd"
 Cohesion: 0.25
@@ -228,16 +228,16 @@ Cohesion: 0.40
 Nodes (5): localAuthPath, originalEnv, require, unitRegistryPath, withLocalAuth()
 
 ### Community 23 - "lucide-react"
-Cohesion: 0.10
-Nodes (43): MainLayout(), readList(), registerUnitAction(), registerUnitAdminAction(), requireSuperadmin(), updateUnitAction(), updateUnitAdminAction(), NewUnitPage() (+35 more)
+Cohesion: 0.13
+Nodes (37): MainLayout(), readList(), registerUnitAction(), registerUnitAdminAction(), requireSuperadmin(), updateUnitAction(), updateUnitAdminAction(), NewUnitPage() (+29 more)
 
 ### Community 28 - "@radix-ui/react-accordion"
 Cohesion: 0.50
 Nodes (3): Edit Unit and Admin Detail Implementation Plan, Global Constraints, Tasks
 
 ### Community 29 - "TaskKanbanBoard.tsx"
-Cohesion: 0.14
-Nodes (12): Unit, UnitAdmin, Input, Label, labelVariants, SelectContent, SelectItem, SelectLabel (+4 more)
+Cohesion: 0.22
+Nodes (8): SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay, SheetTitle, sheetVariants
 
 ### Community 31 - "TaskKanbanBoard.tsx"
 Cohesion: 0.09
@@ -256,20 +256,20 @@ Cohesion: 0.33
 Nodes (5): Global Constraints, Photo Import Extraction Implementation Plan, Task 1: Convert a photographed Angsuran table into import rows, Task 2: Add local photo OCR and server actions, Task 3: Expose photo import controls
 
 ### Community 44 - "cn"
-Cohesion: 0.11
-Nodes (23): formatUnitCode(), formatUnitCodePreview(), INDONESIAN_PROVINCES, PROVINCE_DISPLAY_CODES, resolveUnitLocationCode(), defaultRegistry, { dirname, join }, INDONESIAN_PROVINCE_SET (+15 more)
+Cohesion: 0.06
+Nodes (38): Admin, AdminOnlyForm(), DraftAdmin, DraftPerson, Person, RelatedAdmin, Unit, UnitCreateForm() (+30 more)
 
 ### Community 46 - "@radix-ui/react-tooltip"
 Cohesion: 0.25
 Nodes (7): Global Constraints, NAVIGA Local Chandra and Piper Implementation Plan, Task 1: Local session and route guards, Task 2: Chandra PDF extraction boundary, Task 3: XLSX deterministic import, Task 4: Piper voice service boundary, Task 5: Legacy removal and verification
 
 ### Community 49 - "types/index.ts"
-Cohesion: 0.32
-Nodes (8): LoginHistoryItem, DialogContent, DialogDescription, DialogFooter(), DialogHeader(), DialogOverlay, DialogTitle, VoicenotePreviewDialogProps
+Cohesion: 0.40
+Nodes (5): StaggerContainer(), StaggerContainerProps, StaggerItem(), StaggerItemProps, staggerContainerVariants()
 
 ### Community 53 - "AddTaskDialog.tsx"
-Cohesion: 0.42
-Nodes (8): AddTaskDialog(), formatFileSize(), createAttachmentId(), deleteTaskAttachment(), getTaskAttachment(), openDatabase(), saveTaskAttachment(), validateTaskAttachment()
+Cohesion: 0.40
+Nodes (4): Alert, AlertDescription, AlertTitle, alertVariants
 
 ### Community 55 - "README.md"
 Cohesion: 0.50
@@ -277,15 +277,15 @@ Nodes (3): Cakupan unit, NAVIGA, Uji lokal
 
 ### Community 59 - "cn"
 Cohesion: 0.05
-Nodes (78): DashboardPage(), UpcProfileData, upcProfiles, HistoryPage(), ActionStatus, formatCurrency(), formatDate(), getUnitLabel() (+70 more)
+Nodes (79): react, react, LoginPage(), DashboardPage(), UpcProfileData, upcProfiles, HistoryPage(), ActionStatus (+71 more)
 
 ### Community 60 - "local-auth.d.ts"
 Cohesion: 0.40
 Nodes (5): LocalAuthError, LocalRole, LocalSession, LocalUpc, LocalUser
 
 ### Community 61 - "TaskDetailsDialog.tsx"
-Cohesion: 0.22
-Nodes (10): AddTaskDialogProps, formatFileSize(), mockAssignees, TaskDetailsDialog(), TaskDetailsDialogProps, TaskKanbanBoardProps, PopoverContent, Textarea (+2 more)
+Cohesion: 0.50
+Nodes (3): TabsContent, TabsList, TabsTrigger
 
 ### Community 63 - "Global Constraints"
 Cohesion: 0.29
@@ -302,10 +302,6 @@ Nodes (15): Path, main(), add_installment_cell(), create_engine(), gadai_column(
 ### Community 71 - "radio-group.tsx"
 Cohesion: 0.07
 Nodes (48): getAllowedPrefixes(), ParsedBroadcastCustomer, parseGadaiImage(), parsePdf(), SUPPORTED_IMAGE_TYPES, validateImage(), aliasToField, cleanHtmlCell() (+40 more)
-
-### Community 76 - "select.tsx"
-Cohesion: 0.25
-Nodes (11): react, react, LoginPage(), AdminOnlyForm(), UnitCreateClient(), UnitCreateForm(), missingValue(), UnitManagementClient() (+3 more)
 
 ### Community 79 - "sheet.tsx"
 Cohesion: 0.18
@@ -360,24 +356,24 @@ Cohesion: 0.33
 Nodes (5): Global Constraints, Sidebar Theme Switch Implementation Plan, Task 1: Theme-switch regression contract, Task 2: Shared sidebar placement and NAVIGA dark surface, Task 3: Shared content and overlay dark-theme treatment
 
 ## Knowledge Gaps
-- **398 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+393 more)
+- **404 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+399 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **44 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **45 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `@genkit-ai/firebase` to `login/page.tsx`, `devDependencies`, `genkit`, `next`, `@radix-ui/react-avatar`, `@radix-ui/react-collapsible`, `@radix-ui/react-dialog`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-select`, `@radix-ui/react-separator`, `react-dom`, `react-hook-form`, `@radix-ui/react-dropdown-menu`, `react-day-picker`, `tasks/page.tsx`, `patch-package`, `select.tsx`, `tailwind-merge`, `@hello-pangea/dnd`, `framer-motion`, `@radix-ui/react-slot`, `@radix-ui/react-popover`, `@radix-ui/react-tabs`, `@radix-ui/react-accordion`, `@radix-ui/react-scroll-area`, `tailwindcss-animate`, `clsx`, `alert.tsx`, `papaparse`, `pg`, `@radix-ui/react-toast`, `recharts`, `clsx`, `embla-carousel-react`, `@radix-ui/react-tooltip`, `@radix-ui/react-progress`?**
-  _High betweenness centrality (0.158) - this node is a cross-community bridge._
-- **Why does `react` connect `select.tsx` to `sidebar.tsx`, `@radix-ui/react-popover`, `use-toast.ts`, `date-fns`, `sheet.tsx`, `@radix-ui/react-toast`, `@genkit-ai/firebase`, `cn`, `theme-switch.tsx`?**
-  _High betweenness centrality (0.139) - this node is a cross-community bridge._
-- **Why does `cn()` connect `carousel.tsx` to `pdf-broadcast/page.tsx`, `sidebar.tsx`, `@radix-ui/react-popover`, `menubar.tsx`, `select.tsx`, `date-fns`, `sheet.tsx`, `types/index.ts`, `TaskDetailsDialog.tsx`, `@genkit-ai/next`, `cn`, `TaskKanbanBoard.tsx`, `TaskKanbanBoard.tsx`?**
-  _High betweenness centrality (0.086) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `@genkit-ai/firebase` to `login/page.tsx`, `devDependencies`, `genkit`, `next`, `@radix-ui/react-avatar`, `@radix-ui/react-collapsible`, `@radix-ui/react-dialog`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-select`, `@radix-ui/react-separator`, `react-dom`, `react-hook-form`, `cn`, `@radix-ui/react-dropdown-menu`, `react-day-picker`, `tasks/page.tsx`, `patch-package`, `tailwind-merge`, `@hello-pangea/dnd`, `framer-motion`, `@radix-ui/react-slot`, `@radix-ui/react-popover`, `@radix-ui/react-tabs`, `@radix-ui/react-accordion`, `@radix-ui/react-scroll-area`, `tailwindcss-animate`, `clsx`, `alert.tsx`, `papaparse`, `pg`, `@radix-ui/react-toast`, `recharts`, `clsx`, `embla-carousel-react`, `@radix-ui/react-tooltip`, `@radix-ui/react-progress`?**
+  _High betweenness centrality (0.160) - this node is a cross-community bridge._
+- **Why does `react` connect `cn` to `sidebar.tsx`, `@radix-ui/react-popover`, `cn`, `date-fns`, `sheet.tsx`, `@genkit-ai/firebase`, `theme-switch.tsx`?**
+  _High betweenness centrality (0.147) - this node is a cross-community bridge._
+- **Why does `cn()` connect `carousel.tsx` to `pdf-broadcast/page.tsx`, `sidebar.tsx`, `@radix-ui/react-popover`, `menubar.tsx`, `cn`, `date-fns`, `sheet.tsx`, `types/index.ts`, `TaskDetailsDialog.tsx`, `@genkit-ai/next`, `AddTaskDialog.tsx`, `cn`, `TaskKanbanBoard.tsx`, `TaskKanbanBoard.tsx`?**
+  _High betweenness centrality (0.093) - this node is a cross-community bridge._
 - **What connects `$schema`, `style`, `rsc` to the rest of the system?**
-  _398 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `pdf-broadcast/page.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.13548387096774195 - nodes in this community are weakly interconnected._
+  _404 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `sidebar.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.050980392156862744 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.054426705370101594 - nodes in this community are weakly interconnected._
 - **Should `login/page.tsx` be split into smaller, more focused modules?**
   _Cohesion score 0.09302325581395349 - nodes in this community are weakly interconnected._
+- **Should `devDependencies` be split into smaller, more focused modules?**
+  _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._

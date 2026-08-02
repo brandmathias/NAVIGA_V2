@@ -68,6 +68,7 @@ export interface Task {
   labels?: string[];
   dueDate?: string;
   attachment?: TaskAttachment;
+  attachments?: TaskAttachment[];
 }
 
 export interface Column {

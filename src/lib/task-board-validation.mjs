@@ -6,6 +6,7 @@ const MAX_TITLE_LENGTH = 200;
 const MAX_DESCRIPTION_LENGTH = 5000;
 const MAX_LABELS = 20;
 const MAX_LABEL_LENGTH = 80;
+const MAX_ATTACHMENTS = 20;
 
 function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -17,6 +18,16 @@ function validString(value, { min = 0, max }) {
 
 function invalid(message) {
   return { valid: false, message };
+}
+
+function validateAttachment(attachment) {
+  return isRecord(attachment)
+    && validString(attachment.id, { min: 1, max: 200 })
+    && validString(attachment.name, { min: 1, max: 255 })
+    && validString(attachment.type, { max: 120 })
+    && Number.isInteger(attachment.size)
+    && attachment.size >= 0
+    && attachment.size <= MAX_TASK_ATTACHMENT_SIZE_BYTES;
 }
 
 export function validateTaskBoardData(value) {
@@ -80,9 +91,11 @@ export function validateTaskBoardData(value) {
         return invalid('Penanggung jawab tugas tidak valid.');
       }
     }
-    if (task.attachment !== undefined) {
-      const attachment = task.attachment;
-      if (!isRecord(attachment) || !validString(attachment.id, { min: 1, max: 200 }) || !validString(attachment.name, { min: 1, max: 255 }) || !validString(attachment.type, { max: 120 }) || !Number.isInteger(attachment.size) || attachment.size < 0 || attachment.size > MAX_TASK_ATTACHMENT_SIZE_BYTES) {
+    if (task.attachment !== undefined && !validateAttachment(task.attachment)) {
+      return invalid('Lampiran tugas tidak valid atau melebihi batas 10 MB.');
+    }
+    if (task.attachments !== undefined) {
+      if (!Array.isArray(task.attachments) || task.attachments.length > MAX_ATTACHMENTS || task.attachments.some((attachment) => !validateAttachment(attachment))) {
         return invalid('Lampiran tugas tidak valid atau melebihi batas 10 MB.');
       }
     }

@@ -47,7 +47,7 @@ function taskMatchesFilter(task: Task, filter: LabelFilter) {
   if (filter === 'medium') return hasLabel(task, ['sedang', 'review', 'laporan']);
   if (filter === 'low') return hasLabel(task, ['rendah', 'rapat']);
   if (filter === 'favorite') return Boolean(task.isFavorite);
-  return Boolean(task.attachment);
+  return Boolean(task.attachment || task.attachments?.length);
 }
 
 function dueTime(task: Task) {

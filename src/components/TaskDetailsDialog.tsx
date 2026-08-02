@@ -49,6 +49,9 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
 
   if (!currentTask) return null;
 
+  const primaryAttachment = currentTask.attachments?.[0] ?? currentTask.attachment;
+  const attachmentCount = currentTask.attachments?.length ?? (currentTask.attachment ? 1 : 0);
+
   const handleUpdate = (field: keyof Task, value: any) => {
     const updatedTask = { ...currentTask, [field]: value };
     setCurrentTask(updatedTask);
@@ -67,11 +70,11 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
   };
 
   const handleDownload = async () => {
-    if (!currentTask.attachment || isDownloading) return;
+    if (!primaryAttachment || isDownloading) return;
     setIsDownloading(true);
     setDownloadError('');
     try {
-      await downloadTaskAttachment(currentTask.attachment);
+      await downloadTaskAttachment(primaryAttachment);
     } catch (error) {
       setDownloadError(error instanceof Error ? error.message : 'Lampiran tidak dapat diunduh.');
     } finally {
@@ -145,11 +148,11 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
           </div>
 
           <div className="rounded-2xl border border-[#d9eeea] bg-[linear-gradient(135deg,#f2fbf8,#ffffff)] p-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[#0f9f8f] shadow-sm"><Paperclip className="h-4 w-4" /></span>
-              <div className="min-w-0 flex-1"><p className="text-sm font-bold text-[#173d56]">Lampiran tugas</p><p className="mt-0.5 truncate text-xs text-[#8197a9]">{currentTask.attachment ? `${currentTask.attachment.name} · ${formatFileSize(currentTask.attachment.size)}` : 'Belum ada file yang dilampirkan'}</p></div>
-              {currentTask.attachment && <Button type="button" variant="outline" onClick={handleDownload} disabled={isDownloading} className="h-9 shrink-0 gap-2 rounded-xl border-[#bde7df] bg-white px-3 text-xs font-bold text-[#0b8779] hover:bg-[#eaf9f5] active:scale-95">{isDownloading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />} Unduh</Button>}
-            </div>
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[#0f9f8f] shadow-sm"><Paperclip className="h-4 w-4" /></span>
+              <div className="min-w-0 flex-1"><p className="text-sm font-bold text-[#173d56]">Lampiran tugas</p><p className="mt-0.5 truncate text-xs text-[#8197a9]">{primaryAttachment ? `${primaryAttachment.name} · ${formatFileSize(primaryAttachment.size)}${attachmentCount > 1 ? ` · ${attachmentCount} file` : ''}` : 'Belum ada file yang dilampirkan'}</p></div>
+              {primaryAttachment && <Button type="button" variant="outline" onClick={handleDownload} disabled={isDownloading} className="h-9 shrink-0 gap-2 rounded-xl border-[#bde7df] bg-white px-3 text-xs font-bold text-[#0b8779] hover:bg-[#eaf9f5] active:scale-95">{isDownloading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />} Unduh</Button>}
+              </div>
             {downloadError && <p role="alert" className="mt-3 rounded-lg bg-[#fff4f4] px-3 py-2 text-xs text-[#c54c55]">{downloadError}</p>}
           </div>
         </div>
