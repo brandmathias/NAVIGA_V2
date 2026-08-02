@@ -299,7 +299,7 @@ export default function TasksPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-44 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
                       {labelFilterOptions.map((option) => (
-                        <DropdownMenuItem key={option.value} onClick={() => setLabelFilter(option.value)} className="flex items-center justify-between rounded-lg text-xs font-semibold text-[#173d56]">
+                        <DropdownMenuItem key={option.value} onClick={() => setLabelFilter(option.value)} className={labelFilter === option.value ? 'flex items-center justify-between rounded-[10px] border border-[#b9e7e3] bg-[#dff3f2] text-xs font-semibold text-[#0f5f67] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]' : 'flex items-center justify-between rounded-[10px] text-xs font-semibold text-[#173d56]'}>
                           {option.label}
                           {labelFilter === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
                         </DropdownMenuItem>
@@ -312,7 +312,7 @@ export default function TasksPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48 rounded-xl border-[#dcebe9] p-1.5 shadow-[0_16px_34px_rgba(18,62,75,0.12)]">
                       {sortOptions.map((option) => (
-                        <DropdownMenuItem key={option.value} onClick={() => setSortMode(option.value)} className="flex items-center justify-between rounded-lg text-xs font-semibold text-[#173d56]">
+                        <DropdownMenuItem key={option.value} onClick={() => setSortMode(option.value)} className={sortMode === option.value ? 'flex items-center justify-between rounded-[10px] border border-[#b9e7e3] bg-[#dff3f2] text-xs font-semibold text-[#0f5f67] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]' : 'flex items-center justify-between rounded-[10px] text-xs font-semibold text-[#173d56]'}>
                           {option.label}
                           {sortMode === option.value && <Check className="h-3.5 w-3.5 text-[#0f9f8f]" />}
                         </DropdownMenuItem>
