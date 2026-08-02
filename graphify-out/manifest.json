@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/tasks/page.tsx": {
-    "mtime": 1785689497.7642074,
-    "ast_hash": "60b0ec3d2e777b7b1e9393d7e83b14ab",
+    "mtime": 1785690473.5395727,
+    "ast_hash": "5301befea738202312fffb66af456a47",
     "semantic_hash": ""
   },
   "src/app/(main)/xlsx-broadcast/page.tsx": {
@@ -90,8 +90,8 @@
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
-    "mtime": 1785690001.939543,
-    "ast_hash": "bb7d776a91c2191e561ef879a715e57c",
+    "mtime": 1785691190.3770947,
+    "ast_hash": "2b7c22d271080b3ddbed9fef8ab8aed5",
     "semantic_hash": ""
   },
   "src/components/VoicenotePreviewDialog.tsx": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "tests/tasks-page-layout.test.mjs": {
-    "mtime": 1785689981.37357,
-    "ast_hash": "fdb5e9b601def395d40432448cb48f1f",
+    "mtime": 1785691173.7298546,
+    "ast_hash": "357bf359cb3f79abfe21443617579d96",
     "semantic_hash": ""
   },
   "tests/task-column-icons.test.mjs": {
@@ -970,8 +970,8 @@
     "semantic_hash": ""
   },
   "tests/task-board-workflow-contract.test.mjs": {
-    "mtime": 1785689981.3725684,
-    "ast_hash": "78da5c3710a28f8610dbf8a5fb359259",
+    "mtime": 1785691173.7348332,
+    "ast_hash": "73b2df09ee32a58dc9589f46ebb54523",
     "semantic_hash": ""
   },
   "src/components/task-dialog-config.ts": {

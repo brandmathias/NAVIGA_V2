@@ -218,14 +218,23 @@ export default function TasksPage() {
   const handleDeleteColumn = (columnId: string) => {
     setBoardData((previous) => {
       const column = previous.columns[columnId];
-      if (!column || column.taskIds.length > 0 || previous.columnOrder.length <= 1) return previous;
+      const deletedIndex = previous.columnOrder.indexOf(columnId);
+      const remainingOrder = previous.columnOrder.filter((id) => id !== columnId);
+      if (!column || deletedIndex < 0 || remainingOrder.length === 0) return previous;
 
-      const nextColumns = { ...previous.columns };
+      const targetColumnId = remainingOrder[Math.max(0, deletedIndex - 1)] ?? remainingOrder[0];
+      const targetColumn = previous.columns[targetColumnId];
+      if (!targetColumn) return previous;
+
+      const nextColumns = {
+        ...previous.columns,
+        [targetColumnId]: { ...targetColumn, taskIds: [...targetColumn.taskIds, ...column.taskIds] },
+      };
       delete nextColumns[columnId];
       return {
         ...previous,
         columns: nextColumns,
-        columnOrder: previous.columnOrder.filter((id) => id !== columnId),
+        columnOrder: remainingOrder,
       };
     });
   };

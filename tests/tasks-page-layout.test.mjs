@@ -33,18 +33,35 @@ test('task header keeps column creation inside the add-column card', async () =>
   assert.match(boardSource, /onSubmit=\{handleAddColumn\}/);
 });
 
-test('column cards expose a safe delete action in their footer', async () => {
+test('column cards expose a working delete action in their footer', async () => {
   const tasksPageSource = await readFile(new URL('../src/app/(main)/tasks/page.tsx', import.meta.url), 'utf8');
   assert.match(boardSource, /onDeleteColumn: \(columnId: string\) => void/);
   assert.match(boardSource, /Trash2/);
   assert.match(boardSource, /Hapus kolom/);
-  assert.match(boardSource, /canDeleteColumn/);
-  assert.match(boardSource, /onDeleteColumn\(column\.id\)/);
+  assert.match(boardSource, /const canDeleteColumn = !isReadOnlyView && boardData\.columnOrder\.length > 1/);
+  assert.match(boardSource, /setPendingColumnDeletion\(\{ id: column\.id, title: column\.title, taskCount: tasks\.length \}\)/);
   assert.match(boardSource, /disabled:opacity-100/);
+  assert.match(boardSource, /Hapus kolom dan pindahkan tugas ke kolom tetangga/);
+  assert.match(boardSource, /hover:-translate-y-0\.5/);
+  assert.match(boardSource, /active:translate-y-0/);
+  assert.match(boardSource, /active:scale-95/);
+  assert.match(boardSource, /pendingColumnDeletion/);
+  assert.match(boardSource, /setPendingColumnDeletion/);
+  assert.match(boardSource, /confirmDeleteColumn/);
+  assert.match(boardSource, /Hapus kolom\?/);
+  assert.match(boardSource, /Kolom berisi/);
+  assert.doesNotMatch(boardSource, /tugas tetap tersimpan/);
+  assert.doesNotMatch(boardSource, /Tugas dalam kolom ini akan dipindahkan/);
+  assert.doesNotMatch(boardSource, /bg-\[#fff1f2\]/);
+  assert.doesNotMatch(boardSource, /<Trash2 className="h-5 w-5"/);
+  assert.match(boardSource, /DialogFooter className="[^\"]*justify-between/);
+  assert.match(boardSource, /DialogFooter className="[^\"]*sm:justify-between/);
+  assert.match(boardSource, /DialogFooter[\s\S]*?Batal[\s\S]*?Hapus kolom/);
   assert.match(tasksPageSource, /onDeleteColumn=\{handleDeleteColumn\}/);
-  assert.match(tasksPageSource, /column\.taskIds\.length > 0/);
-  assert.match(tasksPageSource, /previous\.columnOrder\.length <= 1/);
-  assert.match(tasksPageSource, /columnOrder: previous\.columnOrder\.filter/);
+  assert.match(tasksPageSource, /const remainingOrder = previous\.columnOrder\.filter/);
+  assert.match(tasksPageSource, /const targetColumnId = remainingOrder/);
+  assert.match(tasksPageSource, /taskIds: \[\.\.\.targetColumn\.taskIds, \.\.\.column\.taskIds\]/);
+  assert.match(tasksPageSource, /columnOrder: remainingOrder/);
 });
 
 test('favorite star does not open the task detail card', () => {

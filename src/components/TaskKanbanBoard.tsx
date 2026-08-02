@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { downloadTaskAttachment } from '@/lib/task-attachments.mjs';
 import { plainTaskDescription } from '@/lib/task-description';
 import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
 import { Input } from './ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import {
@@ -335,6 +336,8 @@ export default function TaskKanbanBoard({
   viewMode,
   isReadOnlyView = false,
 }: TaskKanbanBoardProps) {
+  const [pendingColumnDeletion, setPendingColumnDeletion] = React.useState<{ id: string; title: string; taskCount: number } | null>(null);
+
   const submitNewColumn = () => {
     const title = newColumnTitle.trim();
     if (!title) {
@@ -347,6 +350,12 @@ export default function TaskKanbanBoard({
   const handleAddColumn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     submitNewColumn();
+  };
+
+  const confirmDeleteColumn = () => {
+    if (!pendingColumnDeletion) return;
+    onDeleteColumn(pendingColumnDeletion.id);
+    setPendingColumnDeletion(null);
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -406,7 +415,7 @@ export default function TaskKanbanBoard({
                 const tasks = column.taskIds.map((taskId) => boardData.tasks[taskId]).filter(Boolean) as Task[];
                 const tone = getTone(index);
                 const ColumnIcon = columnIcons[index] ?? Layers3;
-                const canDeleteColumn = !isReadOnlyView && tasks.length === 0 && boardData.columnOrder.length > 1;
+                const canDeleteColumn = !isReadOnlyView && boardData.columnOrder.length > 1;
 
                 return (
                   <Draggable key={column.id} draggableId={column.id} index={index} isDragDisabled={isReadOnlyView}>
@@ -461,12 +470,18 @@ export default function TaskKanbanBoard({
                               variant="ghost"
                               size="sm"
                               aria-label={`Hapus kolom ${column.title}`}
-                              title={canDeleteColumn ? `Hapus kolom ${column.title}` : 'Kosongkan kolom terlebih dahulu'}
-                              disabled={!canDeleteColumn}
-                              onClick={() => onDeleteColumn(column.id)}
-                              className="h-8 w-full justify-center gap-1.5 rounded-lg border border-[#f2d6d8] bg-[#fff8f8] px-2 text-[10px] font-bold text-[#c66f76] transition-[background-color,border-color,color,transform] duration-180 hover:border-[#efb9bd] hover:bg-[#fff0f1] hover:text-[#d15b64] active:scale-95 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-100 disabled:border-[#f2d6d8] disabled:bg-[#fff8f8] disabled:text-[#c66f76] disabled:hover:border-[#f2d6d8] disabled:hover:bg-[#fff8f8] disabled:hover:text-[#c66f76] disabled:active:scale-100"
-                            >
-                              <Trash2 aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
+                                  title={
+                                    !canDeleteColumn
+                                      ? 'Kolom terakhir tidak dapat dihapus'
+                                      : tasks.length > 0
+                                        ? 'Hapus kolom dan pindahkan tugas ke kolom tetangga'
+                                        : `Hapus kolom ${column.title}`
+                                  }
+                                  disabled={!canDeleteColumn}
+                                      onClick={() => setPendingColumnDeletion({ id: column.id, title: column.title, taskCount: tasks.length })}
+                                  className="group h-8 w-full justify-center gap-1.5 rounded-lg border border-[#f2d6d8] bg-[#fff8f8] px-2 text-[10px] font-bold text-[#c66f76] shadow-[0_3px_10px_rgba(198,111,118,0.08)] transition-[background-color,border-color,box-shadow,color,transform] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#e78790] hover:bg-[#ffecee] hover:text-[#b83d4b] hover:shadow-[0_8px_16px_rgba(184,61,75,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d15b64]/35 focus-visible:ring-offset-1 active:translate-y-0 active:scale-95 active:border-[#d15b64] active:bg-[#ffdfe2] active:text-[#a83b47] active:shadow-[0_2px_6px_rgba(184,61,75,0.16)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-100 disabled:border-[#f2d6d8] disabled:bg-[#fff8f8] disabled:text-[#c66f76] disabled:hover:translate-y-0 disabled:hover:border-[#f2d6d8] disabled:hover:bg-[#fff8f8] disabled:hover:text-[#c66f76] disabled:hover:shadow-none disabled:active:scale-100"
+                                >
+                                  <Trash2 aria-hidden="true" className="h-3.5 w-3.5 transition-transform duration-180 group-hover:scale-110 group-active:scale-95" strokeWidth={1.8} />
                               Hapus kolom
                             </Button>
                           </div>
@@ -503,11 +518,57 @@ export default function TaskKanbanBoard({
                     />
                   </form>
                 </div>
-              </motion.div>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </TooltipProvider>
-  );
+                  </motion.div>
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+
+          <Dialog open={Boolean(pendingColumnDeletion)} onOpenChange={(open) => !open && setPendingColumnDeletion(null)}>
+            <DialogContent
+              hideCloseButton
+              overlayClassName="bg-[#102c35]/55 backdrop-blur-[6px]"
+              className="w-[calc(100vw-2rem)] max-w-[400px] overflow-hidden rounded-[20px] border border-[#e0ebe9] bg-white p-0 shadow-[0_24px_70px_rgba(14,57,61,0.24)]"
+            >
+              <DialogHeader className="border-b border-[#edf3f2] bg-[#fffdfd] px-5 py-4 text-left">
+                <div className="flex items-center gap-2" aria-hidden="true">
+                  <span className="h-1.5 w-8 rounded-full bg-[#d15b64]" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8a9da7]">Kolom tugas</span>
+                </div>
+                <DialogTitle className="mt-3 text-[17px] font-bold tracking-tight text-[#173d56]">Hapus kolom?</DialogTitle>
+                <DialogDescription className="mt-1 text-xs leading-5 text-[#71899c]">
+                  Hapus kolom <span className="font-bold text-[#173d56]">{pendingColumnDeletion?.title}</span>?
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="px-5 py-3.5">
+                <p className="border-l-2 border-[#e4b0b6] pl-3 text-xs leading-5 text-[#71899c]">
+                  {pendingColumnDeletion?.taskCount
+                    ? `Kolom berisi ${pendingColumnDeletion.taskCount} tugas.`
+                    : 'Kolom ini kosong.'}
+                </p>
+              </div>
+
+              <DialogFooter className="flex flex-row items-center justify-between gap-3 border-t border-[#edf3f2] bg-[#fbfdfd] px-5 py-3 sm:justify-between sm:space-x-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPendingColumnDeletion(null)}
+                  className="h-9 rounded-xl border-[#d6e6e3] px-4 text-xs font-bold text-[#567086] transition-[background-color,border-color,color,transform] duration-180 ease-out hover:-translate-y-0.5 hover:border-[#b9d9d4] hover:bg-[#f0f8f6] hover:text-[#0e7d74] active:translate-y-0 active:scale-95"
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="button"
+                  onClick={confirmDeleteColumn}
+                  disabled={!pendingColumnDeletion}
+                  className="h-9 rounded-xl bg-[#e85d67] px-4 text-xs font-bold text-white shadow-[0_8px_18px_rgba(232,93,103,0.18)] transition-[background-color,box-shadow,transform] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#d94e59] hover:shadow-[0_11px_22px_rgba(217,78,89,0.22)] active:translate-y-0 active:scale-95"
+                >
+                  Hapus kolom
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </TooltipProvider>
+      );
 }
