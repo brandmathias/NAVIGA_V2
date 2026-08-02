@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,14 +12,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import type { Task, TaskPriority } from '@/types';
-import { Calendar as CalendarIcon, Download, Eye, FileText, Flag, Loader2, Paperclip, Trash2 } from 'lucide-react';
+import type { Task } from '@/types';
+import { AlignLeft, Bold, Calendar as CalendarIcon, Download, Eye, FileText, Flag, Italic, Link2, ListOrdered, Loader2, Maximize2, Paperclip, Trash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { downloadTaskAttachment, previewTaskAttachment } from '@/lib/task-attachments.mjs';
 import { plainTaskDescription } from '@/lib/task-description';
+import { cn } from '@/lib/utils';
+import { TASK_PRIORITY_OPTIONS } from './task-dialog-config';
 
 interface TaskDetailsDialogProps {
   isOpen: boolean;
@@ -29,10 +30,17 @@ interface TaskDetailsDialogProps {
   onDeleteTask: (taskId: string) => void;
 }
 
-const priorityOptions: Array<{ value: TaskPriority; label: string; className: string }> = [
-  { value: 'tinggi', label: 'Prioritas tinggi', className: 'border-[#ffb4b0] bg-[#fff4f4] text-[#ff4f44]' },
-  { value: 'sedang', label: 'Prioritas sedang', className: 'border-[#ffd39b] bg-[#fff8ef] text-[#f08b00]' },
-  { value: 'rendah', label: 'Prioritas rendah', className: 'border-[#f5e0a6] bg-[#fffdf0] text-[#d79e00]' },
+type EditorCommand = 'justifyLeft' | 'insertOrderedList' | 'bold' | 'italic' | 'createLink';
+
+const priorityOptions = TASK_PRIORITY_OPTIONS;
+
+const editorTools: Array<{ label: string; icon: React.ElementType; command?: EditorCommand; action?: 'expand' | 'link' }> = [
+  { label: 'Perbesar editor', icon: Maximize2, action: 'expand' },
+  { label: 'Tautan', icon: Link2, action: 'link' },
+  { label: 'Rata kiri', icon: AlignLeft, command: 'justifyLeft' },
+  { label: 'Daftar bernomor', icon: ListOrdered, command: 'insertOrderedList' },
+  { label: 'Tebal', icon: Bold, command: 'bold' },
+  { label: 'Miring', icon: Italic, command: 'italic' },
 ];
 
 function formatFileSize(size: number) {
@@ -45,11 +53,23 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
   const [isDownloading, setIsDownloading] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [downloadError, setDownloadError] = useState('');
+  const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const editorTaskIdRef = useRef<string | null>(null);
+  const lastEditorValueRef = useRef('');
 
   useEffect(() => {
-        setCurrentTask(task);
-        setDownloadError('');
-        setIsPreviewing(false);
+    const nextDescription = task?.description ?? '';
+    const nextTaskId = task?.id ?? null;
+    setCurrentTask(task);
+    setDownloadError('');
+    setIsPreviewing(false);
+    setIsEditorExpanded(false);
+    if (editorRef.current && (editorTaskIdRef.current !== nextTaskId || lastEditorValueRef.current !== nextDescription)) {
+      editorRef.current.innerHTML = nextDescription;
+      lastEditorValueRef.current = nextDescription;
+    }
+    editorTaskIdRef.current = nextTaskId;
   }, [task]);
 
   if (!currentTask) return null;
@@ -61,6 +81,25 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
     const updatedTask = { ...currentTask, [field]: value };
     setCurrentTask(updatedTask);
     onUpdateTask(updatedTask);
+  };
+
+  const syncEditorValue = () => {
+    const nextDescription = editorRef.current?.innerHTML ?? '';
+    lastEditorValueRef.current = nextDescription;
+    handleUpdate('description', nextDescription);
+  };
+
+  const runEditorCommand = (command: EditorCommand, value?: string) => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor.focus();
+    document.execCommand(command, false, value);
+    syncEditorValue();
+  };
+
+  const handleLinkCommand = () => {
+    const url = window.prompt('Masukkan URL tautan');
+    if (url?.trim()) runEditorCommand('createLink', url.trim());
   };
 
   const handleDownload = async () => {
@@ -96,15 +135,15 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[min(700px,calc(100dvh-1.5rem))] w-[calc(100vw-1.5rem)] max-w-[920px] overflow-hidden rounded-[24px] border border-[#d9e7e4] bg-white p-0 shadow-[0_24px_80px_rgba(10,57,61,0.18)]">
-        <DialogHeader className="flex items-center justify-between gap-3 border-b border-[#edf3f2] px-5 py-3.5">
+      <DialogContent className="!flex !min-h-0 max-h-[min(700px,calc(100dvh-1.5rem))] w-[calc(100vw-1.5rem)] max-w-[920px] !flex-col !gap-0 !overflow-hidden rounded-[24px] border border-[#d9e7e4] bg-white !p-0 shadow-[0_24px_80px_rgba(10,57,61,0.18)]">
+        <DialogHeader className="flex shrink-0 items-center justify-between gap-3 border-b border-[#edf3f2] px-5 py-3.5">
           <DialogTitle className="inline-flex items-center rounded-full border border-[#d5ece8] bg-[#f3fbf9] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#0e7a73] shadow-[0_4px_12px_rgba(11,117,110,0.07)]">
             Detail Tugas
           </DialogTitle>
           <DialogDescription className="sr-only">Lihat dan perbarui ringkasan tugas, tenggat, prioritas, dan lampiran.</DialogDescription>
         </DialogHeader>
 
-        <div className="grid max-h-[min(700px,calc(100dvh-1.5rem))] gap-2.5 overflow-y-auto px-4 py-3">
+        <div className="grid min-h-0 flex-1 gap-2.5 overflow-y-auto px-4 py-3">
           <section className="relative overflow-hidden rounded-[16px] border border-[#d9e9e7] bg-[linear-gradient(90deg,#ffffff_0%,#fbfffe_70%,#f0fbf8_100%)] px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.035)] before:absolute before:inset-y-0 before:left-0 before:w-1.5 before:rounded-l-[16px] before:bg-[linear-gradient(180deg,#52d5c4,#10978b)]">
             <div className="pointer-events-none absolute right-4 top-3 grid grid-cols-8 gap-1 opacity-55">
               {Array.from({ length: 24 }).map((_, index) => (
@@ -118,22 +157,56 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
               id="detail-title"
               value={currentTask.title}
               onChange={(event) => handleUpdate('title', event.target.value)}
-              className="h-auto border-0 bg-transparent p-0 text-[18px] font-semibold tracking-[-0.02em] text-[#0f5260] shadow-none ring-0 focus-visible:ring-0"
+              className="h-8 min-h-8 relative z-[1] w-full border-0 bg-transparent p-0 text-[18px] font-semibold leading-6 tracking-[-0.02em] text-[#0f5260] shadow-none ring-0 focus-visible:ring-0"
             />
           </section>
 
-          <section className="rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]">
-            <Label htmlFor="detail-description" className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
+          <section className={cn(
+            'relative min-h-0 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-2.5 shadow-[0_6px_16px_rgba(8,61,56,0.03)]',
+            isEditorExpanded && 'fixed inset-4 z-[60] m-0 flex flex-col rounded-[20px] bg-white p-5 shadow-[0_24px_80px_rgba(10,57,61,0.22)]',
+          )}>
+            <Label className="mb-1.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7d76]">
               <span className="h-4 w-1 rounded-full bg-[linear-gradient(180deg,#50d4c2,#0fa292)]" />
               Deskripsi
             </Label>
-            <Textarea
-              id="detail-description"
-              value={plainTaskDescription(currentTask.description)}
-              onChange={(event) => handleUpdate('description', event.target.value)}
-              placeholder="Tambahkan deskripsi lebih detail…"
-              className="min-h-[108px] resize-none rounded-[14px] border-[#d7e3e0] bg-white px-3 py-2.5 text-[13px] leading-6 text-[#233d5a] shadow-none focus-visible:border-[#12a995] focus-visible:ring-[#12a995]/20"
-            />
+
+            <div className="relative flex flex-col overflow-hidden rounded-[14px] border border-[#d7e3e0] bg-white">
+              <div className="flex shrink-0 flex-wrap items-center gap-0 border-b border-[#e8efee] bg-[#fbfdfd] px-2 py-0.5 text-[#12384e]">
+                {editorTools.map(({ icon: Icon, label: itemLabel, command, action }) => (
+                  <React.Fragment key={itemLabel}>
+                    <button
+                      type="button"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => {
+                        if (action === 'expand') setIsEditorExpanded((current) => !current);
+                        else if (action === 'link') handleLinkCommand();
+                        else if (command) runEditorCommand(command);
+                      }}
+                      className="grid h-7 w-7 place-items-center rounded-lg text-[#344b66] transition-[transform,background-color,color] duration-160 ease-out hover:bg-[#edf8f5] hover:text-[#0e7e75] active:scale-95"
+                      title={itemLabel}
+                      aria-label={itemLabel}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                    </button>
+                    {itemLabel !== 'Miring' && <span className="mx-0.5 h-4 w-px bg-[#e3e9e8]" />}
+                  </React.Fragment>
+                ))}
+              </div>
+
+              <div className="relative min-h-0 flex-1">
+                {!plainTaskDescription(currentTask.description) && <span className="pointer-events-none absolute left-3 top-2.5 z-10 text-[13px] text-[#a7b9c6]">Tambahkan deskripsi lebih detail…</span>}
+                <div
+                  ref={editorRef}
+                  contentEditable={true}
+                  suppressContentEditableWarning
+                  role="textbox"
+                  aria-label="Deskripsi tugas"
+                  aria-multiline="true"
+                  onInput={syncEditorValue}
+                  className="min-h-[74px] overflow-y-auto px-3 py-2 text-[13px] leading-5 text-[#233d5a] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#12a995]/20 [&_ol]:my-1.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:my-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:my-0.5 [&_li]:pl-1"
+                />
+              </div>
+            </div>
           </section>
 
           <section className="grid gap-2 rounded-[16px] border border-[#dde8e6] bg-white px-4 py-3 shadow-[0_6px_16px_rgba(8,61,56,0.03)]">
@@ -166,10 +239,15 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
                   type="button"
                   aria-pressed={currentTask.priority === option.value}
                   onClick={() => handleUpdate('priority', option.value)}
-                  className={`flex h-10 items-center justify-center gap-1.5 rounded-xl border px-2 text-[11px] font-bold transition-[transform,box-shadow] duration-180 ease-out hover:-translate-y-0.5 active:scale-[0.98] ${option.className} ${currentTask.priority === option.value ? 'shadow-[0_8px_18px_rgba(15,159,143,0.12)] ring-1 ring-[#0f9f8f]/30' : ''}`}
+                  className={cn(
+                    'group flex h-[44px] min-w-0 items-center justify-center gap-1.5 rounded-[11px] border px-2 text-[11px] font-bold transition-[transform,border-color,background-color,box-shadow,color] duration-180 ease-out active:scale-[0.98]',
+                    currentTask.priority === option.value
+                      ? option.selected
+                      : `${option.tone} hover:-translate-y-0.5 hover:shadow-[0_8px_14px_rgba(0,0,0,0.05)]`,
+                  )}
                 >
-                  <Flag aria-hidden="true" className="h-3.5 w-3.5" />
-                  {option.label}
+                  <Flag aria-hidden="true" className="h-3.5 w-3.5 shrink-0 transition-transform duration-160 group-hover:-translate-y-0.5" />
+                  <span className="truncate">{option.label}</span>
                 </button>
               ))}
             </div>
@@ -205,12 +283,12 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
           </section>
         </div>
 
-        <DialogFooter className="flex-col-reverse gap-2 border-t border-[#edf3f2] bg-[#fbfdfd] px-5 py-3 sm:flex-row sm:justify-between">
-          <Button variant="destructive" onClick={handleDelete} className="w-full gap-2 rounded-xl bg-[#f05d65] shadow-[0_8px_18px_rgba(240,93,101,0.14)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#e04f59] active:translate-y-0 sm:w-auto">
-            <Trash2 className="h-4 w-4" />
+        <DialogFooter className="flex shrink-0 flex-col-reverse gap-2 border-t border-[#edf3f2] bg-[#fbfdfd] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+          <Button variant="destructive" onClick={handleDelete} className="h-10 w-full min-w-0 gap-2 rounded-xl bg-[#f05d65] shadow-[0_8px_18px_rgba(240,93,101,0.14)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#e04f59] active:translate-y-0 sm:w-auto sm:min-w-[140px]">
+            <Trash2 aria-hidden="true" className="h-4 w-4" />
             Hapus Tugas
           </Button>
-          <Button onClick={onClose} className="w-full rounded-xl bg-[#0f9f8f] px-6 shadow-[0_8px_18px_rgba(15,159,143,0.16)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#0b8c7e] active:translate-y-0 sm:w-auto">
+          <Button onClick={onClose} className="h-10 w-full min-w-0 rounded-xl bg-[#0f9f8f] px-6 shadow-[0_8px_18px_rgba(15,159,143,0.16)] transition-[transform,background-color] duration-180 ease-out hover:-translate-y-0.5 hover:bg-[#0b8c7e] active:translate-y-0 sm:w-auto sm:min-w-[170px]">
             Simpan & Tutup
           </Button>
         </DialogFooter>

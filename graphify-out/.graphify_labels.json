@@ -60,7 +60,6 @@
   "58": "tailwind.config.ts",
   "59": "cn",
   "60": "local-auth.d.ts",
-  "61": "TaskDetailsDialog.tsx",
   "62": "@radix-ui/react-dropdown-menu",
   "63": "Global Constraints",
   "64": "react-day-picker",
@@ -132,9 +131,5 @@
   "130": "tooltip-portal.test.mjs",
   "131": "sheet.tsx",
   "132": "alert.tsx",
-  "133": "react",
-  "134": "theme-switch.tsx",
-  "135": "button.tsx",
-  "136": "TaskDetailsDialog.tsx",
   "137": "sidebar-full-page-layout.test.mjs"
 }

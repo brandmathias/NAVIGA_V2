@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const addTaskDialog = readFileSync(new URL('../src/components/AddTaskDialog.tsx', import.meta.url), 'utf8');
+const taskDialogConfig = readFileSync(new URL('../src/components/task-dialog-config.ts', import.meta.url), 'utf8');
 const taskTypes = readFileSync(new URL('../src/types/index.ts', import.meta.url), 'utf8');
 const calendar = readFileSync(new URL('../src/components/ui/calendar.tsx', import.meta.url), 'utf8');
 
@@ -11,9 +12,10 @@ test('add task modal exposes the reference fields and upload flow', () => {
   assert.match(addTaskDialog, /DialogDescription/);
   assert.match(addTaskDialog, /Batas Waktu/);
   assert.match(addTaskDialog, /Prioritas/);
-  assert.match(addTaskDialog, /Prioritas tinggi/);
-  assert.match(addTaskDialog, /Prioritas sedang/);
-  assert.match(addTaskDialog, /Prioritas rendah/);
+  assert.match(addTaskDialog, /TASK_PRIORITY_OPTIONS/);
+  assert.match(taskDialogConfig, /Prioritas tinggi/);
+  assert.match(taskDialogConfig, /Prioritas sedang/);
+  assert.match(taskDialogConfig, /Prioritas rendah/);
   assert.match(addTaskDialog, /Upload File/);
   assert.match(addTaskDialog, /maksimal 10 MB per file/i);
   assert.match(addTaskDialog, /multiple/);

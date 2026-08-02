@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import type { Task, TaskAttachment, TaskPriority } from '@/types';
 import { deleteTaskAttachment, saveTaskAttachment, validateTaskAttachment } from '@/lib/task-attachments.mjs';
 import { cn } from '@/lib/utils';
+import { TASK_PRIORITY_OPTIONS } from './task-dialog-config';
 import {
   AlignLeft,
   Bold,
@@ -47,31 +48,7 @@ type Priority = TaskPriority;
 type RailSection = 'title' | 'description' | 'deadline' | 'priority' | 'attachments';
 type EditorCommand = 'justifyLeft' | 'insertOrderedList' | 'bold' | 'italic' | 'createLink';
 
-const priorityOptions: Array<{
-  value: Priority;
-  label: string;
-  tone: string;
-  selected: string;
-}> = [
-  {
-    value: 'tinggi',
-    label: 'Prioritas tinggi',
-    tone: 'border-[#ffb4b0] bg-[#fff4f4] text-[#ff4f44]',
-    selected: 'border-[#ff7a72] bg-[#ffe8e7] text-[#ff4038] shadow-[0_10px_22px_rgba(255,82,74,0.14)]',
-  },
-  {
-    value: 'sedang',
-    label: 'Prioritas sedang',
-    tone: 'border-[#ffd39b] bg-[#fff8ef] text-[#f08b00]',
-    selected: 'border-[#ffb34f] bg-[#fff1d9] text-[#f08b00] shadow-[0_10px_22px_rgba(240,139,0,0.12)]',
-  },
-  {
-    value: 'rendah',
-    label: 'Prioritas rendah',
-    tone: 'border-[#f5e0a6] bg-[#fffdf0] text-[#d79e00]',
-    selected: 'border-[#f0c65a] bg-[#fff5d8] text-[#d79e00] shadow-[0_10px_22px_rgba(215,158,0,0.12)]',
-  },
-];
+const priorityOptions = TASK_PRIORITY_OPTIONS;
 
 const railSections: Array<{ id: RailSection; icon: React.ElementType; label: string }> = [
   { id: 'title', icon: FileText, label: 'Judul Tugas' },

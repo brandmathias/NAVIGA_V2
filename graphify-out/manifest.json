@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "src/components/AddTaskDialog.tsx": {
-    "mtime": 1785685548.6308074,
-    "ast_hash": "bebde9bec6cbc7d40f6c3e9a6dae3c66",
+    "mtime": 1785687912.2718582,
+    "ast_hash": "d3962bc634dd38cc9c003f094efeaf0f",
     "semantic_hash": ""
   },
   "src/components/KanbanBoard.tsx": {
@@ -85,13 +85,13 @@
     "semantic_hash": ""
   },
   "src/components/TaskDetailsDialog.tsx": {
-    "mtime": 1785685539.5487373,
-    "ast_hash": "77d4d0a7413977a6bbac1c15209b2b40",
+    "mtime": 1785688146.9429264,
+    "ast_hash": "a0fb5948f244c4075ba2f4ab44ed8953",
     "semantic_hash": ""
   },
   "src/components/TaskKanbanBoard.tsx": {
-    "mtime": 1785686603.7144997,
-    "ast_hash": "6b1dff4cf1c49c9fa08f58cf26c2384f",
+    "mtime": 1785687912.275859,
+    "ast_hash": "ddf3bd9f96e3e5e4497c3f08e1e9416c",
     "semantic_hash": ""
   },
   "src/components/VoicenotePreviewDialog.tsx": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "tests/tasks-page-layout.test.mjs": {
-    "mtime": 1785665973.870709,
-    "ast_hash": "77bb26fd4c3e222db5238757933deeb5",
+    "mtime": 1785688123.792556,
+    "ast_hash": "db08538af562b22840fde3e4299ba965",
     "semantic_hash": ""
   },
   "tests/task-column-icons.test.mjs": {
@@ -945,8 +945,8 @@
     "semantic_hash": ""
   },
   "tests/add-task-dialog-modal.test.mjs": {
-    "mtime": 1785684120.512721,
-    "ast_hash": "eba5f451b503efac9ab069e43e96c3e1",
+    "mtime": 1785688045.8491342,
+    "ast_hash": "14114a2e1346f0e394efbf076d570503",
     "semantic_hash": ""
   },
   "src/lib/task-description.ts": {
@@ -970,8 +970,13 @@
     "semantic_hash": ""
   },
   "tests/task-board-workflow-contract.test.mjs": {
-    "mtime": 1785686586.9585073,
-    "ast_hash": "f452e6b5b29d0fc387dbd25699c38767",
+    "mtime": 1785687936.9482574,
+    "ast_hash": "5b3bb8adcdd230682396d245d8e068c0",
+    "semantic_hash": ""
+  },
+  "src/components/task-dialog-config.ts": {
+    "mtime": 1785687912.265726,
+    "ast_hash": "763e133497269622eb8aa11ad59f0295",
     "semantic_hash": ""
   }
 }

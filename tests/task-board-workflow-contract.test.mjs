@@ -136,9 +136,10 @@ test('task board UI keeps the star action, aligned priority visuals, and compact
   assert.doesNotMatch(page, /Semua label|Berbintang|Urutan board|Berbintang dulu/);
   assert.match(page, /> Filter</);
   assert.match(page, /Layers3 className="h-6 w-6" strokeWidth=\{1\.8\}/);
-  assert.match(board, /CheckCircle2 aria-hidden="true" className="relative h-9 w-9" strokeWidth=\{1\.8\}/);
-  assert.match(board, /task-empty-state-dots/);
-  assert.match(board, /Array\.from\(\{ length: 8 \}\)/);
+  assert.match(board, /BadgeCheck aria-hidden="true" className="relative h-9 w-9" strokeWidth=\{1\.8\}/);
+  assert.match(board, /task-empty-state-medallion/);
+  assert.match(board, /task-empty-state-aura/);
+  assert.match(board, /task-empty-state-core/);
   assert.match(page, /TASK_FILTER_OPTIONS/);
   assert.match(page, /TASK_SORT_OPTIONS/);
 });

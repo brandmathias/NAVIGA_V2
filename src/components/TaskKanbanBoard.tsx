@@ -15,7 +15,7 @@ import { Input } from './ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import {
   CalendarDays,
-  CheckCircle2,
+  BadgeCheck,
   CircleCheckBig,
   Download,
   EllipsisVertical,
@@ -65,17 +65,6 @@ const columnTones = [
 ];
 
 const columnIcons = [ListTodo, LoaderCircle, CircleCheckBig, Layers3];
-const emptyStateDots = Array.from({ length: 8 });
-const emptyStateDotPositions = [
-  [14, 16],
-  [50, 2],
-  [82, 18],
-  [92, 48],
-  [78, 80],
-  [48, 94],
-  [12, 78],
-  [4, 46],
-] as const;
 
 function getTone(index: number) {
   return columnTones[index] ?? {
@@ -343,8 +332,6 @@ export default function TaskKanbanBoard({
   viewMode,
   isReadOnlyView = false,
 }: TaskKanbanBoardProps) {
-  const shouldReduceMotion = useReducedMotion();
-
   const handleAddColumn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const title = newColumnTitle.trim();
@@ -438,23 +425,17 @@ export default function TaskKanbanBoard({
                                   />
                                 )) : (
                                   <div className="flex min-h-[250px] flex-1 flex-col items-center justify-center rounded-[14px] border border-dashed border-[#dbeae7] bg-[radial-gradient(circle_at_50%_35%,#f0fbf7,transparent_55%)] px-5 text-center">
-                                    <motion.div animate={shouldReduceMotion ? undefined : { y: [0, -5, 0], rotate: [0, 1, 0] }} transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }} className="relative mb-3 grid h-[72px] w-[72px] place-items-center">
-                                      <div className="task-empty-state-dots pointer-events-none absolute inset-[-10px]" aria-hidden="true">
-                                        {emptyStateDots.map((_, dotIndex) => (
-                                          <span
-                                            key={dotIndex}
-                                            className={cn('absolute h-1.5 w-1.5 rounded-full bg-[#77d9bc]', dotIndex % 2 === 0 ? 'opacity-90' : 'opacity-45')}
-                                            style={{
-                                              left: `${emptyStateDotPositions[dotIndex][0]}%`,
-                                              top: `${emptyStateDotPositions[dotIndex][1]}%`,
-                                            }}
-                                          />
-                                        ))}
-                                      </div>
-                                      <div className="relative grid h-16 w-16 place-items-center rounded-full bg-[#f1fbf7] text-[#1bb35c] shadow-[0_12px_24px_rgba(27,179,92,0.12)]">
-                                        <CheckCircle2 aria-hidden="true" className="relative h-9 w-9" strokeWidth={1.8} />
-                                      </div>
-                                    </motion.div>
+                                    <div className="task-empty-state-medallion relative mb-4 grid h-[88px] w-[88px] place-items-center">
+                                      <span aria-hidden="true" className="task-empty-state-aura absolute inset-0 rounded-[28px] bg-[conic-gradient(from_220deg,#e2faf0,#8fdfbc,#f5fffa,#b6edd3,#e2faf0)] opacity-90 shadow-[0_14px_30px_rgba(30,160,104,0.14)]" />
+                                      <span aria-hidden="true" className="absolute inset-[3px] rounded-[25px] border border-white/80 bg-[#f9fffc] shadow-[inset_0_0_0_1px_rgba(183,235,210,0.55)]" />
+                                      <span aria-hidden="true" className="absolute inset-[11px] rounded-full border border-[#b8ebd1] bg-[radial-gradient(circle_at_35%_28%,#ffffff,#e7faf0_62%,#d2f3e2)] shadow-[0_8px_18px_rgba(24,157,98,0.12)]" />
+                                      <span aria-hidden="true" className="task-empty-state-core absolute inset-[20px] grid place-items-center rounded-full bg-[linear-gradient(145deg,#35c78b,#0b9d67)] text-white shadow-[0_9px_18px_rgba(15,157,103,0.24)]">
+                                        <BadgeCheck aria-hidden="true" className="relative h-9 w-9" strokeWidth={1.8} />
+                                      </span>
+                                      <span aria-hidden="true" className="absolute -left-0.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#50c98f] shadow-[0_0_0_4px_rgba(80,201,143,0.1)]" />
+                                      <span aria-hidden="true" className="absolute right-0 top-3 h-1.5 w-1.5 rounded-full bg-[#8ee0b7]" />
+                                      <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-[#70d5a4] shadow-[0_0_0_4px_rgba(112,213,164,0.1)]" />
+                                    </div>
                                     <p className="text-sm font-bold text-[#173d56]">{index === 2 ? 'Belum ada tugas selesai' : 'Belum ada tugas'}</p>
                                     <p className="mt-1 max-w-[190px] text-xs leading-5 text-[#8197a9]">Tugas yang masuk ke kolom ini akan muncul di sini.</p>
                                   </div>

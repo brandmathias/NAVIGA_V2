@@ -1143,8 +1143,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "package_dependencies_react",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "react"
     },
     {
@@ -1154,8 +1154,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "react",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "react"
     },
     {
@@ -1297,8 +1297,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "package_dependencies_xlsx",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "xlsx"
     },
     {
@@ -1308,8 +1308,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "xlsx",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "xlsx"
     },
     {
@@ -1891,8 +1891,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_main_dashboard_page",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "dashboard/page.tsx"
     },
     {
@@ -1902,8 +1902,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_app_main_dashboard_page_upcprofiledata",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "upcprofiledata"
     },
     {
@@ -1913,8 +1913,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_app_main_dashboard_page_upcprofiles",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "upcprofiles"
     },
     {
@@ -1924,8 +1924,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "src_app_main_dashboard_page_dashboardpage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "dashboardpage()"
     },
     {
@@ -1946,8 +1946,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_app_main_history_page_historypage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "historypage()"
     },
     {
@@ -2067,8 +2067,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_app_main_pdf_broadcast_page_parsedateforformatting",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "parsedateforformatting()"
     },
     {
@@ -2078,8 +2078,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_app_main_pdf_broadcast_page_formatdate",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "formatdate()"
     },
     {
@@ -2089,8 +2089,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "src_app_main_pdf_broadcast_page_formatcurrency",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "formatcurrency()"
     },
     {
@@ -2144,8 +2144,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "src_app_main_pdf_broadcast_page_pdfbroadcastpage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "pdfbroadcastpage()"
     },
     {
@@ -2155,8 +2155,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_main_profile_page",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "profile/page.tsx"
     },
     {
@@ -2166,8 +2166,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_app_main_profile_page_loginhistoryitem",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "loginhistoryitem"
     },
     {
@@ -2177,8 +2177,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "src_app_main_profile_page_profileinfocard",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "profileinfocard()"
     },
     {
@@ -2188,8 +2188,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_app_main_profile_page_profilepage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "profilepage()"
     },
     {
@@ -2199,8 +2199,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_main_tasks_page",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "tasks/page.tsx"
     },
     {
@@ -2210,8 +2210,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_taskfilter",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskfilter"
     },
     {
@@ -2221,8 +2221,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_sortmode",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "sortmode"
     },
     {
@@ -2232,8 +2232,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_priorityfilteroptions",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "priorityfilteroptions"
     },
     {
@@ -2243,8 +2243,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_sortoptions",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "sortoptions"
     },
     {
@@ -2254,8 +2254,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_createvisibleboarddata",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "createvisibleboarddata()"
     },
     {
@@ -2265,8 +2265,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_responseerror",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "responseerror()"
     },
     {
@@ -2276,8 +2276,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_main_tasks_page_taskspage",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskspage()"
     },
     {
@@ -2551,8 +2551,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_app_main_unit_management_new_unit_create_client_unitcreateform",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unitcreateform()"
     },
     {
@@ -2573,8 +2573,8 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "src_app_main_unit_management_new_unit_create_client_unitcreateclient",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "unitcreateclient()"
     },
     {
@@ -2606,8 +2606,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit-management-client.tsx"
     },
     {
@@ -2617,8 +2617,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client_unit",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit"
     },
     {
@@ -2628,8 +2628,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client_unitadmin",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unitadmin"
     },
     {
@@ -2639,8 +2639,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client_missingvalue",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "missingvalue()"
     },
     {
@@ -2650,8 +2650,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client_field",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "field()"
     },
     {
@@ -2661,8 +2661,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client_adminformfield",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "adminformfield()"
     },
     {
@@ -2672,8 +2672,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "src_app_main_unit_management_unit_management_client_unitmanagementclient",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unitmanagementclient()"
     },
     {
@@ -2683,8 +2683,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_actions",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "xlsx-broadcast/actions.ts"
     },
     {
@@ -2694,8 +2694,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_actions_supported_image_types",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "supported_image_types"
     },
     {
@@ -2705,8 +2705,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_actions_validateimage",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "validateimage()"
     },
     {
@@ -2716,8 +2716,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_actions_getallowedprefixes",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "getallowedprefixes()"
     },
     {
@@ -2727,8 +2727,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_actions_parsexlsx",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "parsexlsx()"
     },
     {
@@ -2738,8 +2738,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_actions_parseinstallmentimage",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "parseinstallmentimage()"
     },
     {
@@ -2760,8 +2760,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_page_formatcurrency",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "formatcurrency()"
     },
     {
@@ -2771,8 +2771,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_page_formatdate",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "formatdate()"
     },
     {
@@ -2804,8 +2804,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "src_app_main_xlsx_broadcast_page_xlsxbroadcastpage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "xlsxbroadcastpage()"
     },
     {
@@ -3134,8 +3134,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_login_page",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "login/page.tsx"
     },
     {
@@ -3145,8 +3145,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_app_login_page_loginschema",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "loginschema"
     },
     {
@@ -3156,8 +3156,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_app_login_page_loginformvalues",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "loginformvalues"
     },
     {
@@ -3167,8 +3167,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_login_page_loginpage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "loginpage()"
     },
     {
@@ -3208,18 +3208,18 @@
       "label": "AddTaskDialogProps",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L39",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_addtaskdialogprops",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "addtaskdialogprops"
     },
     {
       "label": "Priority",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L46",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_priority",
       "community": 13,
@@ -3230,7 +3230,7 @@
       "label": "RailSection",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L47",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_railsection",
       "community": 13,
@@ -3241,7 +3241,7 @@
       "label": "EditorCommand",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_editorcommand",
       "community": 13,
@@ -3249,21 +3249,10 @@
       "norm_label": "editorcommand"
     },
     {
-      "label": "priorityOptions",
-      "file_type": "code",
-      "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L50",
-      "_origin": "ast",
-      "id": "src_components_addtaskdialog_priorityoptions",
-      "community": 13,
-      "community_name": "date-fns",
-      "norm_label": "priorityoptions"
-    },
-    {
       "label": "railSections",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L76",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_railsections",
       "community": 13,
@@ -3274,7 +3263,7 @@
       "label": "editorTools",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L84",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_editortools",
       "community": 13,
@@ -3285,7 +3274,7 @@
       "label": "formatFileSize()",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L93",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_formatfilesize",
       "community": 13,
@@ -3296,7 +3285,7 @@
       "label": "formatDeadline()",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L98",
+      "source_location": "L75",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_formatdeadline",
       "community": 13,
@@ -3307,7 +3296,7 @@
       "label": "getDaysLeftLabel()",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L111",
+      "source_location": "L88",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_getdaysleftlabel",
       "community": 13,
@@ -3318,7 +3307,7 @@
       "label": "duplicateSignature()",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L126",
+      "source_location": "L103",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_duplicatesignature",
       "community": 13,
@@ -3329,7 +3318,7 @@
       "label": "AddTaskDialog()",
       "file_type": "code",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L130",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "src_components_addtaskdialog_addtaskdialog",
       "community": 13,
@@ -3343,8 +3332,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_kanbanboard",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "kanbanboard.tsx"
     },
     {
@@ -3354,8 +3343,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_kanbanboard_priorityvariantmap",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "priorityvariantmap"
     },
     {
@@ -3365,8 +3354,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_components_kanbanboard_columns",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "columns"
     },
     {
@@ -3376,8 +3365,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_components_kanbanboard_columnorder",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "columnorder"
     },
     {
@@ -3387,8 +3376,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_components_kanbanboard_kanbanboardprops",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "kanbanboardprops"
     },
     {
@@ -3398,8 +3387,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_components_kanbanboard_kanbanboard",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "kanbanboard()"
     },
     {
@@ -3409,52 +3398,63 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_taskdetailsdialog",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskdetailsdialog.tsx"
     },
     {
       "label": "TaskDetailsDialogProps",
       "file_type": "code",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "src_components_taskdetailsdialog_taskdetailsdialogprops",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskdetailsdialogprops"
     },
     {
-      "label": "priorityOptions",
+      "label": "EditorCommand",
       "file_type": "code",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "_origin": "ast",
-      "id": "src_components_taskdetailsdialog_priorityoptions",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
-      "norm_label": "priorityoptions"
+      "id": "src_components_taskdetailsdialog_editorcommand",
+      "community": 13,
+      "community_name": "date-fns",
+      "norm_label": "editorcommand"
+    },
+    {
+      "label": "editorTools",
+      "file_type": "code",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "src_components_taskdetailsdialog_editortools",
+      "community": 13,
+      "community_name": "date-fns",
+      "norm_label": "editortools"
     },
     {
       "label": "formatFileSize()",
       "file_type": "code",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L38",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "src_components_taskdetailsdialog_formatfilesize",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "formatfilesize()"
     },
     {
       "label": "TaskDetailsDialog()",
       "file_type": "code",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L43",
+      "source_location": "L51",
       "_origin": "ast",
       "id": "src_components_taskdetailsdialog_taskdetailsdialog",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskdetailsdialog()"
     },
     {
@@ -3464,8 +3464,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "taskkanbanboard.tsx"
     },
     {
@@ -3475,8 +3475,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_viewmode",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "viewmode"
     },
     {
@@ -3486,8 +3486,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_taskkanbanboardprops",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskkanbanboardprops"
     },
     {
@@ -3497,8 +3497,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_columntones",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "columntones"
     },
     {
@@ -3508,151 +3508,129 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_columnicons",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "columnicons"
-    },
-    {
-      "label": "emptyStateDots",
-      "file_type": "code",
-      "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L68",
-      "_origin": "ast",
-      "id": "src_components_taskkanbanboard_emptystatedots",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
-      "norm_label": "emptystatedots"
-    },
-    {
-      "label": "emptyStateDotPositions",
-      "file_type": "code",
-      "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L69",
-      "_origin": "ast",
-      "id": "src_components_taskkanbanboard_emptystatedotpositions",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
-      "norm_label": "emptystatedotpositions"
     },
     {
       "label": "getTone()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L80",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_gettone",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "gettone()"
     },
     {
       "label": "getInitials()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L89",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_getinitials",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "getinitials()"
     },
     {
       "label": "getCreatorName()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L99",
+      "source_location": "L88",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_getcreatorname",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "getcreatorname()"
     },
     {
       "label": "getCreatorPhotoSrc()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L103",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_getcreatorphotosrc",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "getcreatorphotosrc()"
     },
     {
       "label": "formatDueDate()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L108",
+      "source_location": "L97",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_formatduedate",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "formatduedate()"
     },
     {
       "label": "formatFileSize()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L114",
+      "source_location": "L103",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_formatfilesize",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "formatfilesize()"
     },
     {
       "label": "getPriorityMeta()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L119",
+      "source_location": "L108",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_getprioritymeta",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "getprioritymeta()"
     },
     {
       "label": "renderColumnTitle()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L125",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_rendercolumntitle",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "rendercolumntitle()"
     },
     {
       "label": "TaskCard()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L137",
+      "source_location": "L126",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_taskcard",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "taskcard()"
     },
     {
       "label": "TaskListView()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L294",
+      "source_location": "L283",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_tasklistview",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "tasklistview()"
     },
     {
       "label": "TaskKanbanBoard()",
       "file_type": "code",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L335",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "src_components_taskkanbanboard_taskkanbanboard",
-      "community": 126,
-      "community_name": "unit-registry.d.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "taskkanbanboard()"
     },
     {
@@ -3662,8 +3640,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_voicenotepreviewdialog",
-      "community": 133,
-      "community_name": "react",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "voicenotepreviewdialog.tsx"
     },
     {
@@ -3673,8 +3651,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_voicenotepreviewdialog_voicenotepreviewdialogprops",
-      "community": 133,
-      "community_name": "react",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "voicenotepreviewdialogprops"
     },
     {
@@ -3717,8 +3695,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_main_shell_uselocalsession",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "uselocalsession()"
     },
     {
@@ -3728,8 +3706,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_components_main_shell_mainshell",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "mainshell()"
     },
     {
@@ -4096,14 +4074,47 @@
       "norm_label": "sidebaritemvariants"
     },
     {
+      "label": "task-dialog-config.ts",
+      "file_type": "code",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_task_dialog_config",
+      "community": 13,
+      "community_name": "date-fns",
+      "norm_label": "task-dialog-config.ts"
+    },
+    {
+      "label": "TaskPriorityOption",
+      "file_type": "code",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "src_components_task_dialog_config_taskpriorityoption",
+      "community": 13,
+      "community_name": "date-fns",
+      "norm_label": "taskpriorityoption"
+    },
+    {
+      "label": "TASK_PRIORITY_OPTIONS",
+      "file_type": "code",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "src_components_task_dialog_config_task_priority_options",
+      "community": 13,
+      "community_name": "date-fns",
+      "norm_label": "task_priority_options"
+    },
+    {
       "label": "theme-switch.tsx",
       "file_type": "code",
       "source_file": "src/components/theme-switch.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_theme_switch",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 79,
+      "community_name": "sheet.tsx",
       "norm_label": "theme-switch.tsx"
     },
     {
@@ -4113,8 +4124,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_theme_switch_theme",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 79,
+      "community_name": "sheet.tsx",
       "norm_label": "theme"
     },
     {
@@ -4124,8 +4135,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_theme_switch_viewtransitiondocument",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 79,
+      "community_name": "sheet.tsx",
       "norm_label": "viewtransitiondocument"
     },
     {
@@ -4135,8 +4146,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_theme_switch_getsystemtheme",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 79,
+      "community_name": "sheet.tsx",
       "norm_label": "getsystemtheme()"
     },
     {
@@ -4146,8 +4157,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_components_theme_switch_applytheme",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 79,
+      "community_name": "sheet.tsx",
       "norm_label": "applytheme()"
     },
     {
@@ -4157,8 +4168,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_components_theme_switch_themeswitch",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 79,
+      "community_name": "sheet.tsx",
       "norm_label": "themeswitch()"
     },
     {
@@ -4212,8 +4223,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alert-dialog.tsx"
     },
     {
@@ -4223,8 +4234,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogoverlay",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogoverlay"
     },
     {
@@ -4234,8 +4245,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogcontent",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogcontent"
     },
     {
@@ -4245,8 +4256,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogheader",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogheader()"
     },
     {
@@ -4256,8 +4267,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogfooter",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogfooter()"
     },
     {
@@ -4267,8 +4278,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogtitle",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogtitle"
     },
     {
@@ -4278,8 +4289,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogdescription",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogdescription"
     },
     {
@@ -4289,8 +4300,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogaction",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogaction"
     },
     {
@@ -4300,8 +4311,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogcancel",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "cn",
       "norm_label": "alertdialogcancel"
     },
     {
@@ -4311,8 +4322,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_alert",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 126,
+      "community_name": "unit-registry.d.ts",
       "norm_label": "alert.tsx"
     },
     {
@@ -4322,8 +4333,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_ui_alert_alertvariants",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 126,
+      "community_name": "unit-registry.d.ts",
       "norm_label": "alertvariants"
     },
     {
@@ -4333,8 +4344,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_components_ui_alert_alert",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 126,
+      "community_name": "unit-registry.d.ts",
       "norm_label": "alert"
     },
     {
@@ -4344,8 +4355,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_components_ui_alert_alerttitle",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 126,
+      "community_name": "unit-registry.d.ts",
       "norm_label": "alerttitle"
     },
     {
@@ -4355,8 +4366,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_components_ui_alert_alertdescription",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 126,
+      "community_name": "unit-registry.d.ts",
       "norm_label": "alertdescription"
     },
     {
@@ -4366,8 +4377,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_avatar",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "avatar.tsx"
     },
     {
@@ -4377,8 +4388,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_ui_avatar_avatar",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "avatar"
     },
     {
@@ -4388,8 +4399,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_ui_avatar_avatarimage",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "avatarimage"
     },
     {
@@ -4399,8 +4410,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_components_ui_avatar_avatarfallback",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "avatarfallback"
     },
     {
@@ -4410,8 +4421,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_badge",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "badge.tsx"
     },
     {
@@ -4421,8 +4432,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_ui_badge_badgevariants",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "badgevariants"
     },
     {
@@ -4432,8 +4443,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_components_ui_badge_badgeprops",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "badgeprops"
     },
     {
@@ -4443,8 +4454,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_components_ui_badge_badge",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "badge()"
     },
     {
@@ -4454,8 +4465,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_button",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "button.tsx"
     },
     {
@@ -4465,8 +4476,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_ui_button_buttonvariants",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "buttonvariants"
     },
     {
@@ -4476,8 +4487,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_components_ui_button_buttonprops",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "buttonprops"
     },
     {
@@ -4487,8 +4498,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_components_ui_button_button",
-      "community": 3,
-      "community_name": "sidebar.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "button"
     },
     {
@@ -4498,8 +4509,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_calendar",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "calendar.tsx"
     },
     {
@@ -4509,8 +4520,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_ui_calendar_calendarprops",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "calendarprops"
     },
     {
@@ -4520,8 +4531,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_ui_calendar_calendar",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "calendar()"
     },
     {
@@ -4916,8 +4927,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_dialog",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialog.tsx"
     },
     {
@@ -4927,8 +4938,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogoverlay",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialogoverlay"
     },
     {
@@ -4938,8 +4949,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogcontent",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialogcontent"
     },
     {
@@ -4949,8 +4960,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogheader",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialogheader()"
     },
     {
@@ -4960,8 +4971,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogfooter",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialogfooter()"
     },
     {
@@ -4971,8 +4982,8 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogtitle",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialogtitle"
     },
     {
@@ -4982,8 +4993,8 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogdescription",
-      "community": 133,
-      "community_name": "react",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "dialogdescription"
     },
     {
@@ -5026,8 +5037,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "src_components_ui_dropdown_menu_dropdownmenucontent",
-      "community": 53,
-      "community_name": "AddTaskDialog.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "dropdownmenucontent"
     },
     {
@@ -5037,8 +5048,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "src_components_ui_dropdown_menu_dropdownmenuitem",
-      "community": 53,
-      "community_name": "AddTaskDialog.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "dropdownmenuitem"
     },
     {
@@ -5103,8 +5114,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_form",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "form.tsx"
     },
     {
@@ -5114,8 +5125,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_ui_form_formfieldcontextvalue",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formfieldcontextvalue"
     },
     {
@@ -5125,8 +5136,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_components_ui_form_formfieldcontext",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formfieldcontext"
     },
     {
@@ -5136,8 +5147,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_components_ui_form_formfield",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formfield()"
     },
     {
@@ -5147,8 +5158,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_components_ui_form_useformfield",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "useformfield()"
     },
     {
@@ -5158,8 +5169,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_components_ui_form_formitemcontextvalue",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formitemcontextvalue"
     },
     {
@@ -5169,8 +5180,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "src_components_ui_form_formitemcontext",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formitemcontext"
     },
     {
@@ -5180,8 +5191,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "src_components_ui_form_formitem",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formitem"
     },
     {
@@ -5191,8 +5202,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "src_components_ui_form_formlabel",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formlabel"
     },
     {
@@ -5202,8 +5213,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "src_components_ui_form_formcontrol",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formcontrol"
     },
     {
@@ -5213,8 +5224,8 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "src_components_ui_form_formdescription",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formdescription"
     },
     {
@@ -5224,8 +5235,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "src_components_ui_form_formmessage",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "formmessage"
     },
     {
@@ -5235,8 +5246,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_input",
-      "community": 59,
-      "community_name": "cn",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "input.tsx"
     },
     {
@@ -5246,8 +5257,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_input_input",
-      "community": 59,
-      "community_name": "cn",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "input"
     },
     {
@@ -5257,8 +5268,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_label",
-      "community": 49,
-      "community_name": "types/index.ts",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "label.tsx"
     },
     {
@@ -5268,8 +5279,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_ui_label_labelvariants",
-      "community": 49,
-      "community_name": "types/index.ts",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "labelvariants"
     },
     {
@@ -5279,8 +5290,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_ui_label_label",
-      "community": 49,
-      "community_name": "types/index.ts",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "label"
     },
     {
@@ -5477,8 +5488,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_popover",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "popover.tsx"
     },
     {
@@ -5488,8 +5499,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_ui_popover_popovercontent",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "popovercontent"
     },
     {
@@ -5587,8 +5598,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_select",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "select.tsx"
     },
     {
@@ -5598,8 +5609,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_ui_select_selecttrigger",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selecttrigger"
     },
     {
@@ -5609,8 +5620,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_components_ui_select_selectscrollupbutton",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selectscrollupbutton"
     },
     {
@@ -5620,8 +5631,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_components_ui_select_selectscrolldownbutton",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selectscrolldownbutton"
     },
     {
@@ -5631,8 +5642,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_components_ui_select_selectcontent",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selectcontent"
     },
     {
@@ -5642,8 +5653,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "src_components_ui_select_selectlabel",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selectlabel"
     },
     {
@@ -5653,8 +5664,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "src_components_ui_select_selectitem",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selectitem"
     },
     {
@@ -5664,8 +5675,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "src_components_ui_select_selectseparator",
-      "community": 20,
-      "community_name": "@genkit-ai/next",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "selectseparator"
     },
     {
@@ -5675,8 +5686,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_separator",
-      "community": 3,
-      "community_name": "sidebar.tsx",
+      "community": 10,
+      "community_name": "carousel.tsx",
       "norm_label": "separator.tsx"
     },
     {
@@ -5686,8 +5697,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_ui_separator_separator",
-      "community": 3,
-      "community_name": "sidebar.tsx",
+      "community": 10,
+      "community_name": "carousel.tsx",
       "norm_label": "separator"
     },
     {
@@ -5818,8 +5829,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "src_components_ui_sidebar_usesidebar",
-      "community": 3,
-      "community_name": "sidebar.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "usesidebar()"
     },
     {
@@ -6258,8 +6269,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_tabs",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 132,
+      "community_name": "alert.tsx",
       "norm_label": "tabs.tsx"
     },
     {
@@ -6269,8 +6280,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabslist",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 132,
+      "community_name": "alert.tsx",
       "norm_label": "tabslist"
     },
     {
@@ -6280,8 +6291,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabstrigger",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 132,
+      "community_name": "alert.tsx",
       "norm_label": "tabstrigger"
     },
     {
@@ -6291,8 +6302,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabscontent",
-      "community": 10,
-      "community_name": "carousel.tsx",
+      "community": 132,
+      "community_name": "alert.tsx",
       "norm_label": "tabscontent"
     },
     {
@@ -6302,8 +6313,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_textarea",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 10,
+      "community_name": "carousel.tsx",
       "norm_label": "textarea.tsx"
     },
     {
@@ -6313,8 +6324,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_textarea_textarea",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 10,
+      "community_name": "carousel.tsx",
       "norm_label": "textarea"
     },
     {
@@ -6478,8 +6489,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_tooltip",
-      "community": 49,
-      "community_name": "types/index.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "tooltip.tsx"
     },
     {
@@ -6489,8 +6500,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_ui_tooltip_tooltipcontent",
-      "community": 49,
-      "community_name": "types/index.ts",
+      "community": 4,
+      "community_name": "login/page.tsx",
       "norm_label": "tooltipcontent"
     },
     {
@@ -6687,8 +6698,8 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "src_hooks_use_toast_usetoast",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "usetoast()"
     },
     {
@@ -6698,8 +6709,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_auth_client",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "auth-client.ts"
     },
     {
@@ -6709,8 +6720,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_auth_client_authclient",
-      "community": 29,
-      "community_name": "TaskKanbanBoard.tsx",
+      "community": 20,
+      "community_name": "@genkit-ai/next",
       "norm_label": "authclient"
     },
     {
@@ -6731,8 +6742,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_auth_session_localsession",
-      "community": 23,
-      "community_name": "lucide-react",
+      "community": 3,
+      "community_name": "sidebar.tsx",
       "norm_label": "localsession"
     },
     {
@@ -6775,8 +6786,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "src_lib_auth_session_requiresession",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "requiresession()"
     },
     {
@@ -7237,8 +7248,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_installment_import",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "installment-import.js"
     },
     {
@@ -7248,8 +7259,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_installment_import_parseindonesiannumber",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "parseindonesiannumber()"
     },
     {
@@ -7259,8 +7270,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_lib_installment_import_hasinstallmentheader",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "hasinstallmentheader()"
     },
     {
@@ -7270,8 +7281,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_lib_installment_import_normalizeheader",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "normalizeheader()"
     },
     {
@@ -7281,8 +7292,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_lib_installment_import_findcolumn",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "findcolumn()"
     },
     {
@@ -7292,8 +7303,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_lib_installment_import_findphonecolumn",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "findphonecolumn()"
     },
     {
@@ -7303,8 +7314,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_lib_installment_import_findidentifiercolumn",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "findidentifiercolumn()"
     },
     {
@@ -7314,8 +7325,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "src_lib_installment_import_findvisitcolumn",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "findvisitcolumn()"
     },
     {
@@ -7325,8 +7336,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_lib_installment_import_getidentifier",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "getidentifier()"
     },
     {
@@ -7336,8 +7347,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_lib_installment_import_parseinstallmentrows",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "parseinstallmentrows()"
     },
     {
@@ -7347,8 +7358,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "src_lib_installment_import_filterinstallmentcustomersbyprefix",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "filterinstallmentcustomersbyprefix()"
     },
     {
@@ -7358,8 +7369,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_installment_ocr_parser",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "installment-ocr-parser.js"
     },
     {
@@ -7369,8 +7380,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_installment_ocr_parser_parseinstallmentrows",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "{ parseinstallmentrows }"
     },
     {
@@ -7380,8 +7391,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_installment_ocr_parser_splitmarkdownrow",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "splitmarkdownrow()"
     },
     {
@@ -7391,8 +7402,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_lib_installment_ocr_parser_isseparatorrow",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "isseparatorrow()"
     },
     {
@@ -7402,8 +7413,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_lib_installment_ocr_parser_isinstallmentheader",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "isinstallmentheader()"
     },
     {
@@ -7413,8 +7424,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_lib_installment_ocr_parser_parseinstallmentocroutput",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "parseinstallmentocroutput()"
     },
     {
@@ -7655,8 +7666,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "local-image-extractor.ts"
     },
     {
@@ -7666,8 +7677,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor_supported_image_extensions",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "supported_image_extensions"
     },
     {
@@ -7677,8 +7688,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor_gettimeoutms",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "gettimeoutms()"
     },
     {
@@ -7688,8 +7699,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor_rapiddocpython",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "rapiddocpython()"
     },
     {
@@ -7699,8 +7710,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor_extractimagemarkdown",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "extractimagemarkdown()"
     },
     {
@@ -7710,8 +7721,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor_extractgadaiimagemarkdown",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "extractgadaiimagemarkdown()"
     },
     {
@@ -7721,8 +7732,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_lib_local_image_extractor_extractinstallmentimagemarkdown",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "extractinstallmentimagemarkdown()"
     },
     {
@@ -8469,8 +8480,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "rapid-doc-client.js"
     },
     {
@@ -8480,8 +8491,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_execfile_execfilecallback",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "{ execfile: execfilecallback }"
     },
     {
@@ -8491,8 +8502,8 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_access_mkdtemp_readfile_rm_writefile",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "{ access, mkdtemp, readfile, rm, writefile }"
     },
     {
@@ -8502,8 +8513,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_tmpdir",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "{ tmpdir }"
     },
     {
@@ -8513,8 +8524,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_join",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "{ join }"
     },
     {
@@ -8524,8 +8535,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_promisify",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "{ promisify }"
     },
     {
@@ -8535,8 +8546,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_execfile",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "execfile"
     },
     {
@@ -8546,8 +8557,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_pathexists",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "pathexists()"
     },
     {
@@ -8557,8 +8568,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_safeinputname",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "safeinputname()"
     },
     {
@@ -8568,8 +8579,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_lib_rapid_doc_client_extractrapiddocmarkdown",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 71,
+      "community_name": "radio-group.tsx",
       "norm_label": "extractrapiddocmarkdown()"
     },
     {
@@ -8656,8 +8667,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "src_lib_task_attachments_downloadtaskattachment",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "downloadtaskattachment()"
     },
     {
@@ -8788,8 +8799,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_task_board_defaults",
-      "community": 16,
-      "community_name": "firebase",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "task-board-defaults.ts"
     },
     {
@@ -8799,8 +8810,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_task_board_defaults_createdefaulttaskboarddata",
-      "community": 16,
-      "community_name": "firebase",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "createdefaulttaskboarddata()"
     },
     {
@@ -8997,8 +9008,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_task_board_view",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "task-board-view.mjs"
     },
     {
@@ -9008,8 +9019,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_task_board_view_task_filter_options",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "task_filter_options"
     },
     {
@@ -9019,8 +9030,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_lib_task_board_view_task_sort_options",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "task_sort_options"
     },
     {
@@ -9030,8 +9041,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_task_board_view_hasattachments",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "hasattachments()"
     },
     {
@@ -9041,8 +9052,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_lib_task_board_view_taskmatchesfilter",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskmatchesfilter()"
     },
     {
@@ -9052,8 +9063,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_lib_task_board_view_timestamp",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "timestamp()"
     },
     {
@@ -9063,8 +9074,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_lib_task_board_view_sorttaskids",
-      "community": 132,
-      "community_name": "alert.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "sorttaskids()"
     },
     {
@@ -9074,8 +9085,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_task_description",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "task-description.ts"
     },
     {
@@ -9085,8 +9096,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_task_description_plaintaskdescription",
-      "community": 136,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "plaintaskdescription()"
     },
     {
@@ -9272,8 +9283,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_unit_code_client",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit-code-client.ts"
     },
     {
@@ -9294,8 +9305,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_unit_code",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit-code.js"
     },
     {
@@ -9305,8 +9316,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_unit_code_indonesian_provinces",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "indonesian_provinces"
     },
     {
@@ -9316,8 +9327,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_unit_code_province_display_codes",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "province_display_codes"
     },
     {
@@ -9327,8 +9338,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_lib_unit_code_resolveunitlocationcode",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "resolveunitlocationcode()"
     },
     {
@@ -9338,8 +9349,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_unit_code_formatunitcode",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "formatunitcode()"
     },
     {
@@ -9349,8 +9360,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_lib_unit_code_formatunitcodepreview",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "formatunitcodepreview()"
     },
     {
@@ -9591,8 +9602,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_unit_registry",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit-registry.js"
     },
     {
@@ -9602,8 +9613,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_unit_registry_randombytes_randomuuid_scryptsync_timingsafeequal",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "{ randombytes, randomuuid, scryptsync, timingsafeequal }"
     },
     {
@@ -9613,8 +9624,8 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "src_lib_unit_registry_mkdir_readfile_rename_writefile",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "{ mkdir, readfile, rename, writefile }"
     },
     {
@@ -9624,8 +9635,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_unit_registry_dirname_join",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "{ dirname, join }"
     },
     {
@@ -9635,8 +9646,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_unit_registry_indonesian_provinces_formatunitcode",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "{ indonesian_provinces, formatunitcode }"
     },
     {
@@ -9646,8 +9657,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_lib_unit_registry_indonesian_province_set",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "indonesian_province_set"
     },
     {
@@ -9657,8 +9668,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_unit_registry_normalizeemail",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "normalizeemail()"
     },
     {
@@ -9668,8 +9679,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_lib_unit_registry_validateprefix",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "validateprefix()"
     },
     {
@@ -9679,8 +9690,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_unit_registry_validatepassword",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "validatepassword()"
     },
     {
@@ -9690,8 +9701,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_lib_unit_registry_validateprovince",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "validateprovince()"
     },
     {
@@ -9701,8 +9712,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_lib_unit_registry_normalizetext",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "normalizetext()"
     },
     {
@@ -9712,8 +9723,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "src_lib_unit_registry_normalizepeople",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "normalizepeople()"
     },
     {
@@ -9723,8 +9734,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_lib_unit_registry_normalizeadmins",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "normalizeadmins()"
     },
     {
@@ -9734,8 +9745,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_lib_unit_registry_hashpassword",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "hashpassword()"
     },
     {
@@ -9745,8 +9756,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_lib_unit_registry_verifypassword",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "verifypassword()"
     },
     {
@@ -9756,8 +9767,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "src_lib_unit_registry_validatebootstrap",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "validatebootstrap()"
     },
     {
@@ -9767,8 +9778,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "src_lib_unit_registry_topublicunit",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "topublicunit()"
     },
     {
@@ -9778,8 +9789,8 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "src_lib_unit_registry_topublicadmin",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "topublicadmin()"
     },
     {
@@ -9789,8 +9800,8 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "src_lib_unit_registry_toauthenticateduser",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "toauthenticateduser()"
     },
     {
@@ -9811,8 +9822,8 @@
       "source_location": "L421",
       "_origin": "ast",
       "id": "src_lib_unit_registry_bootstrapfromenvironment",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "bootstrapfromenvironment()"
     },
     {
@@ -9822,8 +9833,8 @@
       "source_location": "L445",
       "_origin": "ast",
       "id": "src_lib_unit_registry_defaultregistry",
-      "community": 44,
-      "community_name": "cn",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "defaultregistry"
     },
     {
@@ -9888,8 +9899,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_types_index",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "types/index.ts"
     },
     {
@@ -9899,8 +9910,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_types_index_followupstatus",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "followupstatus"
     },
     {
@@ -9910,8 +9921,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_types_index_customer",
-      "community": 79,
-      "community_name": "sheet.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "customer"
     },
     {
@@ -9921,8 +9932,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_types_index_broadcastcustomer",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "broadcastcustomer"
     },
     {
@@ -9932,8 +9943,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_types_index_scheduledtask",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "scheduledtask"
     },
     {
@@ -9943,8 +9954,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_types_index_taskattachment",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskattachment"
     },
     {
@@ -9954,8 +9965,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_types_index_taskpriority",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskpriority"
     },
     {
@@ -9965,8 +9976,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "src_types_index_task",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "task"
     },
     {
@@ -9976,8 +9987,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "src_types_index_column",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "column"
     },
     {
@@ -9987,8 +9998,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "src_types_index_taskboarddata",
-      "community": 16,
-      "community_name": "firebase",
+      "community": 13,
+      "community_name": "date-fns",
       "norm_label": "taskboarddata"
     },
     {
@@ -9998,8 +10009,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "src_types_index_installmentcustomer",
-      "community": 134,
-      "community_name": "theme-switch.tsx",
+      "community": 59,
+      "community_name": "cn",
       "norm_label": "installmentcustomer"
     },
     {
@@ -10047,10 +10058,21 @@
       "norm_label": "addtaskdialog"
     },
     {
-      "label": "taskTypes",
+      "label": "taskDialogConfig",
       "file_type": "code",
       "source_file": "tests/add-task-dialog-modal.test.mjs",
       "source_location": "L6",
+      "_origin": "ast",
+      "id": "tests_add_task_dialog_modal_test_taskdialogconfig",
+      "community": 76,
+      "community_name": "select.tsx",
+      "norm_label": "taskdialogconfig"
+    },
+    {
+      "label": "taskTypes",
+      "file_type": "code",
+      "source_file": "tests/add-task-dialog-modal.test.mjs",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "tests_add_task_dialog_modal_test_tasktypes",
       "community": 76,
@@ -10061,7 +10083,7 @@
       "label": "calendar",
       "file_type": "code",
       "source_file": "tests/add-task-dialog-modal.test.mjs",
-      "source_location": "L7",
+      "source_location": "L8",
       "_origin": "ast",
       "id": "tests_add_task_dialog_modal_test_calendar",
       "community": 76,
@@ -10273,8 +10295,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_installment_import_test",
-      "community": 4,
-      "community_name": "login/page.tsx",
+      "community": 23,
+      "community_name": "lucide-react",
       "norm_label": "installment-import.test.mjs"
     },
     {
@@ -10944,8 +10966,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_code_test",
-      "community": 61,
-      "community_name": "TaskDetailsDialog.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit-code.test.mjs"
     },
     {
@@ -10966,8 +10988,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_registry_test",
-      "community": 135,
-      "community_name": "button.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "unit-registry.test.mjs"
     },
     {
@@ -10977,8 +10999,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "tests_unit_registry_test_createtestregistry",
-      "community": 135,
-      "community_name": "button.tsx",
+      "community": 49,
+      "community_name": "types/index.ts",
       "norm_label": "createtestregistry()"
     },
     {
@@ -13875,7 +13897,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L152",
+      "source_location": "L141",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -21012,7 +21034,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L130",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21023,7 +21045,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21034,7 +21056,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L126",
+      "source_location": "L103",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21045,7 +21067,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21056,7 +21078,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L84",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21067,7 +21089,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L98",
+      "source_location": "L75",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21078,7 +21100,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L93",
+      "source_location": "L70",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21089,7 +21111,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L111",
+      "source_location": "L88",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21100,7 +21122,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21111,18 +21133,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L50",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_addtaskdialog",
-      "target": "src_components_addtaskdialog_priorityoptions",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
@@ -21133,11 +21144,35 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L76",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog",
       "target": "src_components_addtaskdialog_railsections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/AddTaskDialog.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_addtaskdialog",
+      "target": "src_components_task_dialog_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/AddTaskDialog.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_addtaskdialog",
+      "target": "src_components_task_dialog_config_task_priority_options",
       "confidence_score": 1.0
     },
     {
@@ -21445,7 +21480,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialogprops",
@@ -21457,7 +21492,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L515",
+      "source_location": "L492",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21469,7 +21504,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L432",
+      "source_location": "L409",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21481,7 +21516,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L433",
+      "source_location": "L410",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21493,7 +21528,7 @@
       "context": "argument",
       "confidence": "INFERRED",
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L176",
+      "source_location": "L153",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21506,7 +21541,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L223",
+      "source_location": "L200",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21518,7 +21553,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L204",
+      "source_location": "L181",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21530,7 +21565,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L168",
+      "source_location": "L145",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21542,7 +21577,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/AddTaskDialog.tsx",
-      "source_location": "L318",
+      "source_location": "L295",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_addtaskdialog_addtaskdialog",
@@ -21832,10 +21867,56 @@
       "target": "src_lib_utils_cn"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog",
+      "target": "src_components_task_dialog_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog",
+      "target": "src_components_task_dialog_config_task_priority_options",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L38",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog",
+      "target": "src_components_taskdetailsdialog_editorcommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog",
+      "target": "src_components_taskdetailsdialog_editortools",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -21846,18 +21927,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L32",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_taskdetailsdialog",
-      "target": "src_components_taskdetailsdialog_priorityoptions",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L43",
+      "source_location": "L51",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -21868,7 +21938,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -21904,7 +21974,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L19",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -21916,7 +21986,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L19",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22048,7 +22118,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L18",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22060,7 +22130,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L18",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22072,31 +22142,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_taskdetailsdialog",
-      "target": "src_components_ui_textarea",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_taskdetailsdialog",
-      "target": "src_components_ui_textarea_textarea",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L21",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22108,7 +22154,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L21",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22120,7 +22166,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L21",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22132,7 +22178,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L22",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22144,7 +22190,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L22",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22156,7 +22202,31 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L16",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog",
+      "target": "src_lib_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog",
+      "target": "src_lib_utils_cn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22168,7 +22238,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L16",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog",
@@ -22176,23 +22246,11 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_taskdetailsdialog",
-      "target": "src_types_index_taskpriority",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "references",
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog_taskdetailsdialogprops",
@@ -22204,7 +22262,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L185",
+      "source_location": "L263",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog_taskdetailsdialog",
@@ -22217,7 +22275,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L71",
+      "source_location": "L110",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog_taskdetailsdialog",
@@ -22229,7 +22287,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L84",
+      "source_location": "L123",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog_taskdetailsdialog",
@@ -22241,11 +22299,23 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskDetailsDialog.tsx",
-      "source_location": "L132",
+      "source_location": "L197",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskdetailsdialog_taskdetailsdialog",
       "target": "src_lib_task_description_plaintaskdescription"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/TaskDetailsDialog.tsx",
+      "source_location": "L164",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_taskdetailsdialog_taskdetailsdialog",
+      "target": "src_lib_utils_cn"
     },
     {
       "relation": "contains",
@@ -22273,29 +22343,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L69",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_taskkanbanboard",
-      "target": "src_components_taskkanbanboard_emptystatedotpositions",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L68",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_components_taskkanbanboard",
-      "target": "src_components_taskkanbanboard_emptystatedots",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L108",
+      "source_location": "L97",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22306,7 +22354,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L114",
+      "source_location": "L103",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22317,7 +22365,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L99",
+      "source_location": "L88",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22328,7 +22376,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L103",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22339,7 +22387,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L89",
+      "source_location": "L78",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22350,7 +22398,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L119",
+      "source_location": "L108",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22361,7 +22409,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L80",
+      "source_location": "L69",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22372,7 +22420,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L125",
+      "source_location": "L114",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22383,7 +22431,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L137",
+      "source_location": "L126",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22394,7 +22442,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L335",
+      "source_location": "L324",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22416,7 +22464,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L294",
+      "source_location": "L283",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard",
@@ -22739,7 +22787,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L410",
+      "source_location": "L397",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskkanbanboard",
@@ -22751,7 +22799,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L308",
+      "source_location": "L297",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_tasklistview",
@@ -22763,7 +22811,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L282",
+      "source_location": "L271",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22775,7 +22823,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L155",
+      "source_location": "L144",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22787,7 +22835,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L281",
+      "source_location": "L270",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22799,7 +22847,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L252",
+      "source_location": "L241",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22811,7 +22859,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L324",
+      "source_location": "L313",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_tasklistview",
@@ -22823,7 +22871,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L263",
+      "source_location": "L252",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22835,7 +22883,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L156",
+      "source_location": "L145",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22847,7 +22895,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L421",
+      "source_location": "L408",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskkanbanboard",
@@ -22860,7 +22908,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L167",
+      "source_location": "L156",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22872,7 +22920,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L242",
+      "source_location": "L231",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22884,7 +22932,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L209",
+      "source_location": "L198",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskcard",
@@ -22896,7 +22944,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L321",
+      "source_location": "L310",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_tasklistview",
@@ -22908,7 +22956,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TaskKanbanBoard.tsx",
-      "source_location": "L417",
+      "source_location": "L404",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_taskkanbanboard_taskkanbanboard",
@@ -24356,6 +24404,52 @@
       "_origin": "ast",
       "source": "src_components_motion_variants",
       "target": "src_components_motion_variants_staggercontainervariants",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_task_dialog_config",
+      "target": "src_components_task_dialog_config_task_priority_options",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_task_dialog_config",
+      "target": "src_components_task_dialog_config_taskpriorityoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_task_dialog_config",
+      "target": "src_types_index",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/task-dialog-config.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_task_dialog_config",
+      "target": "src_types_index_taskpriority",
       "confidence_score": 1.0
     },
     {
@@ -34502,7 +34596,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/add-task-dialog-modal.test.mjs",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_add_task_dialog_modal_test",
@@ -34514,6 +34608,17 @@
       "confidence": "EXTRACTED",
       "source_file": "tests/add-task-dialog-modal.test.mjs",
       "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_add_task_dialog_modal_test",
+      "target": "tests_add_task_dialog_modal_test_taskdialogconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/add-task-dialog-modal.test.mjs",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_add_task_dialog_modal_test",
@@ -36269,5 +36374,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8cdc50efe7647bd607c64756e882d31a83e9926c"
+  "built_at_commit": "deb220e3e66a18e20cdeedc58ba2203f8b632569"
 }

@@ -4,6 +4,8 @@ import test from 'node:test';
 
 const boardSource = await readFile(new URL('../src/components/TaskKanbanBoard.tsx', import.meta.url), 'utf8');
 const detailsSource = await readFile(new URL('../src/components/TaskDetailsDialog.tsx', import.meta.url), 'utf8');
+const addTaskSource = await readFile(new URL('../src/components/AddTaskDialog.tsx', import.meta.url), 'utf8');
+const dialogConfigSource = await readFile(new URL('../src/components/task-dialog-config.ts', import.meta.url), 'utf8').catch(() => '');
 const descriptionHelper = await readFile(new URL('../src/lib/task-description.ts', import.meta.url), 'utf8').catch(() => '');
 
 test('task board uses a responsive grid instead of a horizontal scroller', () => {
@@ -62,4 +64,30 @@ test('rich text descriptions stay readable outside the editor', () => {
   assert.match(descriptionHelper, /export function plainTaskDescription/);
   assert.match(boardSource, /plainTaskDescription\(task\.description\)/);
   assert.match(detailsSource, /plainTaskDescription\(currentTask\.description\)/);
+});
+
+test('task detail dialog keeps actions visible while its content scrolls', () => {
+  assert.match(detailsSource, /DialogContent className="[^"]*flex[^\"]*flex-col[^\"]*overflow-hidden/);
+  assert.match(detailsSource, /DialogHeader className="[^"]*shrink-0/);
+  assert.match(detailsSource, /className="[^\"]*min-h-0[^\"]*flex-1[^\"]*overflow-y-auto/);
+  assert.match(detailsSource, /DialogFooter className="[^"]*shrink-0/);
+  assert.match(detailsSource, /Hapus Tugas/);
+  assert.match(detailsSource, /Simpan & Tutup/);
+});
+
+test('task detail editor stays synchronized with add-task controls', () => {
+  assert.match(detailsSource, /id="detail-title"[\s\S]*className="[^\"]*h-8[^\"]*min-h-8[^\"]*relative[^\"]*z-\[1\]/);
+  assert.match(addTaskSource, /TASK_PRIORITY_OPTIONS/);
+  assert.match(detailsSource, /TASK_PRIORITY_OPTIONS/);
+  assert.match(dialogConfigSource, /selected: 'border-\[#ff7a72\] bg-\[#ffe8e7\] text-\[#ff4038\]/);
+  assert.match(dialogConfigSource, /selected: 'border-\[#ffb34f\] bg-\[#fff1d9\] text-\[#f08b00\]/);
+  assert.match(dialogConfigSource, /selected: 'border-\[#f0c65a\] bg-\[#fff5d8\] text-\[#d79e00\]/);
+  assert.match(detailsSource, /option\.selected/);
+  assert.match(addTaskSource, /Maximize2/);
+  assert.match(detailsSource, /Maximize2/);
+  assert.match(detailsSource, /contentEditable=\{true\}/);
+  assert.match(detailsSource, /document\.execCommand/);
+  assert.match(detailsSource, /setIsEditorExpanded/);
+  assert.match(detailsSource, /editorTaskIdRef/);
+  assert.match(detailsSource, /lastEditorValueRef/);
 });
