@@ -156,13 +156,13 @@ Expected: typecheck passes, all tests pass, and `git diff --check` produces no o
 - Consumes: verified Porcelain Identity Plaque implementation and refreshed graph.
 - Produces: a pushed branch and a second pull request targeting `main`.
 
-- [ ] **Step 1: Inspect the final diff and working tree**
+- [x] **Step 1: Inspect the final diff and working tree**
 
 Run: `git status --short --branch` and `git diff --stat`.
 
 Expected: only the specified profile, focused-test, Graphify, spec, and plan files are changed.
 
-- [ ] **Step 2: Create the implementation commit**
+- [x] **Step 2: Create the implementation commit**
 
 Run:
 
@@ -171,10 +171,10 @@ git add src/components/main-shell.tsx src/components/main-shell.module.css tests
 git commit -m "feat: refine sidebar profile plaque"
 ```
 
-- [ ] **Step 3: Push the feature branch**
+- [x] **Step 3: Push the feature branch**
 
 Run: `git push -u origin codex/sidebar-profile-luxe`
 
-- [ ] **Step 4: Open the pull request**
+- [x] **Step 4: Open the pull request**
 
 Create a PR from `codex/sidebar-profile-luxe` into `main` with a summary of the visual change and verification results. Do not merge it automatically; the user should review and merge it so GitHub records a legitimate second merged PR.
