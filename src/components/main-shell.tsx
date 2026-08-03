@@ -219,15 +219,21 @@ export default function MainShell({ children, user }: { children: React.ReactNod
           <SidebarFooter className="naviga-sidebar-footer p-4 pt-0">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="naviga-sidebar-profile h-[82px] w-full justify-start gap-3 rounded-[18px] border border-[#e4edef] bg-white/90 px-3 py-3 shadow-[0_10px_28px_rgba(16,42,67,.07)] transition-[transform,border-color,box-shadow,background-color] duration-200 focus-visible:ring-2 focus-visible:ring-[#14b8a6] focus-visible:ring-offset-2 active:scale-[.98]">
-                  <Avatar className="h-11 w-11 shrink-0 border-[3px] border-white shadow-[0_0_0_3px_#bde9e4]">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  aria-label={`Buka menu akun ${user.name}`}
+                  className="naviga-sidebar-profile naviga-sidebar-profile-rail naviga-sidebar-profile-corner group relative h-[82px] w-full justify-start gap-3 overflow-hidden rounded-[12px_28px_12px_12px] border border-[#c7e0db] bg-[#fbfdfc] px-3 py-3 shadow-[0_10px_22px_rgba(16,90,94,.07),inset_0_1px_0_rgba(255,255,255,.96)] transition-[transform,border-color,box-shadow,background-color] duration-200 focus-visible:ring-2 focus-visible:ring-[#0f9f8f] focus-visible:ring-offset-2 active:translate-y-px active:scale-[.99]"
+                >
+                  <Avatar className="naviga-sidebar-profile-avatar relative z-[1] -ml-1 h-11 w-11 shrink-0 border-[3px] border-white bg-[#effaf8] shadow-[0_0_0_1px_rgba(172,215,208,.95),0_8px_16px_rgba(12,135,122,.1)]">
                     <AvatarImage src={`/api/users/${encodeURIComponent(user.userId)}/photo`} alt={`Foto profil ${user.name}`} />
-                    <AvatarFallback className="bg-white text-lg font-semibold text-[#087f76] shadow-[inset_0_1px_1px_rgba(255,255,255,.95)]">{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback className="bg-white text-lg font-semibold text-[#0c8177] shadow-[inset_0_1px_1px_rgba(255,255,255,.95)]">{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <div className="min-w-0 flex-1 text-left">
-                    <p className="truncate text-[13px] font-semibold text-[#123b47]">{user.name}</p>
-                    <p className="mt-0.5 truncate text-[11px] text-[#718096]">{user.email}</p>
-                  </div>
+                  <span className="min-w-0 flex-1 text-left">
+                    <span className="naviga-sidebar-profile-name block truncate font-headline text-[14px] font-semibold leading-tight tracking-[-.02em] text-[#123b47]">{user.name}</span>
+                    <span className="naviga-sidebar-profile-email mt-1 block truncate text-[10.5px] leading-tight text-[#6d8790]">{user.email}</span>
+                  </span>
+                  <ChevronDown aria-hidden="true" className="naviga-sidebar-profile-chevron h-4 w-4 shrink-0 text-[#4b777b] transition-transform duration-200" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
