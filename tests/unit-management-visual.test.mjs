@@ -134,7 +134,7 @@ test('unit management matches the operational hierarchy and keeps complete unit 
   assert.match(shell, /<Sidebar variant="floating"/);
   assert.ok(shell.indexOf('href="/unit-management"') < shell.indexOf('href="/history"'));
   assert.match(shell, /min-w-0/);
-  assert.match(shell, /truncate/);
+  assert.match(shell, /whitespace-nowrap/);
   assert.match(shell, /const header = headerRef\.current;/);
   assert.match(shell, /document\.scrollingElement \?\? document\.documentElement/);
   assert.match(shell, /header\?\.style\.setProperty\('--naviga-glass-alpha'/);
