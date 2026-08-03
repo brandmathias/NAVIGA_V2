@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/history/page.tsx": {
-    "mtime": 1785707964.3031275,
-    "ast_hash": "183b279da3c38fdec85e3b7843dcdc08",
+    "mtime": 1785719774.307365,
+    "ast_hash": "8a7e8a66eecb6533ede3935a06ad7caf",
     "semantic_hash": ""
   },
   "src/app/(main)/layout.tsx": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/pdf-broadcast/page.tsx": {
-    "mtime": 1785707888.1061711,
-    "ast_hash": "93550d7bd36d8caffb404df6a0e870fa",
+    "mtime": 1785719774.3093815,
+    "ast_hash": "f79949f33d55d1ee0e400f3eeda264e2",
     "semantic_hash": ""
   },
   "src/app/(main)/profile/page.tsx": {
@@ -55,8 +55,8 @@
     "semantic_hash": ""
   },
   "src/app/(main)/xlsx-broadcast/page.tsx": {
-    "mtime": 1785707888.1081724,
-    "ast_hash": "b6709c598d9ff9be2a0e4d649f2c2043",
+    "mtime": 1785719774.3093815,
+    "ast_hash": "ead120dbbd8200508cd9870d56e8bbf9",
     "semantic_hash": ""
   },
   "src/app/layout.tsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "src/components/main-shell.tsx": {
-    "mtime": 1785719281.3656535,
-    "ast_hash": "de04d8dc3b345feb55582b36f12ff314",
+    "mtime": 1785769297.2820358,
+    "ast_hash": "3a581118ad22ada1af655b60dd67231a",
     "semantic_hash": ""
   },
   "src/lib/gadai-ocr-parser.js": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "tests/unit-management-visual.test.mjs": {
-    "mtime": 1785719503.841287,
-    "ast_hash": "82a6cd41d5de6ec3febefed2a7b7baa5",
+    "mtime": 1785768208.3478112,
+    "ast_hash": "6f850d3a05435d9a7d960a671375fcab",
     "semantic_hash": ""
   },
   "public/unit-management-hero.png": {
@@ -740,8 +740,8 @@
     "semantic_hash": ""
   },
   "tests/profile-photo-policy.test.mjs": {
-    "mtime": 1785719281.3755248,
-    "ast_hash": "234c9e96e4996ff8fd753439df14dae9",
+    "mtime": 1785769297.2850454,
+    "ast_hash": "c1535af70d8b1ace9199374da6e38adb",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-08-01-profile-redesign.md": {
@@ -1015,43 +1015,53 @@
     "semantic_hash": ""
   },
   "db/migrations/003_create_naviga_broadcast_history.sql": {
-    "mtime": 1785718405.1763148,
-    "ast_hash": "c55ae7c6545a29f167ce8d8454961b39",
+    "mtime": 1785719774.2794359,
+    "ast_hash": "cc35ba82728a6d82786fac6f1047711c",
     "semantic_hash": ""
   },
   "src/app/api/broadcast-history/route.ts": {
-    "mtime": 1785718405.1853147,
-    "ast_hash": "5afaedc1ceacd1038f9168376ea8429f",
+    "mtime": 1785719774.310753,
+    "ast_hash": "7980a3c24d3a090e5012d37d83c121b4",
     "semantic_hash": ""
   },
   "src/lib/broadcast-history-client.mjs": {
-    "mtime": 1785718405.1873128,
-    "ast_hash": "b58799f6e2fbae20375bd155633c4444",
+    "mtime": 1785719774.3137655,
+    "ast_hash": "90ad9180e20a6553c1ff7a8e9e1aacf4",
     "semantic_hash": ""
   },
   "src/lib/broadcast-history-legacy.mjs": {
-    "mtime": 1785718405.1907055,
-    "ast_hash": "8a63a4ee0dc05a5120dd8f6872175bdb",
+    "mtime": 1785719774.3147745,
+    "ast_hash": "f16f8f2d04f8711a2247dc40c47cd844",
     "semantic_hash": ""
   },
   "src/lib/broadcast-history-repository.ts": {
-    "mtime": 1785718405.195707,
-    "ast_hash": "56973bad35ae167d94d8df9385dafed1",
+    "mtime": 1785719774.3157785,
+    "ast_hash": "9db082ffbd3d29e587ff39430784abf3",
     "semantic_hash": ""
   },
   "tests/broadcast-history-persistence.test.mjs": {
-    "mtime": 1785708021.5138805,
-    "ast_hash": "250eae006a191f6abd343e6b645a4cc0",
+    "mtime": 1785719774.3167715,
+    "ast_hash": "55c65ec878c93921b001c7e9b4e49e94",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-08-03-sidebar-profile-editorial-token.md": {
-    "mtime": 1785714703.6969469,
-    "ast_hash": "a9c84ed6d1af74f7d8439e94d37630d4",
+    "mtime": 1785719774.2804372,
+    "ast_hash": "6e42e6369e1361f2038e966a79b21563",
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-08-03-sidebar-profile-editorial-token-design.md": {
     "mtime": 1785713756.4747062,
     "ast_hash": "f5a28b2250630a2a2791062d10747077",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-08-03-sidebar-profile-luxe.md": {
+    "mtime": 1785768392.9895434,
+    "ast_hash": "0303ffc51bbe4eb1187359e7704a127c",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-08-03-sidebar-profile-luxe-design.md": {
+    "mtime": 1785767694.916469,
+    "ast_hash": "6f7a9b8f59f8057617f8c43c75ae50e8",
     "semantic_hash": ""
   }
 }
