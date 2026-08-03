@@ -43,7 +43,10 @@ test('profile photos can be reused safely in sidebar and task creator avatars', 
   assert.doesNotMatch(shellSource, /bg-\[#0d4650\]/);
   assert.match(shellSource, /relative z-\[1\] -ml-1/);
   assert.match(shellSource, /naviga-sidebar-profile-chevron/);
-  assert.match(shellSource, /bg-\[#fbfdfc\]/);
+  assert.match(shellSource, /bg-\[#eef9f5\]/);
+  assert.match(shellSource, /naviga-sidebar-profile-name block whitespace-nowrap overflow-visible/);
+  assert.match(shellSource, /naviga-sidebar-profile-email mt-0\.5 block whitespace-nowrap overflow-visible/);
+  assert.doesNotMatch(shellSource, /naviga-sidebar-profile-(?:name|email)[^\n]*truncate/);
   assert.match(shellStyles, /naviga-sidebar-profile\[data-state='open'\]/);
   assert.match(shellStyles, /naviga-sidebar-profile:focus-visible/);
   assert.match(shellStyles, /naviga-sidebar-profile\[data-disabled\]/);
@@ -51,5 +54,7 @@ test('profile photos can be reused safely in sidebar and task creator avatars', 
   assert.match(shellStyles, /naviga-sidebar-profile::after/);
   assert.match(shellStyles, /naviga-sidebar-profile-corner/);
   assert.match(shellStyles, /naviga-sidebar-profile-rail/);
+  assert.match(shellStyles, /text-overflow: clip/);
+  assert.match(shellStyles, /overflow: visible/);
   assert.match(shellStyles, /prefers-reduced-motion/);
 });
