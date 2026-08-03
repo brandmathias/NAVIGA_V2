@@ -39,11 +39,13 @@ test('profile photos can be reused safely in sidebar and task creator avatars', 
   assert.doesNotMatch(shellSource, /Akun aktif/);
   assert.doesNotMatch(shellSource, /accountRoleLabel/);
   assert.doesNotMatch(shellSource, /bg-\[#f7fbfa\]/);
+  assert.doesNotMatch(shellSource, /bg-\[#eef9f5\]/);
+  assert.match(shellSource, /naviga-sidebar-profile-plaque/);
   assert.match(shellSource, /text-\[#123b47\]/);
   assert.doesNotMatch(shellSource, /bg-\[#0d4650\]/);
-  assert.match(shellSource, /relative z-\[1\] -ml-1/);
+  assert.match(shellSource, /relative z-\[1\] ml-1/);
   assert.match(shellSource, /naviga-sidebar-profile-chevron/);
-  assert.match(shellSource, /bg-\[#eef9f5\]/);
+  assert.match(shellSource, /bg-\[#fbfdfb\]/);
   assert.match(shellSource, /naviga-sidebar-profile-name block whitespace-nowrap overflow-visible/);
   assert.match(shellSource, /naviga-sidebar-profile-email mt-0\.5 block whitespace-nowrap overflow-visible/);
   assert.doesNotMatch(shellSource, /naviga-sidebar-profile-(?:name|email)[^\n]*truncate/);
@@ -54,6 +56,10 @@ test('profile photos can be reused safely in sidebar and task creator avatars', 
   assert.match(shellStyles, /naviga-sidebar-profile::after/);
   assert.match(shellStyles, /naviga-sidebar-profile-corner/);
   assert.match(shellStyles, /naviga-sidebar-profile-rail/);
+  assert.match(shellStyles, /--profile-avatar-ring/);
+  assert.match(shellStyles, /left: 0\.25rem/);
+  assert.doesNotMatch(shellStyles, /left: 0\.55rem/);
+  assert.match(shellStyles, /--profile-paper/);
   assert.match(shellStyles, /text-overflow: clip/);
   assert.match(shellStyles, /overflow: visible/);
   assert.match(shellStyles, /prefers-reduced-motion/);
