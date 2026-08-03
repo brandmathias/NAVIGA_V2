@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Upload, Send, Loader2, Mic, Bell, ClipboardCopy } from 'lucide-react';
-import type { BroadcastCustomer, HistoryEntry, Customer } from '@/types';
+import type { BroadcastCustomer, Customer } from '@/types';
 import { Input } from '@/components/ui/input';
 import { parseGadaiImage, parsePdf } from './actions';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
@@ -30,6 +30,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useLocalSession } from '@/components/main-shell';
 import { ScrollReveal, MotionCard } from '@/components/motion';
+import { createBroadcastHistoryEntry } from '@/lib/broadcast-history-client.mjs';
 
 
 const parseDateForFormatting = (dateString: string): Date | null => {
@@ -107,28 +108,22 @@ export default function PdfBroadcastPage() {
     template: NotificationTemplate;
   } | null>(null);
 
-  const logHistory = (customer: BroadcastCustomer, status: ActionStatus, template: NotificationTemplate) => {
+  const logHistory = async (customer: BroadcastCustomer, status: ActionStatus, template: NotificationTemplate) => {
     try {
-      const storageKey = adminUser.role === 'superadmin'
-        ? 'broadcastHistory_all'
-        : `broadcastHistory_${adminUser.unitPrefix ?? 'unit'}`;
-
-      const newEntry: HistoryEntry = {
-        id: `hist-${Date.now()}-${customer.sbg_number}`,
-        timestamp: new Date().toISOString(),
+      await createBroadcastHistoryEntry({
         type: 'Gadaian Broadcast',
         customerName: customer.name,
         customerIdentifier: customer.sbg_number,
         status,
-        adminUser: adminUser.name,
-        template: template,
-      };
-
-      const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      history.unshift(newEntry); // Add to the beginning
-      localStorage.setItem(storageKey, JSON.stringify(history));
+        template,
+      });
     } catch (error) {
-      console.error("Failed to log history:", error);
+      console.error('Failed to log broadcast history:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Riwayat belum tersimpan',
+        description: 'Broadcast tetap berjalan lokal, tetapi riwayatnya belum masuk database.',
+      });
     }
   };
 
@@ -264,7 +259,7 @@ Terima Kasih`;
         description: `Pesan untuk ${customer.name} telah disalin ke clipboard.`,
         tone: 'copy',
       });
-      logHistory(customer, 'Pesan Disalin', template);
+      void logHistory(customer, 'Pesan Disalin', template);
     }).catch(err => {
       console.error('Failed to copy message: ', err);
       toast({
@@ -290,7 +285,7 @@ Terima Kasih`;
     const whatsappUrl = `https://wa.me/${formattedPhoneNumber}?text=${encodedMessage}`;
     
     window.open(whatsappUrl, '_blank');
-    logHistory(customer, 'WhatsApp Dibuka', template);
+    void logHistory(customer, 'WhatsApp Dibuka', template);
     toast({ title: 'WhatsApp dibuka', description: `Pesan untuk ${customer.name} siap dikirim.`, tone: 'message' });
   };
 
@@ -381,7 +376,7 @@ Terima Kasih`;
             customerName={activeVoicenote.customerName}
             onConfirm={() => {
                 window.open(activeVoicenote.whatsappUrl, '_blank');
-                logHistory(activeVoicenote.customer, 'WhatsApp Dibuka', activeVoicenote.template);
+                void logHistory(activeVoicenote.customer, 'WhatsApp Dibuka', activeVoicenote.template);
             }}
           />
         )}

@@ -15,13 +15,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Upload, Loader2, Mic, ClipboardCopy } from 'lucide-react';
-import type { InstallmentCustomer, HistoryEntry } from '@/types';
+import type { InstallmentCustomer } from '@/types';
 import { Input } from '@/components/ui/input';
 import VoicenotePreviewDialog from '@/components/VoicenotePreviewDialog';
 import { generateCustomerVoicenote } from '@/app/(main)/broadcast/tts-actions';
 import { buildInstallmentSpeechScript } from '@/lib/tts-text';
 import { parseInstallmentImage, parseXlsx } from './actions';
 import { useLocalSession } from '@/components/main-shell';
+import { createBroadcastHistoryEntry } from '@/lib/broadcast-history-client.mjs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,31 +69,25 @@ export default function XlsxBroadcastPage() {
     customerName: string;
   } | null>(null);
 
-  const logHistory = (customer: InstallmentCustomer, status: ActionStatus, template: NotificationTemplate) => {
+  const logHistory = async (customer: InstallmentCustomer, status: ActionStatus, template: NotificationTemplate) => {
     try {
         const customerName = customer.nasabah.split('\n')[0].trim();
         const customerIdentifier = customer.nasabah.split('\n')[1]?.trim() || 'N/A';
-        
-        const storageKey = adminUser.role === 'superadmin'
-          ? 'broadcastHistory_all'
-          : `broadcastHistory_${adminUser.unitPrefix ?? 'unit'}`;
 
-      const newEntry: HistoryEntry = {
-        id: `hist-${Date.now()}-${customer.id}`,
-        timestamp: new Date().toISOString(),
+      await createBroadcastHistoryEntry({
         type: 'Angsuran Broadcast',
         customerName: customerName,
         customerIdentifier: customerIdentifier,
         status,
-        adminUser: adminUser.name,
-        template: template,
-      };
-
-      const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      history.unshift(newEntry); // Add to the beginning
-      localStorage.setItem(storageKey, JSON.stringify(history));
+        template,
+      });
     } catch (error) {
-      console.error("Failed to log history:", error);
+      console.error('Failed to log broadcast history:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Riwayat belum tersimpan',
+        description: 'Broadcast tetap berjalan lokal, tetapi riwayatnya belum masuk database.',
+      });
     }
   };
 
@@ -193,7 +188,7 @@ Terima Kasih`;
         description: `Pesan untuk ${customer.nasabah.split('\n')[0]} telah disalin ke clipboard.`,
         tone: 'copy',
       });
-      logHistory(customer, 'Pesan Disalin', template);
+      void logHistory(customer, 'Pesan Disalin', template);
     }).catch(err => {
       console.error('Failed to copy message: ', err);
       toast({

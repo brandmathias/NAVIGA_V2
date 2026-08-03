@@ -29,33 +29,60 @@ import {
 } from '@/components/ui/select';
 import { useLocalSession } from '@/components/main-shell';
 import { ScrollReveal, MotionCard } from '@/components/motion';
+import {
+  clearBroadcastHistory,
+  getBroadcastHistory,
+  migrateLegacyBroadcastHistory,
+} from '@/lib/broadcast-history-client.mjs';
+import {
+  readLegacyBroadcastHistory,
+  removeLegacyBroadcastHistory,
+} from '@/lib/broadcast-history-legacy.mjs';
 
 export default function HistoryPage() {
-  const { upc: userUpc } = useLocalSession();
+  const session = useLocalSession();
+  const { upc: userUpc } = session;
   const [history, setHistory] = React.useState<HistoryEntry[]>([]);
   const [dateFilter, setDateFilter] = React.useState<Date | undefined>();
   const [typeFilter, setTypeFilter] = React.useState<'all' | 'Gadaian Broadcast' | 'Angsuran Broadcast'>('all');
   const [isClient, setIsClient] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isClearing, setIsClearing] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
 
   React.useEffect(() => {
+    let cancelled = false;
     setIsClient(true);
     // Set initial date filter on the client to avoid hydration mismatch
     setDateFilter(startOfToday());
 
-    try {
-      const storageKey = userUpc === 'all' ? 'broadcastHistory_all' : `broadcastHistory_${userUpc}`;
-      const storedHistory = localStorage.getItem(storageKey);
-
-      if (storedHistory) {
-        const parsedHistory = JSON.parse(storedHistory);
-        parsedHistory.sort((a: HistoryEntry, b: HistoryEntry) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-        setHistory(parsedHistory);
+    const loadHistory = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const legacyEntries = readLegacyBroadcastHistory(session);
+        if (legacyEntries.length) {
+          await migrateLegacyBroadcastHistory(legacyEntries);
+          removeLegacyBroadcastHistory(session);
+        }
+        const items = await getBroadcastHistory();
+        if (!cancelled) setHistory(items);
+      } catch (loadError) {
+        if (!cancelled) {
+          console.error('Failed to load broadcast history:', loadError);
+          setError(loadError instanceof Error ? loadError.message : 'Riwayat broadcast belum dapat dimuat.');
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to parse history from localStorage", error);
-    }
-  }, [userUpc]);
+    };
+
+    void loadHistory();
+    return () => {
+      cancelled = true;
+    };
+  }, [session]);
 
   const filteredHistory = React.useMemo(() => {
     return history.filter(entry => {
@@ -65,10 +92,18 @@ export default function HistoryPage() {
     });
   }, [history, dateFilter, typeFilter]);
 
-  const clearHistory = () => {
-    const storageKey = userUpc === 'all' ? 'broadcastHistory_all' : `broadcastHistory_${userUpc}`;
-    localStorage.removeItem(storageKey);
-    setHistory([]);
+  const clearHistory = async () => {
+    setIsClearing(true);
+    setError(null);
+    try {
+      await clearBroadcastHistory();
+      setHistory([]);
+    } catch (clearError) {
+      console.error('Failed to clear broadcast history:', clearError);
+      setError(clearError instanceof Error ? clearError.message : 'Riwayat broadcast belum dapat dihapus.');
+    } finally {
+      setIsClearing(false);
+    }
   };
   
   const getTemplateBadgeVariant = (template: string) => {
@@ -143,11 +178,12 @@ export default function HistoryPage() {
                     </Button>
                 )}
                 <div className="hidden md:flex flex-grow"></div>
-                 <Button variant="destructive" onClick={clearHistory} className="w-full md:w-auto">
+                 <Button variant="destructive" onClick={() => void clearHistory()} disabled={isClearing || isLoading} className="w-full md:w-auto">
                     <Trash2 className="mr-2 h-4 w-4" />
-                    Bersihkan Riwayat
+                    {isClearing ? 'Menghapus...' : 'Bersihkan Riwayat'}
                 </Button>
             </div>
+            {error && <p role="alert" className="mb-4 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">{error}</p>}
             <div className="rounded-lg border">
                 <Table>
                 <TableHeader>
@@ -164,7 +200,7 @@ export default function HistoryPage() {
                     {filteredHistory.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={6} className="h-24 text-center">
-                            Tidak ada riwayat aktivitas yang cocok dengan filter.
+                            {isLoading ? 'Memuat riwayat aktivitas...' : 'Tidak ada riwayat aktivitas yang cocok dengan filter.'}
                             </TableCell>
                         </TableRow>
                     ) : (
