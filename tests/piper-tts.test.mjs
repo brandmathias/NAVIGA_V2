@@ -46,7 +46,7 @@ test('synthesizePiperWav reports an unavailable local Piper service', async () =
         throw new TypeError('fetch failed');
       },
     }),
-    /Piper tidak dapat dihubungi/i,
+    /npm run dev:local/i,
   );
 });
 

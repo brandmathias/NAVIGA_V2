@@ -758,7 +758,10 @@
 
 .dialogActions {
   display: flex;
+  width: 100%;
+  flex-direction: row;
   gap: 0.55rem;
+  justify-content: space-between;
   margin-top: 0.25rem;
 }
 

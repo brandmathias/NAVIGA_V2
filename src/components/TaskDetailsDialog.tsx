@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { downloadTaskAttachment, previewTaskAttachment } from '@/lib/task-attachments.mjs';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 import { plainTaskDescription } from '@/lib/task-description';
 import { cn } from '@/lib/utils';
 import { TASK_PRIORITY_OPTIONS } from './task-dialog-config';
@@ -115,7 +116,7 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
     try {
       await downloadTaskAttachment(primaryAttachment);
     } catch (error) {
-      setDownloadError(error instanceof Error ? error.message : 'Lampiran tidak dapat diunduh.');
+      setDownloadError(getUserFacingMessage(error, 'Lampiran belum dapat diunduh. Periksa koneksi lalu coba lagi.'));
     } finally {
       setIsDownloading(false);
     }
@@ -128,7 +129,7 @@ export default function TaskDetailsDialog({ isOpen, onClose, task, onUpdateTask,
     try {
       await previewTaskAttachment(primaryAttachment);
     } catch (error) {
-      setDownloadError(error instanceof Error ? error.message : 'Pratinjau lampiran tidak dapat dibuka.');
+      setDownloadError(getUserFacingMessage(error, 'Lampiran belum dapat dibuka sebagai pratinjau. Periksa file lalu coba lagi.'));
     } finally {
       setIsPreviewing(false);
     }

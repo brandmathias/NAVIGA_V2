@@ -26,6 +26,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { authClient } from '@/lib/auth-client';
 import { validateProfilePhoto } from '@/lib/profile-photo-storage';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 import styles from './profile.module.css';
 
 type LoginHistoryItem = {
@@ -205,7 +206,7 @@ export default function ProfilePage() {
       toast({ title: 'Foto profil tersimpan', description: 'Foto tersimpan pada akun Anda.', tone: 'success' });
     } catch (error) {
       console.error('Foto profil tidak dapat disimpan.', error);
-      const message = error instanceof Error ? error.message : 'Foto belum dapat disimpan. Silakan coba lagi.';
+      const message = getUserFacingMessage(error, 'Foto belum dapat disimpan. Periksa ukuran dan format foto lalu coba lagi.');
       setPhotoError(message);
       toast({ title: 'Foto gagal disimpan', description: message, variant: 'destructive', tone: 'error' });
     } finally {
@@ -237,11 +238,11 @@ export default function ProfilePage() {
     setIsChangingPassword(true);
     try {
       const result = await authClient.changePassword({ currentPassword, newPassword, revokeOtherSessions: false });
-      if (result.error) throw new Error(result.error.message ?? 'Kata sandi belum dapat diubah.');
+      if (result.error) throw new Error(getUserFacingMessage(result.error.message, 'Kata sandi belum dapat diubah. Periksa sandi saat ini dan coba lagi.'));
       setIsPasswordDialogOpen(false);
       toast({ title: 'Kata sandi diperbarui', description: 'Kata sandi akun Anda berhasil diganti.', tone: 'success' });
     } catch (error) {
-      setPasswordError(error instanceof Error ? error.message : 'Kata sandi belum dapat diubah.');
+      setPasswordError(getUserFacingMessage(error, 'Kata sandi belum dapat diubah. Periksa sandi saat ini dan coba lagi.'));
     } finally {
       setIsChangingPassword(false);
     }
@@ -264,7 +265,7 @@ export default function ProfilePage() {
         if (updated) return loadLoginHistory();
       }).catch(() => undefined);
     } catch (error) {
-      toast({ title: 'Riwayat login gagal dimuat', description: error instanceof Error ? error.message : 'Silakan coba lagi.', variant: 'destructive', tone: 'error' });
+      toast({ title: 'Riwayat masuk belum dimuat', description: getUserFacingMessage(error, 'Riwayat masuk belum dapat dimuat. Periksa koneksi lalu coba lagi.'), variant: 'destructive', tone: 'error' });
     } finally {
       setIsLoadingHistory(false);
     }

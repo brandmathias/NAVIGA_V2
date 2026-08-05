@@ -31,6 +31,14 @@ import { Badge } from '@/components/ui/badge';
 import { useLocalSession } from '@/components/main-shell';
 import { ScrollReveal, MotionCard } from '@/components/motion';
 import { createBroadcastHistoryEntry } from '@/lib/broadcast-history-client.mjs';
+import {
+  getImportEmptyFeedback,
+  getImportErrorFeedback,
+  getImportProcessingFeedback,
+  getImportScopeLabel,
+  getImportSuccessDescription,
+} from '@/lib/import-feedback.mjs';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 
 
 const parseDateForFormatting = (dateString: string): Date | null => {
@@ -95,6 +103,7 @@ type ActionStatus = 'WhatsApp Dibuka' | 'Pesan Disalin';
 export default function PdfBroadcastPage() {
   const adminUser = useLocalSession();
   const { toast } = useToast();
+  const importScopeLabel = getImportScopeLabel(adminUser);
   const [extractedData, setExtractedData] = React.useState<BroadcastCustomer[]>([]);
   const [selectedCustomers, setSelectedCustomers] = React.useState<Set<string>>(new Set());
   const importFileInputRef = React.useRef<HTMLInputElement>(null);
@@ -122,7 +131,8 @@ export default function PdfBroadcastPage() {
       toast({
         variant: 'destructive',
         title: 'Riwayat belum tersimpan',
-        description: 'Broadcast tetap berjalan lokal, tetapi riwayatnya belum masuk database.',
+        description: 'Broadcast tetap berjalan, tetapi riwayat ini belum tersimpan. Coba muat ulang halaman riwayat untuk memeriksanya.',
+        tone: 'error',
       });
     }
   };
@@ -134,14 +144,15 @@ export default function PdfBroadcastPage() {
     const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
     const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
     if (!isPdf && !isImage) {
-      toast({ title: 'Jenis File Tidak Valid', description: 'Pilih PDF, JPG, PNG, atau WEBP.', variant: 'destructive', tone: 'error' });
+      toast({ title: 'Format file tidak didukung', description: 'Pilih file PDF atau foto JPG, PNG, atau WEBP.', variant: 'destructive', tone: 'error' });
       return;
     }
 
     setIsLoading(true);
     setExtractedData([]);
     setSelectedCustomers(new Set());
-    toast({ title: 'Membaca file...', description: isPdf ? 'Menyiapkan isi PDF.' : 'Membaca foto tabel.', tone: 'processing' });
+    const feedbackContext = { domain: 'gadaian' as const, source: isPdf ? 'pdf' : 'foto', session: adminUser };
+    toast({ ...getImportProcessingFeedback(feedbackContext), tone: 'processing' });
 
     const formData = new FormData();
     formData.append(isPdf ? 'pdf-file' : 'gadai-image', file);
@@ -150,27 +161,17 @@ export default function PdfBroadcastPage() {
         const results = isPdf ? await parsePdf(formData) : await parseGadaiImage(formData);
         
         if (results.length === 0) {
-            toast({
-                title: 'Data Tidak Ditemukan',
-                description: adminUser.role === 'superadmin'
-                    ? 'Tidak ada data gadai lengkap yang ditemukan dalam file.'
-                    : `Tidak ada data untuk prefix unit ${adminUser.unitPrefix ?? '-'} pada file ini.`,
-                variant: 'destructive',
-            });
+            toast({ ...getImportEmptyFeedback(feedbackContext), variant: 'destructive', tone: 'error' });
         } else {
             setExtractedData(results);
             toast({
-                title: 'Impor Selesai',
-                description: `${results.length} data gadai berhasil dimuat.`,
+                title: 'Impor selesai',
+                description: getImportSuccessDescription(feedbackContext, results.length),
                 tone: 'success',
             });
         }
-    } catch (error: any) {
-        toast({
-            title: 'Gagal Memproses File',
-            description: 'Periksa file lalu coba lagi.',
-            variant: 'destructive',
-        });
+    } catch (error: unknown) {
+        toast({ ...getImportErrorFeedback(error, feedbackContext), variant: 'destructive', tone: 'error' });
         console.error('File processing error:', error);
     } finally {
         setIsLoading(false);
@@ -256,16 +257,17 @@ Terima Kasih`;
     navigator.clipboard.writeText(message).then(() => {
       toast({
         title: 'Pesan Disalin',
-        description: `Pesan untuk ${customer.name} telah disalin ke clipboard.`,
+        description: `Pesan untuk ${customer.name} berhasil disalin.`,
         tone: 'copy',
       });
       void logHistory(customer, 'Pesan Disalin', template);
     }).catch(err => {
       console.error('Failed to copy message: ', err);
       toast({
-        title: 'Gagal Menyalin',
-        description: 'Tidak dapat menyalin pesan. Silakan coba lagi.',
+        title: 'Pesan belum tersalin',
+        description: 'Pesan belum dapat disalin. Coba lagi atau salin isi pesan secara manual.',
         variant: 'destructive',
+        tone: 'error',
       });
     });
   };
@@ -274,9 +276,10 @@ Terima Kasih`;
     const formattedPhoneNumber = normalizeIndonesianWhatsAppNumber(customer.phone_number);
     if (!formattedPhoneNumber) {
       toast({
-        title: 'Nomor WhatsApp Tidak Valid',
-        description: 'Periksa nomor HP hasil pembacaan file sebelum membuka WhatsApp.',
+        title: 'Nomor WhatsApp belum dapat digunakan',
+        description: 'Periksa nomor WhatsApp pada data nasabah sebelum membuka WhatsApp.',
         variant: 'destructive',
+        tone: 'error',
       });
       return;
     }
@@ -293,9 +296,10 @@ Terima Kasih`;
     const formattedPhoneNumber = normalizeIndonesianWhatsAppNumber(customer.phone_number);
     if (!formattedPhoneNumber) {
       toast({
-        title: 'Nomor WhatsApp Tidak Valid',
-        description: 'Periksa nomor HP hasil pembacaan file sebelum membuat pesan suara.',
+        title: 'Nomor WhatsApp belum dapat digunakan',
+        description: 'Periksa nomor WhatsApp pada data nasabah sebelum membuat pesan suara.',
         variant: 'destructive',
+        tone: 'error',
       });
       return;
     }
@@ -329,9 +333,10 @@ Terima Kasih`;
     } catch (error) {
         console.error('Voicenote generation failed:', error);
         toast({
-            title: 'Gagal Membuat Pesan Suara',
-            description: error instanceof Error ? error.message : 'Terjadi kesalahan saat membuat pesan suara. Silakan coba lagi.',
+            title: 'Pesan suara belum siap',
+            description: getUserFacingMessage(error, 'Pesan suara belum dapat dibuat. Periksa data nasabah lalu coba lagi.'),
             variant: 'destructive',
+            tone: 'error',
         });
     } finally {
         setIsGeneratingVoicenote(false);
@@ -341,16 +346,17 @@ Terima Kasih`;
   const handleNotifySelected = () => {
     if (selectedCustomers.size === 0) {
       toast({
-        title: 'No Customers Selected',
-        description: 'Please select at least one customer to notify.',
+        title: 'Belum ada nasabah dipilih',
+        description: 'Centang minimal satu nasabah pada tabel sebelum mengirim notifikasi.',
         variant: 'destructive',
+        tone: 'error',
       });
       return;
     }
 
     toast({
-      title: 'Opening WhatsApp Tabs',
-      description: `Preparing notifications for ${selectedCustomers.size} customer(s). Please allow pop-ups.`,
+      title: 'Membuka WhatsApp',
+      description: `Menyiapkan ${selectedCustomers.size} notifikasi jatuh tempo. Izinkan pop-up jika browser memintanya.`,
       tone: 'message',
     });
 
@@ -385,19 +391,19 @@ Terima Kasih`;
             <h1 className="text-2xl font-bold tracking-tight font-headline">Gadaian Broadcast</h1>
         </div>
       </ScrollReveal>
-      <MotionCard delay={0.06}>
+      <MotionCard delay={0.06} disableHover>
         <Card className="overflow-hidden">
           <CardHeader className="space-y-2 px-5 pb-4 pt-5 md:px-6">
             <CardTitle className="text-xl">Panel Gadaian Broadcast</CardTitle>
             <CardDescription>
-              Impor data nasabah dari PDF atau foto tabel untuk menyiapkan notifikasi. Data otomatis difilter berdasarkan UPC Anda.
+              Impor data nasabah dari PDF atau foto tabel untuk menyiapkan notifikasi. Sistem membaca nomor SBG dan hanya menampilkan data terkait {importScopeLabel}.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <div className="flex flex-col items-stretch gap-3 border-y border-border/70 px-5 py-3.5 md:flex-row md:items-center md:px-6">
               <Button onClick={() => importFileInputRef.current?.click()} disabled={isLoading}>
                   {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                  {isLoading ? 'Memproses...' : 'Import File'}
+                  {isLoading ? 'Menganalisis...' : 'Import File'}
               </Button>
               <Input
                   type="file"
@@ -411,7 +417,7 @@ Terima Kasih`;
               <div className="flex-grow"></div>
               <Button onClick={handleNotifySelected} disabled={selectedCustomers.size === 0 || isLoading}>
                 <Send className="mr-2 h-4 w-4" />
-                Notify Selected ({selectedCustomers.size})
+                Kirim Terpilih ({selectedCustomers.size})
               </Button>
             </div>
             <div className="px-4 pb-4 pt-3 md:px-4">
@@ -440,13 +446,13 @@ Terima Kasih`;
                        <TableRow>
                           <TableCell colSpan={7} className="h-24 text-center">
                               <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                              <p className="mt-2 text-muted-foreground">Sedang membaca isi file...</p>
+                              <p className="mt-2 text-muted-foreground">Menganalisis file dan mencocokkan nomor SBG dengan {importScopeLabel}...</p>
                           </TableCell>
                       </TableRow>
                   ) : extractedData.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="h-24 text-center">
-                                Tidak ada data. Klik "Import File" untuk memulai.
+                                Belum ada data. Pilih file untuk membaca data gadaian terkait {importScopeLabel}.
                         </TableCell>
                       </TableRow>
                   ) : (
@@ -540,7 +546,7 @@ Terima Kasih`;
             </div>
               {selectedCustomers.size > 0 && (
                   <div className="text-xs text-muted-foreground mt-2">
-                  Browser may ask for permission to open multiple tabs. Please allow it.
+                  Browser mungkin meminta izin untuk membuka beberapa tab. Izinkan pop-up agar notifikasi dapat dilanjutkan.
                   </div>
               )}
           </CardContent>
