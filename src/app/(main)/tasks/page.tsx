@@ -18,6 +18,7 @@ import { ScrollReveal } from '@/components/motion';
 import { deleteTaskAttachment } from '@/lib/task-attachments.mjs';
 import { createDefaultTaskBoardData } from '@/lib/task-board-defaults';
 import { sortTaskIds, taskMatchesFilter, TASK_FILTER_OPTIONS, TASK_SORT_OPTIONS } from '@/lib/task-board-view.mjs';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 
 type TaskFilter = 'all' | 'high' | 'medium' | 'low' | 'flagged' | 'attachment';
 type SortMode = 'oldest' | 'newest' | 'nearest';
@@ -39,7 +40,8 @@ function createVisibleBoardData(boardData: TaskBoardData, filter: TaskFilter, so
 
 async function responseError(response: Response, fallback: string) {
   try {
-    await response.json();
+    const payload = await response.json() as { error?: unknown };
+    return getUserFacingMessage(payload.error, fallback);
   } catch {
     // The response body may be empty; keep the message user-facing either way.
   }
@@ -117,7 +119,7 @@ export default function TasksPage() {
         setBoardLoading(false);
       } catch (error) {
         if (!isActive || (error instanceof DOMException && error.name === 'AbortError')) return;
-        setBoardError('Tugas belum dapat dimuat. Coba lagi.');
+        setBoardError(getUserFacingMessage(error, 'Tugas belum dapat dimuat. Periksa koneksi lalu coba lagi.'));
         setBoardLoading(false);
       }
     };
@@ -149,7 +151,7 @@ export default function TasksPage() {
         boardVersionRef.current = Number(payload.version);
         setSyncError(null);
       }).catch((error) => {
-        setSyncError('Perubahan tugas belum tersimpan. Coba lagi.');
+        setSyncError(getUserFacingMessage(error, 'Perubahan tugas belum tersimpan. Periksa koneksi lalu coba lagi.'));
       });
     }, 250);
 
@@ -404,7 +406,7 @@ export default function TasksPage() {
           ) : boardError ? (
             <div role="alert" className="grid min-h-[280px] place-items-center rounded-[24px] border border-[#f3c8c8] bg-[#fffafa] px-6 text-center text-sm text-[#a33b3b] shadow-[0_16px_44px_rgba(140,40,40,.06)]">
               <div>
-                    <p className="font-bold">Tugas belum dapat dimuat.</p>
+                    <p className="font-bold">Board tugas belum dapat dimuat.</p>
                 <p className="mt-1 max-w-xl text-[#a96767]">{boardError}</p>
                 <Button type="button" variant="outline" onClick={() => window.location.reload()} className="mt-4 rounded-xl border-[#e9aaaa] text-[#a33b3b] hover:bg-[#fff0f0]">Coba lagi</Button>
               </div>
@@ -413,7 +415,7 @@ export default function TasksPage() {
             <>
               <TaskKanbanBoard boardData={visibleBoardData} setBoardData={setBoardData} onTaskClick={handleTaskClick} onToggleFlagged={handleToggleFlagged} onAddColumn={handleAddColumn} onDeleteColumn={handleDeleteColumn} newColumnTitle={newColumnTitle} onNewColumnTitleChange={setNewColumnTitle} viewMode={viewMode} isReadOnlyView={isFocusedView} />
 
-              {syncError && <div role="alert" className="mt-3 rounded-xl border border-[#f1d19a] bg-[#fffaf0] px-4 py-3 text-xs font-medium text-[#8c641d]">Perubahan terakhir belum tersimpan: {syncError}</div>}
+              {syncError && <div role="alert" className="mt-3 rounded-xl border border-[#f1d19a] bg-[#fffaf0] px-4 py-3 text-xs font-medium text-[#8c641d]">Perubahan terbaru belum tersimpan: {syncError}</div>}
 
               <footer className="mt-3 flex flex-col gap-3 px-1 text-sm text-[#6c87a0] sm:flex-row sm:items-center sm:justify-between">
                 <span className="flex items-center gap-2"><ClipboardList className="h-4 w-4 text-[#547c98]" /> Total {totalTasks} tugas</span>

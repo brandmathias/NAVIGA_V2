@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { formatUnitCodePreview } from '@/lib/unit-code-client';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 
 type Unit = {
   id: string;
@@ -125,7 +126,7 @@ export default function UnitManagementClient({ units: initialUnits, admins: init
       setIsAdminDialogOpen(false);
       toast({ title: editingAdmin ? 'Akun admin diperbarui' : 'Akun admin ditambahkan', description: `${admin.name} dapat masuk untuk ${admin.unitName}.`, tone: 'success' });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Periksa data akun dan coba lagi.';
+      const message = getUserFacingMessage(error, 'Data akun admin belum dapat disimpan. Periksa isian lalu coba lagi.');
       setAdminError(message);
       toast({ title: editingAdmin ? 'Akun tidak dapat diperbarui' : 'Akun tidak dapat ditambahkan', description: message, variant: 'destructive', tone: 'error' });
     } finally {

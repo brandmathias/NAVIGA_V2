@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { authClient } from '@/lib/auth-client';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 import {
   Form,
   FormControl,
@@ -42,7 +43,7 @@ export default function LoginPage() {
     try {
       const result = await authClient.signIn.email(data);
       if (result.error || !result.data?.user) {
-        toast({ title: 'Login Gagal', description: result.error?.message ?? 'Email atau sandi tidak valid.', variant: 'destructive', tone: 'error' });
+        toast({ title: 'Login gagal', description: getUserFacingMessage(result.error?.message, 'Email atau sandi tidak valid.'), variant: 'destructive', tone: 'error' });
         return;
       }
 

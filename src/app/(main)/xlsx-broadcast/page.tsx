@@ -30,6 +30,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollReveal, MotionCard } from '@/components/motion';
+import {
+  getImportEmptyFeedback,
+  getImportErrorFeedback,
+  getImportProcessingFeedback,
+  getImportScopeLabel,
+  getImportSuccessDescription,
+} from '@/lib/import-feedback.mjs';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 
 
 const formatCurrency = (value: number | string | undefined) => {
@@ -59,6 +67,7 @@ type ActionStatus = 'Pesan Disalin';
 export default function XlsxBroadcastPage() {
   const adminUser = useLocalSession();
   const { toast } = useToast();
+  const importScopeLabel = getImportScopeLabel(adminUser);
   const [importedData, setImportedData] = React.useState<InstallmentCustomer[]>([]);
   const importFileInputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -86,7 +95,8 @@ export default function XlsxBroadcastPage() {
       toast({
         variant: 'destructive',
         title: 'Riwayat belum tersimpan',
-        description: 'Broadcast tetap berjalan lokal, tetapi riwayatnya belum masuk database.',
+        description: 'Broadcast tetap berjalan, tetapi riwayat ini belum tersimpan. Coba muat ulang halaman riwayat untuk memeriksanya.',
+        tone: 'error',
       });
     }
   };
@@ -98,31 +108,32 @@ export default function XlsxBroadcastPage() {
     const isXlsx = file.name.toLowerCase().endsWith('.xlsx');
     const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
     if (!isXlsx && !isImage) {
-      toast({ title: 'Jenis File Tidak Valid', description: 'Pilih XLSX, JPG, PNG, atau WEBP.', variant: 'destructive', tone: 'error' });
+      toast({ title: 'Format file tidak didukung', description: 'Pilih file XLSX atau foto JPG, PNG, atau WEBP.', variant: 'destructive', tone: 'error' });
       return;
     }
 
     setIsLoading(true);
     setImportedData([]);
-    toast({ title: 'Membaca file...', description: isXlsx ? 'Menyiapkan data.' : 'Membaca foto tabel angsuran.', tone: 'processing' });
+    const feedbackContext = { domain: 'angsuran' as const, source: isXlsx ? 'xlsx' : 'foto', session: adminUser };
+    toast({ ...getImportProcessingFeedback(feedbackContext), tone: 'processing' });
 
     try {
       const formData = new FormData();
       formData.append(isXlsx ? 'xlsx-file' : 'angsuran-image', file);
       const customers = isXlsx ? await parseXlsx(formData) : await parseInstallmentImage(formData);
+      if (!customers.length) {
+        toast({ ...getImportEmptyFeedback(feedbackContext), variant: 'destructive', tone: 'error' });
+        return;
+      }
       setImportedData(customers);
       toast({
-        title: 'Impor Selesai',
-        description: `${customers.length} data telah berhasil dimuat.`,
+        title: 'Impor selesai',
+        description: getImportSuccessDescription(feedbackContext, customers.length),
         tone: 'success',
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('File parsing error:', error);
-      toast({
-        title: 'Gagal Memproses File',
-        description: 'Periksa file lalu coba lagi. Pastikan formatnya benar.',
-        variant: 'destructive',
-      });
+      toast({ ...getImportErrorFeedback(error, feedbackContext), variant: 'destructive', tone: 'error' });
     } finally {
       setIsLoading(false);
       if (importFileInputRef.current) importFileInputRef.current.value = '';
@@ -185,16 +196,17 @@ Terima Kasih`;
     navigator.clipboard.writeText(message).then(() => {
       toast({
         title: 'Pesan Disalin',
-        description: `Pesan untuk ${customer.nasabah.split('\n')[0]} telah disalin ke clipboard.`,
+        description: `Pesan untuk ${customer.nasabah.split('\n')[0]} berhasil disalin.`,
         tone: 'copy',
       });
       void logHistory(customer, 'Pesan Disalin', template);
     }).catch(err => {
       console.error('Failed to copy message: ', err);
       toast({
-        title: 'Gagal Menyalin',
-        description: 'Tidak dapat menyalin pesan. Silakan coba lagi.',
+        title: 'Pesan belum tersalin',
+        description: 'Pesan belum dapat disalin. Coba lagi atau salin isi pesan secara manual.',
         variant: 'destructive',
+        tone: 'error',
       });
     });
   };
@@ -226,9 +238,10 @@ Terima Kasih`;
     } catch (error) {
         console.error('Voicenote generation failed:', error);
         toast({
-            title: 'Gagal Membuat Pesan Suara',
-            description: error instanceof Error ? error.message : 'Terjadi kesalahan saat membuat pesan suara. Silakan coba lagi.',
+            title: 'Pesan suara belum siap',
+            description: getUserFacingMessage(error, 'Pesan suara belum dapat dibuat. Periksa data nasabah lalu coba lagi.'),
             variant: 'destructive',
+            tone: 'error',
         });
     } finally {
         setIsGeneratingVoicenote(false);
@@ -250,19 +263,19 @@ Terima Kasih`;
             <h1 className="text-2xl font-bold tracking-tight font-headline">Angsuran Broadcast</h1>
         </div>
       </ScrollReveal>
-      <MotionCard delay={0.06}>
+      <MotionCard delay={0.06} disableHover>
         <Card className="overflow-hidden">
           <CardHeader className="space-y-2 px-5 pb-4 pt-5 md:px-6">
             <CardTitle className="text-xl">Panel Angsuran Broadcast</CardTitle>
             <CardDescription>
-              Impor data nasabah dari file .xlsx atau foto tabel untuk menyalin template pengingat dan membuat pesan suara. Data otomatis difilter berdasarkan UPC Anda.
+              Impor data nasabah dari file XLSX atau foto tabel untuk menyalin template pengingat dan membuat pesan suara. Sistem membaca nomor kredit dan hanya menampilkan data terkait {importScopeLabel}.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <div className="flex flex-col items-stretch gap-3 border-y border-border/70 px-5 py-3.5 md:flex-row md:items-center md:px-6">
               <Button onClick={() => importFileInputRef.current?.click()} disabled={isLoading}>
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                {isLoading ? 'Memproses...' : 'Import File'}
+                {isLoading ? 'Menganalisis...' : 'Import File'}
               </Button>
               <Input
                   type="file"
@@ -277,7 +290,7 @@ Terima Kasih`;
             <div className="px-4 pb-4 pt-3 md:px-4">
              {importedData.length > 0 && (
                 <div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-700">
-                 <strong>Perhatian:</strong> Data Excel angsuran tidak memuat nomor WhatsApp. Fitur yang tersedia adalah salin template dan pembuatan pesan suara.
+                 <strong>Informasi:</strong> Data angsuran hasil impor tidak memuat nomor WhatsApp. Gunakan salin template atau buat pesan suara dari tabel.
                 </div>
               )}
               <div className="rounded-lg border border-border/80 bg-card">
@@ -295,13 +308,13 @@ Terima Kasih`;
                       <TableRow>
                           <TableCell colSpan={4} className="h-24 text-center">
                               <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-                              <p className="mt-2 text-muted-foreground">Sedang membaca isi file...</p>
+                              <p className="mt-2 text-muted-foreground">Menganalisis file dan mencocokkan nomor kredit dengan {importScopeLabel}...</p>
                           </TableCell>
                       </TableRow>
                   ) : importedData.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={4} className="h-24 text-center">
-                            Tidak ada data. Klik "Import File" untuk memulai.
+                            Belum ada data. Pilih file untuk membaca data angsuran terkait {importScopeLabel}.
                         </TableCell>
                       </TableRow>
                   ) : (

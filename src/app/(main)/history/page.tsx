@@ -20,6 +20,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 import {
   Select,
   SelectContent,
@@ -71,7 +72,7 @@ export default function HistoryPage() {
       } catch (loadError) {
         if (!cancelled) {
           console.error('Failed to load broadcast history:', loadError);
-          setError(loadError instanceof Error ? loadError.message : 'Riwayat broadcast belum dapat dimuat.');
+          setError(getUserFacingMessage(loadError, 'Riwayat broadcast belum dapat dimuat. Periksa koneksi lalu coba lagi.'));
         }
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -100,7 +101,7 @@ export default function HistoryPage() {
       setHistory([]);
     } catch (clearError) {
       console.error('Failed to clear broadcast history:', clearError);
-      setError(clearError instanceof Error ? clearError.message : 'Riwayat broadcast belum dapat dihapus.');
+      setError(getUserFacingMessage(clearError, 'Riwayat broadcast belum dapat dihapus. Periksa koneksi lalu coba lagi.'));
     } finally {
       setIsClearing(false);
     }

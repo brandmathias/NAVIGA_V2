@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { Task, TaskAttachment, TaskPriority } from '@/types';
 import { deleteTaskAttachment, saveTaskAttachment, validateTaskAttachment } from '@/lib/task-attachments.mjs';
+import { getUserFacingMessage } from '@/lib/user-facing-message.mjs';
 import { cn } from '@/lib/utils';
 import { TASK_PRIORITY_OPTIONS } from './task-dialog-config';
 import TaskAttachmentPreview from './TaskAttachmentPreview';
@@ -145,7 +146,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
     for (const file of incoming) {
       const validation = validateTaskAttachment(file);
       if (!validation.valid) {
-        setError(validation.message ?? 'File tidak dapat digunakan.');
+        setError(getUserFacingMessage(validation.message, 'File lampiran tidak dapat digunakan. Periksa format dan ukuran file.'));
         if (fileInputRef.current) fileInputRef.current.value = '';
         return;
       }
@@ -199,7 +200,7 @@ export default function AddTaskDialog({ isOpen, onClose, onAddTask, columnId }: 
       onClose();
     } catch (submitError) {
       await Promise.all(savedAttachments.map((attachment) => deleteTaskAttachment(attachment.id).catch(() => undefined)));
-      setError(submitError instanceof Error ? submitError.message : 'Tugas gagal ditambahkan.');
+      setError(getUserFacingMessage(submitError, 'Tugas belum dapat ditambahkan. Periksa isian dan lampiran lalu coba lagi.'));
     } finally {
       setIsSubmitting(false);
     }
