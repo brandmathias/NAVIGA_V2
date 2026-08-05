@@ -22,6 +22,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useLocalSession } from '@/components/main-shell';
 import { ScrollReveal, MotionCard, StaggerContainer, StaggerItem } from '@/components/motion';
+import { getGoogleMapsEmbedUrl } from '@/lib/google-maps';
 
 interface UpcProfileData {
   name: string;
@@ -126,18 +127,29 @@ export default function DashboardPage() {
 
   const dynamicAppraiser = session.unitAppraisers?.[0];
   const dynamicManager = session.unitManagers?.[0];
-  const profileData = upcProfiles[userUpc as keyof typeof upcProfiles] ?? {
-    ...upcProfiles['N/A'],
+  const knownProfilesByPrefix: Record<string, keyof typeof upcProfiles> = {
+    '11787': 'Pegadaian Wanea',
+    '11793': 'Pegadaian Ranotana',
+  };
+  const directProfile = upcProfiles[userUpc as keyof typeof upcProfiles];
+  const baseProfile = directProfile ?? upcProfiles[knownProfilesByPrefix[session.unitPrefix ?? ''] ?? 'N/A'];
+  const profileData: UpcProfileData = directProfile ? {
+    ...baseProfile,
+    mapUrl: session.unitMapUrl || baseProfile.mapUrl,
+  } : {
+    ...baseProfile,
     name: session.unitName ?? 'Unit Pelayanan Cabang',
     address: session.unitAddress || [session.unitDomicile, session.unitProvince].filter(Boolean).join(', ') || 'Alamat unit belum diatur.',
     phone: session.unitPhone || 'Nomor telepon unit belum diatur.',
     description: `Profil untuk ${session.unitCode || `prefix SBG ${session.unitPrefix ?? 'belum diatur'}`}.`,
-    mapUrl: session.unitMapUrl || '',
+    mapUrl: session.unitMapUrl || baseProfile.mapUrl,
     staff: {
       penaksir: { name: dynamicAppraiser?.name || 'Belum diatur', nip: dynamicAppraiser?.nip || '—', avatar: '' },
       pengelola: { name: dynamicManager?.name || 'Belum diatur', nip: dynamicManager?.nip || '—', avatar: '' },
     },
   };
+  const mapEmbedUrl = getGoogleMapsEmbedUrl(profileData.mapUrl, profileData.address);
+  const activeMapUrl = mapView === 'map' ? mapEmbedUrl : profileData.streetViewUrl;
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -197,14 +209,10 @@ export default function DashboardPage() {
                   </Button>
                 </div>
                 <div className="rounded-lg overflow-hidden border aspect-video">
-                  {profileData.mapUrl ? (
+                  {activeMapUrl ? (
                     <iframe
                       key={mapView}
-                      src={
-                        mapView === 'map'
-                          ? profileData.mapUrl
-                          : profileData.streetViewUrl
-                      }
+                      src={activeMapUrl}
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
@@ -212,6 +220,13 @@ export default function DashboardPage() {
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                     ></iframe>
+                  ) : profileData.mapUrl ? (
+                    <div className="flex h-full min-h-[14rem] flex-col items-center justify-center gap-3 bg-muted px-6 text-center text-muted-foreground">
+                      <span>Peta belum dapat disematkan dari link ini.</span>
+                      <a href={profileData.mapUrl} target="_blank" rel="noreferrer" className="font-semibold text-primary underline-offset-4 hover:underline">
+                        Buka di Google Maps
+                      </a>
+                    </div>
                   ) : (
                     <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
                       Peta tidak tersedia
@@ -228,20 +243,20 @@ export default function DashboardPage() {
           <StaggerContainer stagger={0.08} delayChildren={0.12} className="grid gap-6 md:grid-cols-2">
             {/* Staff Cards */}
             <StaggerItem>
-            <Card className="transition-shadow duration-200 hover:shadow-xl">
-              <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                <Avatar className="h-12 w-12">
+            <Card className="staff-registry-card" data-registry-role="penaksir">
+              <CardHeader className="staff-registry-layout">
+                <Avatar className="staff-registry-avatar">
                   <AvatarImage src={profileData.staff.penaksir.avatar} />
-                  <AvatarFallback>
+                  <AvatarFallback className="staff-registry-avatar-fallback">
                     {profileData.staff.penaksir.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <CardTitle className="text-lg">Penaksir</CardTitle>
-                  <p className="text-base font-semibold">
+                <div className="staff-registry-copy">
+                  <CardTitle className="staff-registry-role">Penaksir</CardTitle>
+                  <p className="staff-registry-name">
                     {profileData.staff.penaksir.name}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="staff-registry-nip">
                     NIP: {profileData.staff.penaksir.nip}
                   </p>
                 </div>
@@ -249,20 +264,20 @@ export default function DashboardPage() {
             </Card>
             </StaggerItem>
             <StaggerItem>
-            <Card className="transition-shadow duration-200 hover:shadow-xl">
-              <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                <Avatar className="h-12 w-12">
+            <Card className="staff-registry-card" data-registry-role="pengelola">
+              <CardHeader className="staff-registry-layout">
+                <Avatar className="staff-registry-avatar">
                   <AvatarImage src={profileData.staff.pengelola.avatar} />
-                  <AvatarFallback>
+                  <AvatarFallback className="staff-registry-avatar-fallback">
                     {profileData.staff.pengelola.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <CardTitle className="text-lg">Pengelola Unit</CardTitle>
-                  <p className="text-base font-semibold">
+                <div className="staff-registry-copy">
+                  <CardTitle className="staff-registry-role">Pengelola Unit</CardTitle>
+                  <p className="staff-registry-name">
                     {profileData.staff.pengelola.name}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="staff-registry-nip">
                     NIP: {profileData.staff.pengelola.nip}
                   </p>
                 </div>
