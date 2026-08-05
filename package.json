@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:local": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-local.ps1",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
+    "piper:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-piper.ps1",
+    "piper:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-piper.ps1",
     "auth:migrate": "node scripts/migrate-better-auth.mjs",
     "auth:bootstrap": "node scripts/bootstrap-better-auth.mjs",
     "db:ensure:naviga": "node scripts/ensure-naviga-database.mjs",

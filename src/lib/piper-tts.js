@@ -49,7 +49,7 @@ async function synthesizePiperWav(text, options = {}) {
       if (error?.name === 'AbortError') {
         throw piperError('Piper tidak merespons sebelum batas waktu habis.');
       }
-      throw piperError('Piper tidak dapat dihubungi. Jalankan layanan Piper lokal terlebih dahulu.');
+      throw piperError('Piper tidak dapat dihubungi. Jalankan "npm run dev:local" terlebih dahulu.');
     }
 
     if (!response.ok) {

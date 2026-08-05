@@ -152,8 +152,8 @@ export default function DashboardPage() {
   const activeMapUrl = mapView === 'map' ? mapEmbedUrl : profileData.streetViewUrl;
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+    <div className="flex min-h-screen w-full flex-col bg-background lg:min-h-0">
+      <main className="dashboard-main flex flex-1 flex-col gap-4 p-4 md:gap-5 md:px-6 md:py-5">
         <ScrollReveal direction="up">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold tracking-tight font-headline">
@@ -162,19 +162,19 @@ export default function DashboardPage() {
           </div>
         </ScrollReveal>
 
-        <div className="grid gap-6">
+        <div className="grid gap-5">
           {/* UPC Profile Card */}
           <MotionCard delay={0.06}>
           <Card className="transition-shadow duration-200 hover:shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building className="h-6 w-6 text-primary" />
-                Profil {profileData.name}
-              </CardTitle>
-              <CardDescription>{profileData.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
+            <CardContent className="dashboard-profile-grid grid items-stretch gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,0.95fr)]">
+              <div className="min-w-0 space-y-5">
+                <CardHeader className="space-y-1.5 p-0">
+                  <CardTitle className="flex items-center gap-2">
+                    <Building className="h-6 w-6 text-primary" />
+                    Profil {profileData.name}
+                  </CardTitle>
+                  <CardDescription>{profileData.description}</CardDescription>
+                </CardHeader>
                 <div className="space-y-2">
                   <h4 className="font-semibold">Informasi Cabang</h4>
                   <div className="flex items-start gap-3 text-sm">
@@ -191,7 +191,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-              <div className="relative">
+              <div className="relative min-w-0">
                 <div className="absolute top-2 right-2 z-10 bg-background/70 p-1 rounded-md backdrop-blur-sm flex items-center gap-1">
                   <Button
                     size="sm"
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                     <Camera className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="rounded-lg overflow-hidden border aspect-video">
+                <div className="dashboard-map-frame relative overflow-hidden rounded-xl border">
                   {activeMapUrl ? (
                     <iframe
                       key={mapView}
@@ -240,19 +240,24 @@ export default function DashboardPage() {
         </div>
 
         {userUpc !== 'all' && (
-          <StaggerContainer stagger={0.08} delayChildren={0.12} className="grid gap-6 md:grid-cols-2">
+          <StaggerContainer stagger={0.08} delayChildren={0.12} className="grid gap-4 md:grid-cols-2">
             {/* Staff Cards */}
             <StaggerItem>
-            <Card className="staff-registry-card" data-registry-role="penaksir">
-              <CardHeader className="staff-registry-layout">
-                <Avatar className="staff-registry-avatar">
+            <Card
+              className="staff-registry-card group rounded-full border-primary/15 bg-card shadow-none"
+              data-registry-role="penaksir"
+            >
+              <CardHeader className="staff-registry-layout flex flex-row items-center gap-4 space-y-0 p-4 pr-5">
+                <Avatar className="staff-registry-avatar h-12 w-12 border border-primary/20 bg-secondary ring-4 ring-secondary/70">
                   <AvatarImage src={profileData.staff.penaksir.avatar} />
                   <AvatarFallback className="staff-registry-avatar-fallback">
                     {profileData.staff.penaksir.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="staff-registry-copy">
-                  <CardTitle className="staff-registry-role">Penaksir</CardTitle>
+                  <CardTitle className="staff-registry-role text-sm font-semibold leading-tight tracking-normal text-primary">
+                    Penaksir
+                  </CardTitle>
                   <p className="staff-registry-name">
                     {profileData.staff.penaksir.name}
                   </p>
@@ -264,16 +269,21 @@ export default function DashboardPage() {
             </Card>
             </StaggerItem>
             <StaggerItem>
-            <Card className="staff-registry-card" data-registry-role="pengelola">
-              <CardHeader className="staff-registry-layout">
-                <Avatar className="staff-registry-avatar">
+            <Card
+              className="staff-registry-card group rounded-full border-primary/15 bg-card shadow-none"
+              data-registry-role="pengelola"
+            >
+              <CardHeader className="staff-registry-layout flex flex-row items-center gap-4 space-y-0 p-4 pr-5">
+                <Avatar className="staff-registry-avatar h-12 w-12 border border-primary/20 bg-secondary ring-4 ring-secondary/70">
                   <AvatarImage src={profileData.staff.pengelola.avatar} />
                   <AvatarFallback className="staff-registry-avatar-fallback">
                     {profileData.staff.pengelola.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="staff-registry-copy">
-                  <CardTitle className="staff-registry-role">Pengelola Unit</CardTitle>
+                  <CardTitle className="staff-registry-role text-sm font-semibold leading-tight tracking-normal text-primary">
+                    Pengelola Unit
+                  </CardTitle>
                   <p className="staff-registry-name">
                     {profileData.staff.pengelola.name}
                   </p>
